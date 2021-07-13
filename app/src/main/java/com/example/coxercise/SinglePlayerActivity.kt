@@ -10,6 +10,7 @@ import android.view.Surface
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.coxercise.databinding.ActivitySinglePlayerBinding
+import com.example.coxercise.listeners.sensorEvent.StepDetector
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
@@ -34,33 +35,6 @@ class SinglePlayerActivity: AppCompatActivity() {
         val stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         val orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
 
-        val stepDetector = object: SensorEventListener {
-            override fun onSensorChanged(event: SensorEvent?) {
-                if (event == null) {
-                    return
-                }
-
-                val xAcc = event.values[0]
-                val yAcc = event.values[1]
-                val zAcc = event.values[2]
-
-                val magnitude = sqrt((xAcc * xAcc + yAcc * yAcc + zAcc * zAcc).toDouble())
-                print(magnitude)
-                val magnitudeDelta = magnitude - magnitudePrevious
-                magnitudePrevious = magnitude
-
-                // change this for sensitivity
-                if (magnitudeDelta > 4) {
-                    stepCount++
-                    stepDisplay.text = stepCount.toString()
-                }
-            }
-
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-                // TODO("Not yet implemented")
-            }
-        }
-
         val orientationDetector = object: SensorEventListener {
             override fun onSensorChanged(event: SensorEvent?) {
                 if (event == null) {
@@ -75,6 +49,7 @@ class SinglePlayerActivity: AppCompatActivity() {
 
                 // Remap the axes as if the device screen was the instrument panel,
                 // and adjust the rotation matrix for the device orientation.
+                // default display is used for api < 30 so should be used for our purposes still.
                 when (windowManager.defaultDisplay.rotation) {
                     Surface.ROTATION_90 -> {
                         worldAxisForDeviceAxisX = SensorManager.AXIS_Z
@@ -120,11 +95,12 @@ class SinglePlayerActivity: AppCompatActivity() {
             }
 
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-                // TODO("Not yet implemented")
+                // not important for now, could add checks for low accuracy
+                // if needed.
             }
         }
 
-        sensorManager.registerListener(stepDetector, stepSensor, SensorManager.SENSOR_DELAY_NORMAL,
+        sensorManager.registerListener(StepDetector(stepDisplay), stepSensor, SensorManager.SENSOR_DELAY_NORMAL,
             SensorManager.SENSOR_DELAY_UI)
         sensorManager.registerListener(orientationDetector, orientationSensor,
             SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI)
