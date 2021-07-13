@@ -23,9 +23,6 @@ class SinglePlayerActivity: AppCompatActivity() {
     private lateinit var angleDisplay: TextView
     private lateinit var binding: ActivitySinglePlayerBinding
 
-    private var accelerometerReading = FloatArray(3)
-    private var magnetometerReading = FloatArray(3)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySinglePlayerBinding.inflate(layoutInflater)
@@ -42,9 +39,6 @@ class SinglePlayerActivity: AppCompatActivity() {
                 if (event == null) {
                     return
                 }
-
-                System.arraycopy(event.values, 0, accelerometerReading, 0,
-                    accelerometerReading.size)
 
                 val xAcc = event.values[0]
                 val yAcc = event.values[1]
@@ -73,23 +67,15 @@ class SinglePlayerActivity: AppCompatActivity() {
                     return
                 }
 
-
-
-                System.arraycopy(
-                    event.values, 0, magnetometerReading, 0,
-                    magnetometerReading.size,
-                )
-
                 val rotationMatrix = FloatArray(16)
                 SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
 
-                var worldAxisForDeviceAxisX: Int
-                var worldAxisForDeviceAxisY: Int
+                val worldAxisForDeviceAxisX: Int
+                val worldAxisForDeviceAxisY: Int
 
                 // Remap the axes as if the device screen was the instrument panel,
                 // and adjust the rotation matrix for the device orientation.
-
-                when (windowManager.defaultDisplay.orientation) {
+                when (windowManager.defaultDisplay.rotation) {
                     Surface.ROTATION_90 -> {
                         worldAxisForDeviceAxisX = SensorManager.AXIS_Z
                         worldAxisForDeviceAxisY = SensorManager.AXIS_MINUS_X
@@ -121,16 +107,6 @@ class SinglePlayerActivity: AppCompatActivity() {
 
                 val orientationValuesV = FloatArray(3)
                 SensorManager.getOrientation(rotationMatrix, orientationValuesV)
-
-                /*
-
-                val rotationMatrix = FloatArray(9)
-                val orientationAngles = FloatArray(3)
-
-                SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading,
-                    magnetometerReading)
-                val orientation = SensorManager.getOrientation(rotationMatrix,
-                    orientationAngles) */
 
                 // convert azimuth to degrees
                 val degrees = Math.toDegrees(orientationValuesV[0].toDouble())
