@@ -1,0 +1,27 @@
+
+graphics.png
+size: 64, 16
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+ship_base
+  rotate: false
+  xy: 25, 1
+  size: 10, 9
+  orig: 10, 9
+  offset: 0, 0
+  index: -1
+ship_left
+  rotate: false
+  xy: 1, 1
+  size: 10, 9
+  orig: 10, 9
+  offset: 0, 0
+  index: -1
+ship_right
+  rotate: false
+  xy: 13, 1
+  size: 10, 9
+  orig: 10, 9
+  offset: 0, 0
+  index: -1
