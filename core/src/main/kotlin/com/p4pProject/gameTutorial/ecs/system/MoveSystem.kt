@@ -26,7 +26,24 @@ class MoveSystem : IteratingSystem (allOf(TransformComponent::class, MoveCompone
         accumulator +=deltaTime
         while (accumulator>= UPDATE_RATE){
             accumulator -= UPDATE_RATE
+
+            entities.forEach{ entity ->
+                entity[TransformComponent.mapper]?.let { transform ->
+                    transform.prevPosition.set(transform.position)
+                }
+            }
             super.update(UPDATE_RATE)
+        }
+
+        val alpha = accumulator / UPDATE_RATE
+        entities.forEach { entity ->
+            entity[TransformComponent.mapper]?.let { transform ->
+                transform.interpolatedPosition.set(
+                    MathUtils.lerp(transform.prevPosition.x, transform.position.x, alpha),
+                    MathUtils.lerp(transform.prevPosition.y, transform.position.y, alpha),
+                    transform.position.z
+                )
+            }
         }
     }
 

@@ -13,15 +13,17 @@ import ktx.ashley.with
 import ktx.graphics.use
 import ktx.log.debug
 import ktx.log.logger
+import kotlin.math.min
 
 
 private val LOG = logger<MyGameTutorial>()
+private const val MAX_DELTA_TIME = 1/20f
 
 class GameScreen(game: MyGameTutorial): GameTutorialScreen(game) {
 
     private  val player = engine.entity{
         with<TransformComponent>{
-            position.set(3f,9f,0f)
+            setInitialPosition(3f,9f,0f)
         }
         with<MoveComponent>()
         with<GraphicComponent>()
@@ -36,7 +38,7 @@ class GameScreen(game: MyGameTutorial): GameTutorialScreen(game) {
 
 
     override fun render(delta: Float) {
-        engine.update(delta)
+        engine.update(min(MAX_DELTA_TIME, delta))
 
     }
 }
