@@ -32,9 +32,11 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
     val engine: Engine by lazy { PooledEngine().apply {
         addSystem(PlayerInputSystem(gameViewport))
         addSystem(MoveSystem())
+        addSystem(DamageSystem())
         addSystem(PlayerAnimationSystem(graphicsAtlas.findRegion("ship_base"), graphicsAtlas.findRegion("ship_left"), graphicsAtlas.findRegion("ship_right")))
         addSystem(RenderSystem(batch, gameViewport))
         addSystem(RemoveSystem())
+        addSystem(DebugSystem())
         }
     }
 
