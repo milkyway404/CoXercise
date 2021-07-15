@@ -26,6 +26,7 @@ class GameScreen(game: MyGameTutorial): GameTutorialScreen(game) {
     private  val player = engine.entity{
         with<TransformComponent>{
             setInitialPosition(3f,9f,-1f)
+            setSize(18f * UNIT_SCALE, 18f * UNIT_SCALE)
         }
         with<MoveComponent>()
         with<GraphicComponent>()

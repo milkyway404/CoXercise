@@ -27,6 +27,10 @@ class TransformComponent: Component, Pool.Poolable, Comparable<TransformComponen
         interpolatedPosition.set(x,y,z)
     }
 
+    fun setSize(x : Float, y : Float,){
+        size.set(x,y)
+    }
+
     override fun compareTo(other: TransformComponent): Int {
         val zDiff = other.position.z.compareTo(position.z)
         return if(zDiff == 0) other.position.y.compareTo(position.y) else zDiff
