@@ -9,9 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.p4pProject.gameTutorial.ecs.system.PlayerAnimationSystem
-import com.p4pProject.gameTutorial.ecs.system.PlayerInputSystem
-import com.p4pProject.gameTutorial.ecs.system.RenderSystem
+import com.p4pProject.gameTutorial.ecs.system.*
 import com.p4pProject.gameTutorial.screen.GameScreen
 import com.p4pProject.gameTutorial.screen.GameTutorialScreen
 import ktx.app.KtxGame
@@ -20,6 +18,8 @@ import ktx.log.logger
 
 private val LOG = logger<MyGameTutorial>()
 const val UNIT_SCALE = 1/16f
+const val V_WIDTH = 16
+const val V_HEIGHT = 9
 class MyGameTutorial : KtxGame<GameTutorialScreen>() {
 
     val gameViewport = FitViewport(9f, 16f)
@@ -31,8 +31,10 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
 
     val engine: Engine by lazy { PooledEngine().apply {
         addSystem(PlayerInputSystem(gameViewport))
+        addSystem(MoveSystem())
         addSystem(PlayerAnimationSystem(graphicsAtlas.findRegion("ship_base"), graphicsAtlas.findRegion("ship_left"), graphicsAtlas.findRegion("ship_right")))
         addSystem(RenderSystem(batch, gameViewport))
+        addSystem(RemoveSystem())
         }
     }
 

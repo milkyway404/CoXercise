@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.p4pProject.gameTutorial.MyGameTutorial
 import com.p4pProject.gameTutorial.UNIT_SCALE
-import com.p4pProject.gameTutorial.ecs.component.FacingComponent
-import com.p4pProject.gameTutorial.ecs.component.GraphicComponent
-import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
-import com.p4pProject.gameTutorial.ecs.component.TransformComponent
+import com.p4pProject.gameTutorial.ecs.component.*
 import ktx.ashley.entity
 import ktx.ashley.get
 import ktx.ashley.with
@@ -26,6 +23,7 @@ class GameScreen(game: MyGameTutorial): GameTutorialScreen(game) {
         with<TransformComponent>{
             position.set(3f,9f,0f)
         }
+        with<MoveComponent>()
         with<GraphicComponent>()
         with<PlayerComponent>()
         with<FacingComponent>()
