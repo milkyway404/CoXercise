@@ -33,7 +33,14 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
         addSystem(PlayerInputSystem(gameViewport))
         addSystem(MoveSystem())
         addSystem(DamageSystem())
-        addSystem(PlayerAnimationSystem(graphicsAtlas.findRegion("ship_base"), graphicsAtlas.findRegion("ship_left"), graphicsAtlas.findRegion("ship_right")))
+        addSystem(
+            PlayerAnimationSystem(
+                graphicsAtlas.findRegion("ship_base"),
+                graphicsAtlas.findRegion("ship_left"),
+                graphicsAtlas.findRegion("ship_right")
+            )
+        )
+        addSystem(AnimationSystem(graphicsAtlas))
         addSystem(RenderSystem(batch, gameViewport))
         addSystem(RemoveSystem())
         addSystem(DebugSystem())

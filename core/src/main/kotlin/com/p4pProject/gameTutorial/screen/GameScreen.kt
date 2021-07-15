@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.p4pProject.gameTutorial.MyGameTutorial
 import com.p4pProject.gameTutorial.UNIT_SCALE
+import com.p4pProject.gameTutorial.V_WIDTH
 import com.p4pProject.gameTutorial.ecs.component.*
+import com.p4pProject.gameTutorial.ecs.system.DAMAGE_AREA_HEIGHT
 import ktx.ashley.entity
 import ktx.ashley.get
 import ktx.ashley.with
@@ -29,6 +31,19 @@ class GameScreen(game: MyGameTutorial): GameTutorialScreen(game) {
         with<GraphicComponent>()
         with<PlayerComponent>()
         with<FacingComponent>()
+    }
+
+    private val background = engine.entity{
+        with<TransformComponent>{
+            size.set(
+                V_WIDTH.toFloat(),
+                DAMAGE_AREA_HEIGHT
+            )
+        }
+        with<AnimationComponent>{
+            type = AnimationType.DARK_MATTER
+        }
+        with<GraphicComponent>()
     }
 
 
