@@ -431,6 +431,20 @@ error
   orig: 8, 8
   offset: 0, 0
   index: 0
+fire
+  rotate: false
+  xy: 1561, 106
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 0
+fire
+  rotate: false
+  xy: 1573, 117
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 1
 ship_base
   rotate: false
   xy: 1, 1

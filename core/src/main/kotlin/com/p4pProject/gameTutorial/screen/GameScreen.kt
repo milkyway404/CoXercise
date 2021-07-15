@@ -25,12 +25,24 @@ class GameScreen(game: MyGameTutorial): GameTutorialScreen(game) {
 
     private  val player = engine.entity{
         with<TransformComponent>{
-            setInitialPosition(3f,9f,0f)
+            setInitialPosition(3f,9f,-1f)
         }
         with<MoveComponent>()
         with<GraphicComponent>()
         with<PlayerComponent>()
         with<FacingComponent>()
+    }
+
+    private val fireAnimation = engine.entity {
+        with<TransformComponent>()
+        with<AttachComponent>{
+            entity = player
+            offset.set(1f * UNIT_SCALE, -6f * UNIT_SCALE)
+        }
+        with<GraphicComponent>()
+        with<AnimationComponent> {
+            type = AnimationType.FIRE
+        }
     }
 
     private val background = engine.entity{
