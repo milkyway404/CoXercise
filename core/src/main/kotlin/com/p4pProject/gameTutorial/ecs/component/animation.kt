@@ -17,7 +17,11 @@ enum class AnimationType (
         ){
     NONE(""),
     DARK_MATTER("dark_matter"),
-    FIRE("fire")
+    FIRE("fire"),
+    SPEED_1("orb_blue"),
+    SPEED_2("orb_yellow"),
+    LIFE("life"),
+    SHIELD("shield")
 }
 
 class Animation2D (

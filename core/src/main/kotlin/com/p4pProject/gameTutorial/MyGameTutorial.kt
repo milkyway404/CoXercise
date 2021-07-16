@@ -18,8 +18,8 @@ import ktx.log.logger
 
 private val LOG = logger<MyGameTutorial>()
 const val UNIT_SCALE = 1/16f
-const val V_WIDTH = 16
-const val V_HEIGHT = 9
+const val V_WIDTH = 9
+const val V_HEIGHT = 16
 class MyGameTutorial : KtxGame<GameTutorialScreen>() {
 
     val gameViewport = FitViewport(9f, 16f)
@@ -32,6 +32,7 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
     val engine: Engine by lazy { PooledEngine().apply {
         addSystem(PlayerInputSystem(gameViewport))
         addSystem(MoveSystem())
+        addSystem(PowerUpSystem())
         addSystem(DamageSystem())
         addSystem(
             PlayerAnimationSystem(

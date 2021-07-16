@@ -73,7 +73,7 @@ class AnimationSystem (
                 regions = atlas.findRegions("error")
                 if (regions == null) throw GdxRuntimeException("There is no error region in the atlas")
             }else{
-                LOG.debug{"Adding animation of tyoe $type with ${regions.size} regions"}
+                LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
             }
             animation = Animation2D(type, regions, type.playMode, type.speedRate)
             animationCache[type] = animation
