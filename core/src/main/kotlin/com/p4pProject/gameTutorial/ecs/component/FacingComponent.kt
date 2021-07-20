@@ -6,11 +6,11 @@ import ktx.ashley.mapperFor
 
 class FacingComponent : Component, Pool.Poolable{
 
-    var direction = FacingDirection.DEFAULT
-    var lastDirection = FacingDirection.DEFAULT
+    var direction = FacingDirection.NORTH
+    var lastDirection = FacingDirection.NORTH
 
     override fun reset() {
-        direction = FacingDirection.DEFAULT
+        direction = FacingDirection.NORTH
     }
 
     companion object {
@@ -19,5 +19,5 @@ class FacingComponent : Component, Pool.Poolable{
 }
 
 enum class FacingDirection {
-    LEFT, DEFAULT, RIGHT
+    NORTH, SOUTH, EAST, WEST
 }

@@ -37,8 +37,8 @@ class PlayerAnimationSystem(
 
         facing.lastDirection = facing.direction
         val region = when(facing.direction){
-                FacingDirection.LEFT -> leftRegion
-                FacingDirection.RIGHT -> rightRegion
+                FacingDirection.EAST -> leftRegion
+                FacingDirection.WEST -> rightRegion
                 else -> defaultRegion
         }
 
