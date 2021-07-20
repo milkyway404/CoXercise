@@ -18,7 +18,6 @@ import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.actors.plus
 import ktx.actors.plusAssign
-import ktx.app.KtxScreen
 import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
 import ktx.scene2d.*

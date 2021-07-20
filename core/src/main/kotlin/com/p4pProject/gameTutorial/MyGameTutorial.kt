@@ -29,11 +29,11 @@ import ktx.log.debug
 import ktx.log.logger
 
 private val LOG = logger<MyGameTutorial>()
-const val V_WIDTH_PIXELS = 135
-const val V_HEIGHT_PIXELS = 240
+const val V_WIDTH_PIXELS = 240
+const val V_HEIGHT_PIXELS = 135
 const val UNIT_SCALE = 1/16f
-const val V_WIDTH = 9
-const val V_HEIGHT = 16
+const val V_WIDTH = 16
+const val V_HEIGHT = 9
 class MyGameTutorial : KtxGame<GameTutorialScreen>() {
     val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val uiViewport = FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat());
