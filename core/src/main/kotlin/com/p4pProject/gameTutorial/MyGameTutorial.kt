@@ -3,6 +3,7 @@ package com.p4pProject.gameTutorial
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.p4pProject.gameTutorial.audio.AudioService
 import com.p4pProject.gameTutorial.audio.DefaultAudioService
+import com.p4pProject.gameTutorial.ecs.asset.MusicAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAtlasAsset
 import com.p4pProject.gameTutorial.ecs.system.*
@@ -23,6 +25,7 @@ import ktx.assets.async.AssetStorage
 import ktx.async.KtxAsync
 import ktx.log.debug
 import ktx.log.logger
+import ktx.preferences.set
 
 private val LOG = logger<MyGameTutorial>()
 const val V_WIDTH_PIXELS = 135
@@ -43,6 +46,10 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
 
     val audioService : AudioService by lazy {
         DefaultAudioService(assets)
+    }
+
+    val preferences : Preferences by lazy {
+        Gdx.app.getPreferences("game-tutorial")
     }
 
     val engine: Engine by lazy { PooledEngine().apply {
