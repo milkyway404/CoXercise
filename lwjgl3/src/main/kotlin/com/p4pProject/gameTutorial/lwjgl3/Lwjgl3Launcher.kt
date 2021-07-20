@@ -9,7 +9,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
     fun main() {
         Lwjgl3Application(MyGameTutorial(), Lwjgl3ApplicationConfiguration().apply{
             setTitle("gameTutorial")
-            setWindowedMode(9 * 32, 16 * 32)
+            setWindowedMode(16 * 32, 9*32 )
             setWindowIcon(
                 "libgdx128.png",
                 "libgdx64.png",

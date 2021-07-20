@@ -31,7 +31,7 @@ class GameScreen(
     private fun spawnPlayer (){
         val player = engine.entity{
             with<TransformComponent>{
-                setInitialPosition(3f,9f,-1f)
+                setInitialPosition(9f, 3f,-1f)
                 setSize(18f * UNIT_SCALE, 18f * UNIT_SCALE)
             }
             with<MoveComponent>()
