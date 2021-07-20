@@ -1,10 +1,12 @@
 package com.p4pProject.gameTutorial.ecs.asset
 
 import com.badlogic.gdx.assets.AssetDescriptor
+import com.badlogic.gdx.assets.loaders.ShaderProgramLoader
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 
 enum class TextureAsset(
     fileName:String,
@@ -43,4 +45,21 @@ enum class MusicAsset(
     val descriptor : AssetDescriptor<Music> = AssetDescriptor("$directory/$fileName", Music::class.java)
 ){
     GAME("game.mp3")
+}
+
+enum class ShaderProgramAsset(
+    vertexFileName : String,
+    fragmentFileName: String,
+    directory : String = "shader",
+    val descriptor: AssetDescriptor<ShaderProgram> = AssetDescriptor(
+        "$directory/$vertexFileName/$fragmentFileName",
+        ShaderProgram::class.java,
+        ShaderProgramLoader.ShaderProgramParameter().apply{
+            vertexFile = "$directory/$vertexFileName"
+            fragmentFile = "$directory/$fragmentFileName"
+        }
+    )
+){
+
+    OUTLINE("default.vert", "outline.frag")
 }
