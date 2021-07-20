@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.p4pProject.gameTutorial.audio.AudioService
+import com.p4pProject.gameTutorial.audio.DefaultAudioService
 import com.p4pProject.gameTutorial.ecs.asset.TextureAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAtlasAsset
 import com.p4pProject.gameTutorial.ecs.system.*
@@ -39,13 +41,17 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
         AssetStorage()
     }
 
+    val audioService : AudioService by lazy {
+        DefaultAudioService(assets)
+    }
+
     val engine: Engine by lazy { PooledEngine().apply {
 
         val graphicsAtlas = assets[TextureAtlasAsset.GAME_GRAPHICS.descriptor]
 
         addSystem(PlayerInputSystem(gameViewport))
         addSystem(MoveSystem())
-        addSystem(PowerUpSystem(gameEventManager))
+        addSystem(PowerUpSystem(gameEventManager, audioService))
         addSystem(DamageSystem(gameEventManager))
         addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))
         addSystem(

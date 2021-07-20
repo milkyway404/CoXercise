@@ -2,6 +2,7 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.gdx.graphics.Texture
 import com.p4pProject.gameTutorial.MyGameTutorial
+import com.p4pProject.gameTutorial.ecs.asset.SoundAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAtlasAsset
 import kotlinx.coroutines.joinAll
@@ -17,7 +18,12 @@ class LoadingScreen(game: MyGameTutorial) : GameTutorialScreen(game){
             TextureAsset.values().map {
                 assets.loadAsync(it.descriptor)
             } ,
+
             TextureAtlasAsset.values().map {
+                assets.loadAsync(it.descriptor)
+            } ,
+
+            SoundAsset.values().map {
                 assets.loadAsync(it.descriptor)
             }
         ).flatten()

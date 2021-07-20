@@ -1,21 +1,16 @@
 package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.ashley.core.Engine
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.utils.viewport.FitViewport
 import com.p4pProject.gameTutorial.MyGameTutorial
 import com.p4pProject.gameTutorial.UNIT_SCALE
 import com.p4pProject.gameTutorial.V_WIDTH
+import com.p4pProject.gameTutorial.ecs.asset.MusicAsset
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.ecs.system.DAMAGE_AREA_HEIGHT
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import ktx.ashley.entity
-import ktx.ashley.get
 import ktx.ashley.with
-import ktx.graphics.use
 import ktx.log.debug
 import ktx.log.logger
 import kotlin.math.min
@@ -28,7 +23,6 @@ class GameScreen(
     game: MyGameTutorial,
     private val engine: Engine = game.engine
 ): GameTutorialScreen(game), GameEventListener {
-
 
     private val background = engine.entity{
         with<TransformComponent>{
@@ -73,6 +67,7 @@ class GameScreen(
         LOG.debug{ "Game screen is shown" }
         gameEventManager.addListener(GameEvent.PlayerDeath::class, this)
 
+        audioService.play(MusicAsset.GAME)
         spawnPlayer ()
 
     }
@@ -85,7 +80,7 @@ class GameScreen(
 
     override fun render(delta: Float) {
         engine.update(min(MAX_DELTA_TIME, delta))
-
+        audioService.update()
     }
 
     override fun onEvent(event: GameEvent) {

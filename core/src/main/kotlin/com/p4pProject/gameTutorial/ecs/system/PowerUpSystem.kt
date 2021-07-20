@@ -5,6 +5,8 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.p4pProject.gameTutorial.V_WIDTH
+import com.p4pProject.gameTutorial.audio.AudioService
+import com.p4pProject.gameTutorial.ecs.asset.SoundAsset
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
@@ -33,7 +35,8 @@ private class SpawnPattern(
 )
 
 class PowerUpSystem (
-    private val gameEventManager: GameEventManager
+    private val gameEventManager: GameEventManager,
+    private val audioService: AudioService
         ) : IteratingSystem (
     allOf(PowerUpComponent::class, TransformComponent::class).exclude(RemoveComponent::class).get()){
 
@@ -130,10 +133,9 @@ class PowerUpSystem (
             player[MoveComponent.mapper]?.let { it.speed.y += powerUpType.speedGain }
             player[PlayerComponent.mapper]?.let {
                 it.life = min(it.maxLife, it.life + powerUpType.lifeGain)
-            }
-            player[PlayerComponent.mapper]?.let {
                 it.shield = min(it.maxShield, it.shield + powerUpType.speedGain)
-        }
+            }
+            audioService.play(powerUpType.soundAsset)
         gameEventManager.dispatchEvent(
             GameEvent.CollectPowerUp.apply {
                 this.player = player
