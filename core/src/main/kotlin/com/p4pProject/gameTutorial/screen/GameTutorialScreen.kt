@@ -4,14 +4,17 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.p4pProject.gameTutorial.MyGameTutorial
+import com.p4pProject.gameTutorial.event.GameEventManager
 import ktx.app.KtxScreen
+import ktx.assets.async.AssetStorage
 
 abstract class GameTutorialScreen (
     val game: MyGameTutorial,
-    val batch: Batch = game.batch,
     val gameViewport: Viewport = game.gameViewport,
     val uiViewport: Viewport =game.uiViewport,
-    val engine: Engine = game.engine): KtxScreen{
+    val gameEventManager: GameEventManager = game.gameEventManager,
+    val assets : AssetStorage = game.assets
+): KtxScreen{
 
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width,height, true)
