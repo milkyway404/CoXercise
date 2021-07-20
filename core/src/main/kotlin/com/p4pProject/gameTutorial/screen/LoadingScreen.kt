@@ -13,6 +13,7 @@ import com.p4pProject.gameTutorial.ecs.asset.ShaderProgramAsset
 import com.p4pProject.gameTutorial.ecs.asset.SoundAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAtlasAsset
+import com.p4pProject.gameTutorial.ui.LabelStyles
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.actors.plus
@@ -64,12 +65,12 @@ class LoadingScreen(game: MyGameTutorial) : GameTutorialScreen(game){
         stage.actors {
             table {
                 defaults().fillX().expandX()
-                label("LoadingScreen", "gradient"){
+                label("Loading Screen", LabelStyles.GRADIENT.name){
                     wrap = true
                     setAlignment(Align.center)
                 }
                 row()
-                touchToBeginLabel = label("Touch To Begin","default"){
+                touchToBeginLabel = label("Touch To Begin",LabelStyles.DEFAULT.name){
                     wrap = true
                     setAlignment(Align.center)
                     color.a = 0f
@@ -79,7 +80,7 @@ class LoadingScreen(game: MyGameTutorial) : GameTutorialScreen(game){
                     progressBar = image("life_bar").apply {
                         scaleX = 0f
                     }
-                    label("Loading...", "default"){
+                    label("Loading...", LabelStyles.DEFAULT.name){
                         setAlignment(Align.center)
                     }
                     cell.padLeft(5f).padRight(5f)
@@ -88,6 +89,8 @@ class LoadingScreen(game: MyGameTutorial) : GameTutorialScreen(game){
                 pack()
             }
         }
+        // allows you to see the borders of components on screen
+        stage.isDebugAll = true
     }
 
     override fun render(delta: Float) {
