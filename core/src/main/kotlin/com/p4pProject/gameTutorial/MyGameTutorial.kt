@@ -34,9 +34,12 @@ const val V_HEIGHT_PIXELS = 135
 const val UNIT_SCALE = 1/16f
 const val V_WIDTH = 16
 const val V_HEIGHT = 9
+const val BACKGROUND_V_WIDTH = 1462
+const val BACKGROUND_V_HEIGHT = 822
 class MyGameTutorial : KtxGame<GameTutorialScreen>() {
     val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val uiViewport = FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat());
+    val backgroundViewport = FitViewport(BACKGROUND_V_WIDTH.toFloat(), BACKGROUND_V_HEIGHT.toFloat());
     val stage: Stage by lazy {
         val result = Stage(uiViewport, batch)
         Gdx.input.inputProcessor = result
@@ -79,6 +82,7 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
             batch,
             gameViewport,
             uiViewport,
+            backgroundViewport,
             assets[TextureAsset.BACKGROUND.descriptor],
             gameEventManager,
         assets[ShaderProgramAsset.OUTLINE.descriptor]))

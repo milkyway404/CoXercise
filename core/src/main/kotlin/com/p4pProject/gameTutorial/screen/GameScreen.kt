@@ -31,7 +31,7 @@ class GameScreen(
     private fun spawnPlayer (){
         val player = engine.entity{
             with<TransformComponent>{
-                setInitialPosition(9f, 3f,-1f)
+                setInitialPosition(9f,3f,-1f)
                 setSize(18f * UNIT_SCALE, 18f * UNIT_SCALE)
             }
             with<MoveComponent>()
@@ -62,16 +62,10 @@ class GameScreen(
         spawnPlayer ()
 
         val background = engine.entity{
-            with<TransformComponent>{
-                size.set(
-                    V_WIDTH.toFloat(),
-                    DAMAGE_AREA_HEIGHT
-                )
+            with<TransformComponent>()
+            with<GraphicComponent> {
+                isBackground()
             }
-            with<AnimationComponent>{
-                type = AnimationType.DARK_MATTER
-            }
-            with<GraphicComponent>()
         }
 
     }

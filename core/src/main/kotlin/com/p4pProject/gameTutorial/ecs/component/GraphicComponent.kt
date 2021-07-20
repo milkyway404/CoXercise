@@ -10,6 +10,7 @@ import ktx.ashley.mapperFor
 
 class GraphicComponent: Component, Pool.Poolable {
     val sprite = Sprite()
+    var isBackground = false
 
     override fun reset() {
         sprite.texture = null
@@ -22,6 +23,10 @@ class GraphicComponent: Component, Pool.Poolable {
             setSize(texture.width * UNIT_SCALE, texture.height * UNIT_SCALE)
             setOriginCenter()
         }
+    }
+
+    fun isBackground(){
+        isBackground = true
     }
 
     companion object{

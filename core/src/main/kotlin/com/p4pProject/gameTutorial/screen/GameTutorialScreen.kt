@@ -15,6 +15,7 @@ abstract class GameTutorialScreen (
     val game: MyGameTutorial,
     val gameViewport: Viewport = game.gameViewport,
     val uiViewport: Viewport =game.uiViewport,
+    val backgroundViewport: Viewport = game.backgroundViewport,
     val gameEventManager: GameEventManager = game.gameEventManager,
     val assets : AssetStorage = game.assets,
     val audioService: AudioService = game.audioService,
@@ -25,5 +26,6 @@ abstract class GameTutorialScreen (
     override fun resize(width: Int, height: Int) {
         gameViewport.update(width,height, true)
         uiViewport.update(width,height, true)
+        backgroundViewport.update(width, height, true)
     }
 }

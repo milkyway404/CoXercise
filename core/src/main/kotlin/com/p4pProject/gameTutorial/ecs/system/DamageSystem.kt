@@ -13,19 +13,23 @@ import ktx.ashley.exclude
 import ktx.ashley.get
 import kotlin.math.max
 
-public const val DAMAGE_AREA_HEIGHT = 2f
+
+// DO NOT LEAVE LIKE THIS
+public const val DAMAGE_AREA_HEIGHT = 0f
 private const val DAMAGE_PER_SECOND = 25f
 private const val DEATH_EXPLOSION_DURATION = 0.9f
 
 class DamageSystem (
     private val gameEventManager: GameEventManager
         ) : IteratingSystem(allOf(PlayerComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
+        // This needs to be rewritten
         if(transform.position.y <= DAMAGE_AREA_HEIGHT){
             var damage = DAMAGE_PER_SECOND * deltaTime
             if(player.shield> 0f){

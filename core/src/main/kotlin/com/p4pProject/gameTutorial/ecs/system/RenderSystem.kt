@@ -27,6 +27,7 @@ class RenderSystem(
     private val batch: Batch,
     private val gameViewport: Viewport,
     private val uiViewport: Viewport,
+    private val backgroundViewport: Viewport,
     backgroundTexture: Texture,
     private val gameEventManager: GameEventManager,
     private val outlineShader: ShaderProgram
@@ -58,13 +59,9 @@ class RenderSystem(
         gameEventManager.removeListener(GameEvent.CollectPowerUp::class, this)
     }
     override fun update(deltaTime: Float) {
-        uiViewport.apply()
-        batch.use(uiViewport.camera.combined) {
-            background.run {
-                backgroundScrollSpeed.y = min(-0.25f, backgroundScrollSpeed.y + deltaTime * (1f/10f))
-                scroll(backgroundScrollSpeed.x * deltaTime, backgroundScrollSpeed.y * deltaTime)
-                draw(batch)
-            }
+        backgroundViewport.apply()
+        batch.use(backgroundViewport.camera.combined) {
+            background.draw(batch)
         }
 
         forceSort()
@@ -82,8 +79,6 @@ class RenderSystem(
             it.shader = outlineShader
             playerEntities.forEach{ entity ->
                 renderPlayerOutlines(entity, it)
-
-
             }
 
             it.shader = null
@@ -114,8 +109,12 @@ class RenderSystem(
         val graphic = entity[GraphicComponent.mapper]
         require(graphic != null){"Entity |entity| must have a GraphicComponent. entity=$entity"}
 
-        if(graphic.sprite.texture == null){
-            LOG.error{"Entity has no texutre for rendering. entity=$entity"}
+        if(graphic.isBackground){
+            return
+        }
+
+        if(graphic.sprite.texture == null && !graphic.isBackground){
+            LOG.error{"Entity has no texture for rendering. entity=$entity"}
             return
         }
 
