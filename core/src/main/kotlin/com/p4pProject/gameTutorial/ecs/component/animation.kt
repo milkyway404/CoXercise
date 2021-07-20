@@ -21,7 +21,11 @@ enum class AnimationType (
     SPEED_1("orb_blue"),
     SPEED_2("orb_yellow"),
     LIFE("life"),
-    SHIELD("shield")
+    SHIELD("shield"),
+    PLAYER_UP("WarriorUpIdle"),
+    PLAYER_DOWN("WarriorDownIdle"),
+    PLAYER_LEFT("WarriorLeftIdle"),
+    PLAYER_RIGHT("WarriorRightIdle"),
 }
 
 class Animation2D (
@@ -42,5 +46,27 @@ class AnimationComponent : Component, Pool.Poolable {
 
     companion object {
         val mapper = mapperFor<AnimationComponent>()
+    }
+}
+
+class PlayerAnimationComponent : Component, Pool.Poolable {
+    var typeUp = AnimationType.PLAYER_UP
+    var typeDown = AnimationType.PLAYER_DOWN
+    var typeLeft = AnimationType.PLAYER_LEFT
+    var typeRight = AnimationType.PLAYER_RIGHT
+    var stateTime = 0f
+
+    lateinit var animation : Animation2D
+
+
+    override fun reset() {
+         typeUp = AnimationType.NONE
+         typeDown = AnimationType.NONE
+         typeLeft = AnimationType.NONE
+         typeRight = AnimationType.NONE
+    }
+
+    companion object {
+        val mapper = mapperFor<PlayerAnimationComponent>()
     }
 }

@@ -63,6 +63,7 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
     val engine: Engine by lazy { PooledEngine().apply {
 
         val graphicsAtlas = assets[TextureAtlasAsset.GAME_GRAPHICS.descriptor]
+        val playerGraphicAtlas = assets[TextureAtlasAsset.PLAYER_GRAPHICS.descriptor]
 
         addSystem(PlayerInputSystem(gameViewport))
         addSystem(MoveSystem())
@@ -71,9 +72,7 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
         addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))
         addSystem(
             PlayerAnimationSystem(
-                graphicsAtlas.findRegion("ship_base"),
-                graphicsAtlas.findRegion("ship_left"),
-                graphicsAtlas.findRegion("ship_right")
+                playerGraphicAtlas
             )
         )
         addSystem(AttachSystem())

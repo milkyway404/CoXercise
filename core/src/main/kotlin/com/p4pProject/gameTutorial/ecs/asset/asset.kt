@@ -27,6 +27,7 @@ enum class TextureAtlasAsset(
 ){
     // Animated assets
     GAME_GRAPHICS(false ,"graphics.atlas"),
+    PLAYER_GRAPHICS(false ,"warrior.atlas"),
     UI(true ,"ui.atlas")
 }
 

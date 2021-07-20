@@ -11,10 +11,12 @@ import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.TransformComponent
 import ktx.ashley.allOf
 import ktx.ashley.get
+import ktx.log.debug
+import ktx.log.logger
 import kotlin.math.roundToInt
 
 private const val TOUCH_TOLERANCE_DISTANCE = 0.3f
-
+private val LOG = logger<PlayerInputSystem>()
 class PlayerInputSystem(
     private val gameViewport: Viewport
     ) : IteratingSystem(allOf(PlayerComponent::class, TransformComponent::class, FacingComponent::class).get()) {
