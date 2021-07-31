@@ -13,39 +13,32 @@ WarriorDownIdle
   index: 0
 WarriorDownIdle
   rotate: false
-  xy: 1, 1
+  xy: 601, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 WarriorDownIdle
   rotate: false
-  xy: 251, 1
+  xy: 201, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 WarriorDownIdle
   rotate: false
-  xy: 451, 1
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 4
-WarriorDownIdle
-  rotate: false
-  xy: 451, 1
+  xy: 201, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 WarriorDownIdle
   rotate: false
-  xy: 101, 1
+  xy: 401, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
-  index: 5
+  index: 4
 WarriorLeftIdle
   rotate: false
   xy: 51, 1
@@ -62,21 +55,21 @@ WarriorLeftIdle
   index: 1
 WarriorLeftIdle
   rotate: false
-  xy: 301, 1
+  xy: 251, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 WarriorLeftIdle
   rotate: false
-  xy: 301, 1
+  xy: 251, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 WarriorLeftIdle
   rotate: false
-  xy: 551, 1
+  xy: 501, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -90,56 +83,56 @@ WarriorRightIdle
   index: 0
 WarriorRightIdle
   rotate: false
-  xy: 351, 1
+  xy: 301, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 WarriorRightIdle
   rotate: false
-  xy: 601, 1
+  xy: 551, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 WarriorRightIdle
   rotate: false
-  xy: 601, 1
+  xy: 551, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 WarriorRightIdle
   rotate: false
-  xy: 201, 1
+  xy: 151, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 4
 WarriorUpIdle
   rotate: false
-  xy: 501, 1
+  xy: 451, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 0
 WarriorUpIdle
   rotate: false
-  xy: 151, 1
+  xy: 101, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 WarriorUpIdle
   rotate: false
-  xy: 401, 1
+  xy: 351, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 WarriorUpIdle
   rotate: false
-  xy: 401, 1
+  xy: 351, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
