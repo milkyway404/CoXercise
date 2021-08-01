@@ -53,7 +53,7 @@ class MoveSystem : IteratingSystem (allOf(TransformComponent::class, MoveCompone
         require(move != null ){"Entity |entity| must have a MoveComponent. entity=$entity"}
 
         val player = entity[PlayerComponent.mapper]
-        if(player != null) {
+        if(player != null && !player.isAttacking) {
             val magnitude = sqrt((Gdx.input.accelerometerX.pow(2) + Gdx.input.accelerometerY.pow(2)
                     + Gdx.input.accelerometerZ.pow(2)).toDouble())
             val magnitudeDelta = magnitude - magnitudePrevious

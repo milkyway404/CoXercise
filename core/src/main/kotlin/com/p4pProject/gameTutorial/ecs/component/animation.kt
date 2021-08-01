@@ -13,6 +13,7 @@ private const val DEFAULT_FRAME_DURATION = 1/20f
 enum class AnimationType (
     val atlasKey: String,
     val playMode: Animation.PlayMode = Animation.PlayMode.LOOP,
+    val attackPlayMode : Animation.PlayMode = Animation.PlayMode.NORMAL,
     val speedRate: Float = 1f
         ){
     NONE(""),
@@ -26,6 +27,10 @@ enum class AnimationType (
     PLAYER_DOWN("WarriorDownIdle"),
     PLAYER_LEFT("WarriorLeftIdle"),
     PLAYER_RIGHT("WarriorRightIdle"),
+    ATTACK_RIGHT("WarriorRightAttack"),
+    ATTACK_LEFT("WarriorLeftAttack"),
+    ATTACK_UP("WarriorUpAttack"),
+    ATTACK_DOWN("WarriorDownAttack")
 }
 
 class Animation2D (
@@ -54,6 +59,10 @@ class PlayerAnimationComponent : Component, Pool.Poolable {
     var typeDown = AnimationType.PLAYER_DOWN
     var typeLeft = AnimationType.PLAYER_LEFT
     var typeRight = AnimationType.PLAYER_RIGHT
+    var typeAttackRight = AnimationType.ATTACK_RIGHT
+    var typeAttackLeft = AnimationType.ATTACK_LEFT
+    var typeAttackUp = AnimationType.ATTACK_UP
+    var typeAttackDown = AnimationType.ATTACK_DOWN
     var stateTime = 0f
 
     lateinit var animation : Animation2D
@@ -64,6 +73,10 @@ class PlayerAnimationComponent : Component, Pool.Poolable {
          typeDown = AnimationType.NONE
          typeLeft = AnimationType.NONE
          typeRight = AnimationType.NONE
+        typeAttackRight = AnimationType.NONE
+        typeAttackLeft = AnimationType.NONE
+        typeAttackUp = AnimationType.NONE
+        typeAttackDown = AnimationType.NONE
     }
 
     companion object {

@@ -1,14 +1,15 @@
 package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.ashley.core.Engine
-import com.p4pProject.gameTutorial.MyGameTutorial
-import com.p4pProject.gameTutorial.UNIT_SCALE
-import com.p4pProject.gameTutorial.V_WIDTH
+import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.Game
+import com.p4pProject.gameTutorial.*
 import com.p4pProject.gameTutorial.ecs.asset.MusicAsset
 import com.p4pProject.gameTutorial.ecs.component.*
-import com.p4pProject.gameTutorial.ecs.system.DAMAGE_AREA_HEIGHT
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
+import com.p4pProject.gameTutorial.ui.SkinImageButton
+import ktx.actors.onClick
 import ktx.ashley.entity
 import ktx.ashley.with
 import ktx.log.debug
@@ -16,6 +17,7 @@ import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
+import ktx.scene2d.*
 import kotlin.math.min
 
 
@@ -27,9 +29,10 @@ class GameScreen(
     private val engine: Engine = game.engine
 ): GameTutorialScreen(game), GameEventListener {
 
+    private lateinit var playerr : Entity
 
     private fun spawnPlayer (){
-        val player = engine.entity{
+         playerr = engine.entity{
             with<TransformComponent>{
                 setInitialPosition(9f,3f,-1f)
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
@@ -41,7 +44,9 @@ class GameScreen(
             with<FacingComponent>()
         }
 
-        engine.entity {
+
+        // The added fire
+        /*engine.entity {
             with<TransformComponent>()
             with<AttachComponent> {
                 entity = player
@@ -51,7 +56,7 @@ class GameScreen(
             with<AnimationComponent> {
                 type = AnimationType.FIRE
             }
-        }
+        }*/
     }
 
     override fun show() {
@@ -68,7 +73,7 @@ class GameScreen(
                 isBackground()
             }
         }
-
+        setupUI()
     }
 
     override fun hide() {
@@ -80,6 +85,36 @@ class GameScreen(
     override fun render(delta: Float) {
         engine.update(min(MAX_DELTA_TIME, delta))
         audioService.update()
+        stage.run {
+            viewport.apply()
+            act()
+            draw()
+        }
+    }
+
+    private fun setupUI() {
+        stage.actors {
+            table {
+                right().bottom()
+                pad(5f)
+                imageButton(SkinImageButton.PAUSE_PLAY.name) {
+                    x = 50f
+                    y = 50f
+                    color.a = 1.0f
+
+                    onClick {
+                        gameEventManager.dispatchEvent(GameEvent.PlayerAttack.apply {
+                            this.damage = 50f
+                            this.player = playerr
+                        })
+                    }
+                }
+                setFillParent(true)
+                pack()
+            }
+        }
+        // allows you to see the borders of components on screen
+        stage.isDebugAll = true
     }
 
     override fun onEvent(event: GameEvent) {
@@ -91,7 +126,6 @@ class GameScreen(
                 }
                 spawnPlayer()
             }
-            GameEvent.CollectPowerUp -> TODO()
         }
     }
 }

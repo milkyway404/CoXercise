@@ -14,6 +14,7 @@ class PlayerComponent : Component, Pool.Poolable {
     var shield = 0f
     var maxShield = MAX_SHIElD
     var distance = 0f
+    var isAttacking = false
 
     override fun reset() {
          life = MAX_LIFE
@@ -21,6 +22,7 @@ class PlayerComponent : Component, Pool.Poolable {
          shield = 0f
          maxShield = MAX_SHIElD
          distance = 0f
+        isAttacking = false
     }
 
     companion object{

@@ -28,6 +28,13 @@ sealed class GameEvent{
 
         override fun toString() = "PlayerHit(player = $player, life=$life, maxLife=$maxLife)"
     }
+
+    object PlayerAttack : GameEvent (){
+        lateinit var player : Entity
+        var damage = 0f
+
+        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+    }
 }
 
 interface GameEventListener {

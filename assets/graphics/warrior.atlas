@@ -1,9 +1,51 @@
 
 warrior.png
-size: 1024, 64
+size: 2048, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+WarriorDownAttack
+  rotate: false
+  xy: 1201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+WarriorDownAttack
+  rotate: false
+  xy: 1201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+WarriorDownAttack
+  rotate: false
+  xy: 451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+WarriorDownAttack
+  rotate: false
+  xy: 1501, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+WarriorDownAttack
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+WarriorDownAttack
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
 WarriorDownIdle
   rotate: false
   xy: 1, 1
@@ -13,82 +55,145 @@ WarriorDownIdle
   index: 0
 WarriorDownIdle
   rotate: false
-  xy: 601, 1
+  xy: 1151, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
-WarriorDownIdle
-  rotate: false
-  xy: 201, 1
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 2
-WarriorDownIdle
-  rotate: false
-  xy: 201, 1
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 3
 WarriorDownIdle
   rotate: false
   xy: 401, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
+  index: 2
+WarriorDownIdle
+  rotate: false
+  xy: 401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+WarriorDownIdle
+  rotate: false
+  xy: 901, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
   index: 4
-WarriorLeftIdle
+WarriorLeftAttack
+  rotate: false
+  xy: 801, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+WarriorLeftAttack
+  rotate: false
+  xy: 801, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+WarriorLeftAttack
   rotate: false
   xy: 51, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
-  index: 0
-WarriorLeftIdle
-  rotate: false
-  xy: 651, 1
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
   index: 1
-WarriorLeftIdle
+WarriorLeftAttack
   rotate: false
-  xy: 251, 1
+  xy: 1251, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
-WarriorLeftIdle
+WarriorLeftAttack
   rotate: false
-  xy: 251, 1
+  xy: 501, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
-WarriorLeftIdle
+WarriorLeftAttack
   rotate: false
   xy: 501, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 4
-WarriorRightIdle
+WarriorLeftIdle
   rotate: false
-  xy: 701, 1
+  xy: 201, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 0
-WarriorRightIdle
+WarriorLeftIdle
   rotate: false
-  xy: 301, 1
+  xy: 1401, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
-WarriorRightIdle
+WarriorLeftIdle
+  rotate: false
+  xy: 651, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+WarriorLeftIdle
+  rotate: false
+  xy: 651, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+WarriorLeftIdle
+  rotate: false
+  xy: 1051, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+WarriorRightAttack
+  rotate: false
+  xy: 1451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+WarriorRightAttack
+  rotate: false
+  xy: 1451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+WarriorRightAttack
+  rotate: false
+  xy: 951, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+WarriorRightAttack
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+WarriorRightAttack
+  rotate: false
+  xy: 551, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+WarriorRightAttack
   rotate: false
   xy: 551, 1
   size: 48, 48
@@ -97,49 +202,112 @@ WarriorRightIdle
   index: 3
 WarriorRightIdle
   rotate: false
-  xy: 551, 1
+  xy: 1351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+WarriorRightIdle
+  rotate: false
+  xy: 751, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+WarriorRightIdle
+  rotate: false
+  xy: 1101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+WarriorRightIdle
+  rotate: false
+  xy: 1101, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 WarriorRightIdle
   rotate: false
+  xy: 351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+WarriorUpAttack
+  rotate: false
+  xy: 851, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+WarriorUpAttack
+  rotate: false
+  xy: 851, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+WarriorUpAttack
+  rotate: false
   xy: 151, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+WarriorUpAttack
+  rotate: false
+  xy: 1301, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+WarriorUpAttack
+  rotate: false
+  xy: 601, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+WarriorUpAttack
+  rotate: false
+  xy: 601, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 4
 WarriorUpIdle
   rotate: false
-  xy: 451, 1
+  xy: 1001, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 0
 WarriorUpIdle
   rotate: false
-  xy: 101, 1
+  xy: 301, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 WarriorUpIdle
   rotate: false
-  xy: 351, 1
+  xy: 701, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 WarriorUpIdle
   rotate: false
-  xy: 351, 1
+  xy: 701, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 WarriorUpIdle
   rotate: false
-  xy: 751, 1
+  xy: 1551, 1
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
