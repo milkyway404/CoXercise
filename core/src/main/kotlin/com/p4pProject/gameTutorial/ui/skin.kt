@@ -13,7 +13,7 @@ enum class SkinLabel {
 }
 
 enum class SkinImageButton {
-    PAUSE_PLAY, QUIT, SOUND_ON_OFF
+    PAUSE_PLAY, QUIT, SOUND_ON_OFF, WARRIOR_ATTACK
 }
 
 enum class SkinTextButton {
@@ -33,6 +33,7 @@ enum class SkinImage(val atlasKey: String) {
     WARNING("warning"),
     LIFE_BAR("life_bar"),
     SHIELD_BAR("shield_bar"),
+    WARRIOR_ATTACK("warriorAttack"),
     PLAY("play"),
     PAUSE("pause"),
     QUIT("quit"),
@@ -105,6 +106,12 @@ private fun Skin.createTextButtonStyles(
 
 // Use this to create new buttons
 private fun Skin.createImageButtonStyles(skin: Skin) {
+
+    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+        imageUp = skin.getDrawable(SkinImage.WARRIOR_ATTACK.atlasKey)
+        imageDown = imageUp
+    }
+
     imageButton(SkinImageButton.PAUSE_PLAY.name) {
         imageUp = skin.getDrawable(SkinImage.PAUSE.atlasKey)
         imageChecked = skin.getDrawable(SkinImage.PLAY.atlasKey)

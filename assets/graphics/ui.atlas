@@ -20,7 +20,7 @@ font8
   index: -1
 frame
   rotate: false
-  xy: 23, 9
+  xy: 131, 198
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -28,7 +28,7 @@ frame
   index: -1
 frame_transparent
   rotate: false
-  xy: 131, 220
+  xy: 25, 9
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -43,7 +43,7 @@ game_hud
   index: -1
 label_frame
   rotate: false
-  xy: 1, 9
+  xy: 131, 220
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -51,7 +51,7 @@ label_frame
   index: -1
 label_frame_transparent
   rotate: false
-  xy: 131, 198
+  xy: 153, 220
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -68,28 +68,28 @@ life_bar
   index: -1
 no_sound
   rotate: false
-  xy: 131, 187
+  xy: 153, 209
   size: 11, 9
   orig: 11, 9
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 45, 11
+  xy: 138, 189
   size: 6, 7
   orig: 6, 7
   offset: 0, 0
   index: -1
 play
   rotate: false
-  xy: 153, 207
+  xy: 131, 163
   size: 5, 9
   orig: 5, 9
   offset: 0, 0
   index: -1
 quit
   rotate: false
-  xy: 160, 232
+  xy: 175, 232
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -103,7 +103,7 @@ scroll_knob
   index: -1
 scroll_v
   rotate: false
-  xy: 153, 218
+  xy: 131, 174
   size: 5, 22
   split: 0, 0, 8, 9
   orig: 5, 22
@@ -120,7 +120,7 @@ shield_bar
   index: -1
 sound
   rotate: false
-  xy: 45, 20
+  xy: 47, 20
   size: 11, 9
   orig: 11, 9
   offset: 0, 0
@@ -130,5 +130,12 @@ warning
   xy: 131, 242
   size: 62, 7
   orig: 62, 7
+  offset: 0, 0
+  index: -1
+warriorAttack
+  rotate: false
+  xy: 1, 9
+  size: 22, 20
+  orig: 22, 20
   offset: 0, 0
   index: -1

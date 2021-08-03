@@ -97,11 +97,8 @@ class GameScreen(
             table {
                 right().bottom()
                 pad(5f)
-                imageButton(SkinImageButton.PAUSE_PLAY.name) {
-                    x = 50f
-                    y = 50f
+                imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
                     color.a = 1.0f
-
                     onClick {
                         gameEventManager.dispatchEvent(GameEvent.PlayerAttack.apply {
                             this.damage = 50f
