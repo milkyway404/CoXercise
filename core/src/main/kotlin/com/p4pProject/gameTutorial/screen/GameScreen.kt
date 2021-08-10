@@ -116,13 +116,13 @@ class GameScreen(
 
         // TODO implement actual boss logic
         gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
-            this.damage = 20
+            this.damage = 1
             this.startX = 0
-            this.endX = 100
+            this.endX = 5
             this.startY = 0
-            this.endY = 100
+            this.endY = 5
             this.startTime = LocalDateTime.now()
-            this.duration = 20
+            this.duration = 2000
         })
     }
 
