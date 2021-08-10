@@ -18,6 +18,7 @@ import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.*
+import java.time.LocalDateTime
 import kotlin.math.min
 
 
@@ -112,6 +113,17 @@ class GameScreen(
         }
         // allows you to see the borders of components on screen
         stage.isDebugAll = true
+
+        // TODO implement actual boss logic
+        gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
+            this.damage = 20
+            this.startX = 0
+            this.endX = 100
+            this.startY = 0
+            this.endY = 100
+            this.startTime = LocalDateTime.now()
+            this.duration = 20
+        })
     }
 
     override fun onEvent(event: GameEvent) {

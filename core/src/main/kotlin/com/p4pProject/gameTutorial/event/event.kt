@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.ObjectMap
 import com.p4pProject.gameTutorial.ecs.component.PowerUpType
 import ktx.collections.GdxSet
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -34,6 +35,20 @@ sealed class GameEvent{
         var damage = 0f
 
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+    }
+
+    object BossAttack: GameEvent () {
+        var damage = 0
+        var startX = 0
+        var endX = 0
+        var startY = 0
+        var endY = 0
+        var startTime: LocalDateTime = LocalDateTime.now()
+        var duration = 0L
+
+        override fun toString() = "BossAttack(damage=$damage, startX=$startX, " +
+                "endX=$endX, startY=$startY, endY=$endY, startTime=$startTime," +
+                "duration=$duration)"
     }
 }
 
