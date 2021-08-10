@@ -132,8 +132,8 @@ class PowerUpSystem (
 
             player[MoveComponent.mapper]?.let { it.speed.y += powerUpType.speedGain }
             player[PlayerComponent.mapper]?.let {
-                it.life = min(it.maxLife, it.life + powerUpType.lifeGain)
-                it.shield = min(it.maxShield, it.shield + powerUpType.speedGain)
+                it.hp = min(it.maxHp, it.hp + powerUpType.lifeGain)
+                //it.shield = min(it.maxShield, it.shield + powerUpType.speedGain)
             }
             audioService.play(powerUpType.soundAsset)
         gameEventManager.dispatchEvent(

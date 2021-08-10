@@ -7,7 +7,7 @@ import ktx.ashley.mapperFor
 
 enum class PowerUpType (
     val animationType: AnimationType,
-    val lifeGain:Float = 0f,
+    val lifeGain: Int = 0,
     val shieldGain:Float = 0f,
     val speedGain:Float = 0f,
     val soundAsset: SoundAsset
@@ -15,7 +15,7 @@ enum class PowerUpType (
     NONE(AnimationType.NONE, soundAsset = SoundAsset.BLOCK),
     SPEED_1(AnimationType.SPEED_1, speedGain = 3f, soundAsset = SoundAsset.BOOST_1),
     SPEED_2(AnimationType.SPEED_2, speedGain = 3.75f, soundAsset = SoundAsset.BOOST_2),
-    LIFE(AnimationType.LIFE, lifeGain = 25f, soundAsset = SoundAsset.LIFE),
+    LIFE(AnimationType.LIFE, lifeGain = 25, soundAsset = SoundAsset.LIFE),
     SHIELD(AnimationType.SHIELD, shieldGain = 25f, soundAsset = SoundAsset.SHIELD)
 }
 

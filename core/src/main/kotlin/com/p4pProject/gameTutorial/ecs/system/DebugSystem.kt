@@ -31,16 +31,16 @@ class DebugSystem : IntervalIteratingSystem(allOf(PlayerComponent::class).get(),
         when{
             Gdx.input.isKeyJustPressed(Input.Keys.NUM_1) -> {
                 transform.position.y = 1f
-                player.life = 1f
-                player.shield = 0f
+                player.hp = 100
+                //player.shield = 0f
             }
 
             Gdx.input.isKeyJustPressed(Input.Keys.NUM_2) -> {
-                player.shield = kotlin.math.min(player.maxShield, player.shield + 25f)
+                //player.shield = kotlin.math.min(player.maxShield, player.shield + 25f)
             }
 
             Gdx.input.isKeyJustPressed(Input.Keys.NUM_3) -> {
-                player.shield = 0f
+                //player.shield = 0f
             }
 
             Gdx.input.isKeyJustPressed(Input.Keys.NUM_4) -> {
@@ -52,6 +52,6 @@ class DebugSystem : IntervalIteratingSystem(allOf(PlayerComponent::class).get(),
             }
         }
 
-        Gdx.graphics.setTitle("CoEx Debug - pos:${transform.position}, life:${player.life}, shield:${player.shield}")
+        Gdx.graphics.setTitle("CoEx Debug - pos:${transform.position}, hp:${player.hp}")
     }
 }

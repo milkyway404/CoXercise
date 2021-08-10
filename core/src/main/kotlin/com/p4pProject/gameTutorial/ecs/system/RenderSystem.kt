@@ -89,17 +89,17 @@ class RenderSystem(
         val player = entity[PlayerComponent.mapper]
         require(player != null){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-        if(player.shield > 0f){
-            outlineColor.a = MathUtils.clamp(player.shield/player.maxShield, 0f, 1f)
-
-            outlineShader.setUniformf(outlineColorLoc, outlineColor)
-            entity[GraphicComponent.mapper]?.let { graphic ->
-                graphic.sprite.run {
-                    outlineShader.setUniformf(textureSizeLocation, texture.width.toFloat(), texture.height.toFloat())
-                    draw(batch)
-                }
-            }
-        }
+//        if(player.shield > 0f){
+//            outlineColor.a = MathUtils.clamp(player.shield/player.maxShield, 0f, 1f)
+//
+//            outlineShader.setUniformf(outlineColorLoc, outlineColor)
+//            entity[GraphicComponent.mapper]?.let { graphic ->
+//                graphic.sprite.run {
+//                    outlineShader.setUniformf(textureSizeLocation, texture.width.toFloat(), texture.height.toFloat())
+//                    draw(batch)
+//                }
+//            }
+//        }
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

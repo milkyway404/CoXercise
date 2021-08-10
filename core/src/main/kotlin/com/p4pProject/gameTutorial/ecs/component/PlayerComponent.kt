@@ -9,17 +9,17 @@ const val MAX_HP = 100
 
 class PlayerComponent : Component, Pool.Poolable {
 
-    var life = MAX_HP
-    var maxLife = MAX_HP
-    var shield = 0f
+    var hp = MAX_HP
+    var maxHp = MAX_HP
+    //var shield = 0f
     //var maxShield = MAX_SHIElD
     var distance = 0f
     var isAttacking = false
 
     override fun reset() {
-         life = MAX_HP
-         maxLife = MAX_HP
-         shield = 0f
+         hp = MAX_HP
+         maxHp = MAX_HP
+         //shield = 0f
          //maxShield = MAX_SHIElD
          distance = 0f
         isAttacking = false

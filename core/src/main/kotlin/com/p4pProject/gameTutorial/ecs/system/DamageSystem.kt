@@ -42,34 +42,31 @@ class DamageSystem (
 
         removeExpiredBossAttacks();
 
-        // This needs to be rewritten
-        if(transform.position.y <= DAMAGE_AREA_HEIGHT){
-            var damage = DAMAGE_PER_SECOND * deltaTime
-            if(player.shield> 0f){
-                val blockAmount = player.shield
-                player.shield = max(0f, player.shield - damage)
-                damage -= blockAmount
+        for (bossAttack in bossAttackAreas) {
+            if (transform.position.x >= bossAttack.startX &&
+                    transform.position.x <= bossAttack.endX &&
+                    transform.position.y >= bossAttack.startY &&
+                    transform.position.y <= bossAttack.endY) {
+                //ouch
+                player.hp -= bossAttack.damage
 
-                if(damage <= 0f){
-                    // all damage is blocked
-                    return
-                }
-            }
-
-            player.life -= damage
-            gameEventManager.dispatchEvent(GameEvent.PlayerHit.apply {
-                this.player = entity
-                life = player.life
-                maxLife = player.maxLife
-            })
-            if(player.life <= 0f){
-                gameEventManager.dispatchEvent(GameEvent.PlayerDeath.apply {
-                    this.distance = player.distance
+                gameEventManager.dispatchEvent(GameEvent.PlayerHit.apply {
+                    this.player = entity
+                    hp = player.hp
+                    maxHp = player.maxHp
                 })
-                entity.addComponent<RemoveComponent>(engine){
-                    delay = DEATH_EXPLOSION_DURATION
+
+                if(player.hp <= 0f){
+                    gameEventManager.dispatchEvent(GameEvent.PlayerDeath.apply {
+                        this.distance = player.distance
+                    })
+                    entity.addComponent<RemoveComponent>(engine){
+                        delay = DEATH_EXPLOSION_DURATION
+                    }
                 }
             }
+
+
         }
     }
 
@@ -87,8 +84,9 @@ class DamageSystem (
         // boss is attacking lol
         when (event) {
             is GameEvent.BossAttack -> {
-                bossAttackAreas.add(BossAttackArea(event.startX, event.endX,
-                    event.startY, event.endY, event.startTime, event.duration))
+                bossAttackAreas.add(BossAttackArea(event.damage, event.startX,
+                    event.endX, event.startY, event.endY, event.startTime,
+                    event.duration))
             }
         }
     }
@@ -101,7 +99,6 @@ class DamageSystem (
         }
     }
 
-    private class BossAttackArea(val startX: Int, val endX: Int, val startY: Int, val endY: Int,
-        val startTime: LocalDateTime, val duration: Long) {
-    }
+    private class BossAttackArea(val damage: Int, val startX: Int, val endX: Int, val startY: Int,
+                                 val endY: Int, val startTime: LocalDateTime, val duration: Long)
 }
