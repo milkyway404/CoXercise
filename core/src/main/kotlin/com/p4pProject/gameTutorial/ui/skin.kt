@@ -57,6 +57,13 @@ fun createSkin(assets: AssetStorage) {
         createTextButtonStyles(defaultFont, skin)
         createWindowStyles(skin, defaultFont)
         createScrollPaneStyles(skin)
+        createHpBarStyles(skin)
+    }
+}
+
+private fun Skin.createHpBarStyles(skin: Skin) {
+    imageButton(SkinImage.LIFE_BAR.name) {
+        over = skin.getDrawable(SkinImage.LIFE_BAR.atlasKey)
     }
 }
 
