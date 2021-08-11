@@ -70,6 +70,7 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
         addSystem(MoveSystem())
         addSystem(PowerUpSystem(gameEventManager, audioService))
         addSystem(DamageSystem(gameEventManager))
+        addSystem(PlayerDamageSystem(gameEventManager))
         addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))
         addSystem(
             PlayerAnimationSystem(

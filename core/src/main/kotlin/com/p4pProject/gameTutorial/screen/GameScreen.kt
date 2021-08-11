@@ -72,7 +72,7 @@ class GameScreen(
             with<BossAnimationComponent>()
             //with<MoveComponent>()
             with<GraphicComponent>()
-            with<PlayerComponent>()
+            with<BossComponent>()
             with<FacingComponent>()
         }
     }
@@ -119,10 +119,10 @@ class GameScreen(
                 imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
                     color.a = 1.0f
                     onClick {
-                        gameEventManager.dispatchEvent(GameEvent.PlayerAttack.apply {
-                            this.damage = 50f
+                       gameEventManager.dispatchEvent(GameEvent.PlayerAttack.apply {
+                            this.damage = 0
                             this.player = playerr
-                        })
+                       })
                     }
                 }
                 image(SkinImage.LIFE_BAR.atlasKey) {

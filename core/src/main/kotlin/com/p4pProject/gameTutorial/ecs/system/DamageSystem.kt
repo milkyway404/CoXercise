@@ -3,6 +3,7 @@ package com.p4pProject.gameTutorial.ecs.system
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Game
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.RemoveComponent
 import com.p4pProject.gameTutorial.ecs.component.TransformComponent
@@ -28,7 +29,6 @@ private const val DEATH_EXPLOSION_DURATION = 0.9f
 class DamageSystem (
     private val gameEventManager: GameEventManager
         ) : GameEventListener, IteratingSystem(allOf(PlayerComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
-
     private val bossAttackAreas = ArrayList<BossAttackArea>()
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -65,8 +65,6 @@ class DamageSystem (
                     }
                 }
             }
-
-
         }
     }
 

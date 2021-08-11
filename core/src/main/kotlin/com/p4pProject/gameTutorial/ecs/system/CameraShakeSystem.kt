@@ -69,6 +69,7 @@ class CameraShakeSystem (
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.PlayerHit::class, this)
+        gameEventManager.addListener(GameEvent.BossHit::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
@@ -86,7 +87,7 @@ class CameraShakeSystem (
         }
     }
     override fun onEvent(event: GameEvent) {
-        if(activeShakes.size < 4){
+        if(activeShakes.size < 1){
             activeShakes.add(shakePool.obtain().apply {
                 duration = 0.25f
                 maxDistortion = 0.25f

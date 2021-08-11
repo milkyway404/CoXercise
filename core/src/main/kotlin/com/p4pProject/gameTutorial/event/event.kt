@@ -30,10 +30,18 @@ sealed class GameEvent{
         override fun toString() = "PlayerHit(player = $player, hp=$hp, maxHp=$maxHp)"
     }
 
+    object BossHit : GameEvent(){
+        lateinit var boss : Entity
+        var hp = 0
+        var maxHp = 0
+
+        override fun toString() = "PlayerHit(player = $boss, hp=$hp, maxHp=$maxHp)"
+    }
+
     object PlayerAttack : GameEvent (){
         lateinit var player : Entity
-        var damage = 0f
-
+        var damage = 0
+        var startTime: LocalDateTime = LocalDateTime.now()
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
     }
 

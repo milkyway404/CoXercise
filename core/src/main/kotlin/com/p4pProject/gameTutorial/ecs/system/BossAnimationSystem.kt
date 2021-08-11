@@ -18,7 +18,7 @@ import java.util.*
 private val LOG = logger<PlayerAnimationSystem>()
 class BossAnimationSystem(
     private val atlas: TextureAtlas
-): IteratingSystem(allOf(PlayerComponent::class, FacingComponent::class, GraphicComponent::class, BossAnimationComponent::class).get()),
+): IteratingSystem(allOf(BossComponent::class, FacingComponent::class, GraphicComponent::class, BossAnimationComponent::class).get()),
     EntityListener {
 
     private val animationCache = EnumMap<AnimationType, Animation2D>(AnimationType::class.java)
@@ -43,8 +43,8 @@ class BossAnimationSystem(
         val aniCmp = entity[BossAnimationComponent.mapper]
         require(aniCmp != null ){"Entity |entity| must have a BossAnimationComponent. entity=$entity"}
 
-        val player = entity[PlayerComponent.mapper]
-        require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
+        val boss = entity[BossComponent.mapper]
+        require(boss != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
 //        if(facing.direction == facing.lastDirection && graphic.sprite.texture!= null){
 //            LOG.debug { "lol gotcha" }

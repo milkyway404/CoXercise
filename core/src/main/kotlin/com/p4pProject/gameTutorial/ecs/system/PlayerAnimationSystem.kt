@@ -47,11 +47,6 @@ class PlayerAnimationSystem(
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-//        if(facing.direction == facing.lastDirection && graphic.sprite.texture!= null){
-//            LOG.debug { "lol gotcha" }
-//            return
-//        }
-
         facing.lastDirection = facing.direction
 
 

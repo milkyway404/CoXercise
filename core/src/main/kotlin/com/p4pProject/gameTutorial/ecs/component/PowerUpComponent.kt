@@ -13,8 +13,8 @@ enum class PowerUpType (
     val soundAsset: SoundAsset
 ){
     NONE(AnimationType.NONE, soundAsset = SoundAsset.BLOCK),
-    SPEED_1(AnimationType.SPEED_1, speedGain = 3f, soundAsset = SoundAsset.BOOST_1),
-    SPEED_2(AnimationType.SPEED_2, speedGain = 3.75f, soundAsset = SoundAsset.BOOST_2),
+    SPEED_1(AnimationType.SPEED_1, speedGain = 0f, soundAsset = SoundAsset.BOOST_1),
+    SPEED_2(AnimationType.SPEED_2, speedGain = 0f, soundAsset = SoundAsset.BOOST_2),
     LIFE(AnimationType.LIFE, lifeGain = 25, soundAsset = SoundAsset.LIFE),
     SHIELD(AnimationType.SHIELD, shieldGain = 25f, soundAsset = SoundAsset.SHIELD)
 }
