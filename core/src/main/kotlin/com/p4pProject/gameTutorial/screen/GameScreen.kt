@@ -8,6 +8,7 @@ import com.p4pProject.gameTutorial.ecs.asset.MusicAsset
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
+import com.p4pProject.gameTutorial.ui.SkinImage
 import com.p4pProject.gameTutorial.ui.SkinImageButton
 import ktx.actors.onClick
 import ktx.ashley.entity
@@ -106,6 +107,10 @@ class GameScreen(
                             this.player = playerr
                         })
                     }
+                }
+                image(SkinImage.LIFE_BAR.atlasKey) {
+                    width = 23f
+                    height = 48f
                 }
                 setFillParent(true)
                 pack()
