@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.NinePatch
+import com.badlogic.gdx.math.MathUtils
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.TextField
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.p4pProject.gameTutorial.*
@@ -38,6 +40,8 @@ class GameScreen(
 ): GameTutorialScreen(game), GameEventListener {
 
     private lateinit var playerr : Entity
+    private lateinit var hpBar: Image
+    private lateinit var hpText: TextField
 
     private fun spawnPlayer (){
          playerr = engine.entity{
@@ -71,7 +75,7 @@ class GameScreen(
         LOG.debug{ "Game screen is shown" }
         LOG.debug { "${preferences["highscore", 0f]}" }
         gameEventManager.addListener(GameEvent.PlayerDeath::class, this)
-
+        gameEventManager.addListener(GameEvent.PlayerHit::class, this)
         audioService.play(MusicAsset.GAME)
         spawnPlayer ()
 
@@ -108,10 +112,9 @@ class GameScreen(
                 columnDefaults(0).width(50f)
                 columnDefaults(0).height(8f)
 
-                image(SkinImage.LIFE_BAR.atlasKey)
+                hpBar = image(SkinImage.LIFE_BAR.atlasKey)
 
-                textArea {
-                    name = "hp"
+                hpText = textArea {
                     text = "100"
                 }
 
@@ -151,7 +154,8 @@ class GameScreen(
     }
 
     fun updateHp(hp: Float, maxHp: Float) {
-        lifeBarImage.scaleX = MathUtils.clamp(life / maxLife, 0f, 1f)
+        hpBar.scaleX = MathUtils.clamp(hp / maxHp, 0f, 1f)
+        hpText.text = hp.toInt().toString()
     }
 
     override fun onEvent(event: GameEvent) {
@@ -162,6 +166,9 @@ class GameScreen(
                     this["highscore"] = event.distance
                 }
                 spawnPlayer()
+            }
+            is GameEvent.PlayerHit -> {
+                updateHp(event.hp.toFloat(), event.maxHp.toFloat())
             }
         }
     }
