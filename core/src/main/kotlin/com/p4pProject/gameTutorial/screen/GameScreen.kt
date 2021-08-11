@@ -2,7 +2,11 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.NinePatch
+import com.badlogic.gdx.scenes.scene2d.ui.TextField
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.p4pProject.gameTutorial.*
 import com.p4pProject.gameTutorial.ecs.asset.MusicAsset
 import com.p4pProject.gameTutorial.ecs.component.*
@@ -10,6 +14,7 @@ import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.ui.SkinImage
 import com.p4pProject.gameTutorial.ui.SkinImageButton
+import com.p4pProject.gameTutorial.ui.SkinLabel
 import ktx.actors.onClick
 import ktx.ashley.entity
 import ktx.ashley.with
@@ -19,6 +24,7 @@ import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.*
+import ktx.style.textField
 import java.time.LocalDateTime
 import kotlin.math.min
 
@@ -97,6 +103,23 @@ class GameScreen(
     private fun setupUI() {
         stage.actors {
             table {
+                left().top();
+                pad(3f)
+                columnDefaults(0).width(50f)
+                columnDefaults(0).height(8f)
+
+                image(SkinImage.LIFE_BAR.atlasKey)
+
+                textArea {
+                    name = "hp"
+                    text = "100"
+                }
+
+                setFillParent(true)
+                pack()
+            }
+
+            table {
                 right().bottom()
                 pad(5f)
                 imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
@@ -107,10 +130,6 @@ class GameScreen(
                             this.player = playerr
                         })
                     }
-                }
-                image(SkinImage.LIFE_BAR.atlasKey) {
-                    width = 23f
-                    height = 48f
                 }
                 setFillParent(true)
                 pack()
@@ -129,6 +148,10 @@ class GameScreen(
             this.startTime = LocalDateTime.now()
             this.duration = 2000
         })
+    }
+
+    fun updateHp(hp: Float, maxHp: Float) {
+        lifeBarImage.scaleX = MathUtils.clamp(life / maxLife, 0f, 1f)
     }
 
     override fun onEvent(event: GameEvent) {

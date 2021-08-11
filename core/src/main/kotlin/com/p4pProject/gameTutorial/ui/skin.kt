@@ -1,5 +1,6 @@
 package com.p4pProject.gameTutorial.ui
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.p4pProject.gameTutorial.ecs.asset.BitmapFontAsset
@@ -57,13 +58,17 @@ fun createSkin(assets: AssetStorage) {
         createTextButtonStyles(defaultFont, skin)
         createWindowStyles(skin, defaultFont)
         createScrollPaneStyles(skin)
-        createHpBarStyles(skin)
+        createHpBarStyles(skin, defaultFont)
     }
 }
 
-private fun Skin.createHpBarStyles(skin: Skin) {
+private fun Skin.createHpBarStyles(skin: Skin, defaultFont: BitmapFont) {
     imageButton(SkinImage.LIFE_BAR.name) {
         over = skin.getDrawable(SkinImage.LIFE_BAR.atlasKey)
+    }
+    textField {
+        font = defaultFont
+        fontColor = Color(255f,255f,255f,100f)
     }
 }
 
