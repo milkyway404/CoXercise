@@ -23,6 +23,7 @@ enum class PowerUpType (
 class PowerUpComponent : Component, Pool.Poolable{
 
     var type = PowerUpType.NONE
+    var duration = 0F
 
     override fun reset() {
         type = PowerUpType.NONE

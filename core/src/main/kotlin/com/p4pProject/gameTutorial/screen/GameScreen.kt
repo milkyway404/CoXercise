@@ -17,6 +17,7 @@ import com.p4pProject.gameTutorial.ui.SkinImageButton
 import com.p4pProject.gameTutorial.ui.SkinLabel
 import ktx.actors.onClick
 import ktx.ashley.entity
+import ktx.ashley.get
 import ktx.ashley.with
 import ktx.log.debug
 import ktx.log.logger
@@ -76,6 +77,7 @@ class GameScreen(
         LOG.debug { "${preferences["highscore", 0f]}" }
         gameEventManager.addListener(GameEvent.PlayerDeath::class, this)
         gameEventManager.addListener(GameEvent.PlayerHit::class, this)
+        gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         audioService.play(MusicAsset.GAME)
         spawnPlayer ()
 
@@ -182,6 +184,13 @@ class GameScreen(
             }
             is GameEvent.PlayerHit -> {
                 updateHp(event.hp.toFloat(), event.maxHp.toFloat())
+            }
+            is GameEvent.CollectPowerUp -> {
+                val hp = event.player[PlayerComponent.mapper]?.hp?.toFloat()
+                val maxHp = event.player[PlayerComponent.mapper]?.maxHp?.toFloat()
+                if (hp != null && maxHp != null) {
+                    updateHp(hp, maxHp)
+                }
             }
         }
     }

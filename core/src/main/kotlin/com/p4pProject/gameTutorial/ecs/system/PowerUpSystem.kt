@@ -140,7 +140,7 @@ class PowerUpSystem (
 
             LOG.debug { "Picking up power up of type $powerUpType" }
 
-            player[MoveComponent.mapper]?.let { it.speed.y += powerUpType.speedGain }
+            //player[MoveComponent.mapper]?.let { it.speed.y += powerUpType.speedGain }
             player[PlayerComponent.mapper]?.let {
                 it.hp = min(it.maxHp, it.hp + powerUpType.lifeGain)
                 //it.shield = min(it.maxShield, it.shield + powerUpType.speedGain)
