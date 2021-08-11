@@ -123,12 +123,9 @@ class GameScreen(
                 row()
 
 
-                val mpBarImage = image(SkinImage.MP_BAR.atlasKey) {
+                mpBar = image(SkinImage.MP_BAR.atlasKey) {
                     color.a = 0.8f
-                    color.b = 1f
-                    color.r = 1lifef
                 }
-                mpBar = mpBarImage
 
                 mpText = textArea {
                     text = "100"

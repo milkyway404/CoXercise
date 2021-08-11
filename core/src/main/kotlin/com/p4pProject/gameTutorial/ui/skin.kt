@@ -33,7 +33,7 @@ enum class SkinImage(val atlasKey: String) {
     GAME_HUD("game_hud"),
     WARNING("warning"),
     HP_BAR("life_bar"),
-    MP_BAR("life_bar"),
+    MP_BAR("mp_bar"),
     SHIELD_BAR("shield_bar"),
     WARRIOR_ATTACK("warriorAttack"),
     PLAY("play"),
@@ -64,9 +64,9 @@ fun createSkin(assets: AssetStorage) {
 }
 
 private fun Skin.createHpBarStyles(skin: Skin, defaultFont: BitmapFont) {
-    imageButton(SkinImage.HP_BAR.name) {
-        over = skin.getDrawable(SkinImage.HP_BAR.atlasKey)
-    }
+//    imageButton(SkinImage.HP_BAR.name) {
+//        over = skin.getDrawable(SkinImage.HP_BAR.atlasKey)
+//    }
 //    imageButton(SkinImage.MP_BAR.name) {
 //        over = skin.newDrawable(SkinImage.MP_BAR.atlasKey, Color(0f, 0f, 255f, 1f))
 //        color("blue",0f,0f,255f,1f)
