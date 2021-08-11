@@ -32,7 +32,8 @@ enum class SkinScrollPane {
 enum class SkinImage(val atlasKey: String) {
     GAME_HUD("game_hud"),
     WARNING("warning"),
-    LIFE_BAR("life_bar"),
+    HP_BAR("life_bar"),
+    MP_BAR("life_bar"),
     SHIELD_BAR("shield_bar"),
     WARRIOR_ATTACK("warriorAttack"),
     PLAY("play"),
@@ -63,12 +64,17 @@ fun createSkin(assets: AssetStorage) {
 }
 
 private fun Skin.createHpBarStyles(skin: Skin, defaultFont: BitmapFont) {
-    imageButton(SkinImage.LIFE_BAR.name) {
-        over = skin.getDrawable(SkinImage.LIFE_BAR.atlasKey)
+    imageButton(SkinImage.HP_BAR.name) {
+        over = skin.getDrawable(SkinImage.HP_BAR.atlasKey)
     }
+//    imageButton(SkinImage.MP_BAR.name) {
+//        over = skin.newDrawable(SkinImage.MP_BAR.atlasKey, Color(0f, 0f, 255f, 1f))
+//        color("blue",0f,0f,255f,1f)
+//    }
+
     textField {
         font = defaultFont
-        fontColor = Color(255f,255f,255f,100f)
+        fontColor = Color(1f,1f,1f,1f)
     }
 }
 

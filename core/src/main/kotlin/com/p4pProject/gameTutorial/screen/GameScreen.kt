@@ -2,13 +2,11 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.NinePatch
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.TextField
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable
 import com.p4pProject.gameTutorial.*
 import com.p4pProject.gameTutorial.ecs.asset.MusicAsset
 import com.p4pProject.gameTutorial.ecs.component.*
@@ -26,7 +24,6 @@ import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.*
-import ktx.style.textField
 import java.time.LocalDateTime
 import kotlin.math.min
 
@@ -42,6 +39,8 @@ class GameScreen(
     private lateinit var playerr : Entity
     private var hpBar: Image? = null
     private var hpText: TextField? = null
+    private var mpBar: Image? = null
+    private var mpText: TextField? = null
 
     private fun spawnPlayer (){
          playerr = engine.entity{
@@ -113,9 +112,25 @@ class GameScreen(
                 columnDefaults(0).width(50f)
                 columnDefaults(0).height(8f)
 
-                hpBar = image(SkinImage.LIFE_BAR.atlasKey)
+                hpBar = image(SkinImage.HP_BAR.atlasKey) {
+                    color.a = 0.8f
+                }
 
                 hpText = textArea {
+                    text = "100"
+                }
+
+                row()
+
+
+                val mpBarImage = image(SkinImage.MP_BAR.atlasKey) {
+                    color.a = 0.8f
+                    color.b = 1f
+                    color.r = 1lifef
+                }
+                mpBar = mpBarImage
+
+                mpText = textArea {
                     text = "100"
                 }
 
