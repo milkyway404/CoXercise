@@ -12,6 +12,7 @@ import com.p4pProject.gameTutorial.ui.SkinImage
 import com.p4pProject.gameTutorial.ui.SkinImageButton
 import ktx.actors.onClick
 import ktx.ashley.entity
+import ktx.ashley.get
 import ktx.ashley.with
 import ktx.log.debug
 import ktx.log.logger
@@ -32,6 +33,7 @@ class GameScreen(
 ): GameTutorialScreen(game), GameEventListener {
 
     private lateinit var playerr : Entity
+    private lateinit var boss : Entity
 
     private fun spawnPlayer (){
          playerr = engine.entity{
@@ -61,6 +63,20 @@ class GameScreen(
         }*/
     }
 
+    private fun spawnBoss(){
+        boss = engine.entity{
+            with<TransformComponent>{
+                setInitialPosition(9f,5f,-1f)
+                setSize(50f * UNIT_SCALE, 50f * UNIT_SCALE)
+            }
+            with<BossAnimationComponent>()
+            //with<MoveComponent>()
+            with<GraphicComponent>()
+            with<PlayerComponent>()
+            with<FacingComponent>()
+        }
+    }
+
     override fun show() {
         LOG.debug{ "Game screen is shown" }
         LOG.debug { "${preferences["highscore", 0f]}" }
@@ -68,6 +84,7 @@ class GameScreen(
 
         audioService.play(MusicAsset.GAME)
         spawnPlayer ()
+        spawnBoss()
 
         val background = engine.entity{
             with<TransformComponent>()

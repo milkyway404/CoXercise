@@ -52,6 +52,7 @@ class PlayerInputSystem(
         gameViewport.unproject(tmpVec)
         val diffX = tmpVec.x - transform.position.x - transform.size.x * 0.5f
         facing.direction = getFacingDirection()
+
         player.isAttacking = playerIsAttacking
     }
 

@@ -1,0 +1,174 @@
+
+Boss.png
+size: 1024, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+SkeletonWithSwordDownIdle
+  rotate: false
+  xy: 301, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+SkeletonWithSwordDownIdle
+  rotate: false
+  xy: 301, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+SkeletonWithSwordDownIdle
+  rotate: false
+  xy: 151, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+SkeletonWithSwordDownIdle
+  rotate: false
+  xy: 151, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+SkeletonWithSwordDownIdle
+  rotate: false
+  xy: 601, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+SkeletonWithSwordDownIdle
+  rotate: false
+  xy: 401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+SkeletonWithSwordLeftIdle
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+SkeletonWithSwordLeftIdle
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+SkeletonWithSwordLeftIdle
+  rotate: false
+  xy: 351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+SkeletonWithSwordLefttIdle
+  rotate: false
+  xy: 351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+SkeletonWithSwordLeftIdle
+  rotate: false
+  xy: 751, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+SkeletonWithSwordLeftIdle
+  rotate: false
+  xy: 551, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+SkeletonWithSwordRightIdle
+  rotate: false
+  xy: 51, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+SkeletonWithSwordRightIdle
+  rotate: false
+  xy: 51, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+SkeletonWithSwordRightIdle
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+SkeletonWithSwordRightIdle
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+SkeletonWithSwordRightIdle
+  rotate: false
+  xy: 701, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+SkeletonWithSwordRightIdle
+  rotate: false
+  xy: 501, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+SkeletonWithSwordUpIdle
+  rotate: false
+  xy: 451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+SkeletonWithSwordUpIdle
+  rotate: false
+  xy: 451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+SkeletonWithSwordUpIdle
+  rotate: false
+  xy: 1, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+SkeletonWithSwordUpIdle
+  rotate: false
+  xy: 1, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+SkeletonWithSwordUpIdle
+  rotate: false
+  xy: 201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+SkeletonWithSwordUpIdle
+  rotate: false
+  xy: 651, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5

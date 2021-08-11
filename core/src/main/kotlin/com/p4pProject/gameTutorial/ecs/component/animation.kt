@@ -13,7 +13,6 @@ private const val DEFAULT_FRAME_DURATION = 1/20f
 enum class AnimationType (
     val atlasKey: String,
     val playMode: Animation.PlayMode = Animation.PlayMode.LOOP,
-    val attackPlayMode : Animation.PlayMode = Animation.PlayMode.NORMAL,
     val speedRate: Float = 1f
         ){
     NONE(""),
@@ -23,6 +22,12 @@ enum class AnimationType (
     SPEED_2("orb_yellow"),
     LIFE("life"),
     SHIELD("shield"),
+
+    BOSS_UP("SkeletonWithSwordUpIdle"),
+    BOSS_DOWN("SkeletonWithSwordDownIdle"),
+    BOSS_LEFT("SkeletonWithSwordLeftIdle"),
+    BOSS_RIGHT("SkeletonWithSwordRightIdle"),
+
     PLAYER_UP("WarriorUpIdle"),
     PLAYER_DOWN("WarriorDownIdle"),
     PLAYER_LEFT("WarriorLeftIdle"),
@@ -81,5 +86,27 @@ class PlayerAnimationComponent : Component, Pool.Poolable {
 
     companion object {
         val mapper = mapperFor<PlayerAnimationComponent>()
+    }
+}
+
+class BossAnimationComponent : Component, Pool.Poolable {
+    var typeUp = AnimationType.BOSS_UP
+    var typeDown = AnimationType.BOSS_DOWN
+    var typeLeft = AnimationType.BOSS_LEFT
+    var typeRight = AnimationType.BOSS_RIGHT
+    var stateTime = 0f
+
+    lateinit var animation : Animation2D
+
+
+    override fun reset() {
+        typeUp = AnimationType.NONE
+        typeDown = AnimationType.NONE
+        typeLeft = AnimationType.NONE
+        typeRight = AnimationType.NONE
+    }
+
+    companion object {
+        val mapper = mapperFor<BossAnimationComponent>()
     }
 }

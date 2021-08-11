@@ -28,6 +28,7 @@ enum class TextureAtlasAsset(
     // Animated assets
     GAME_GRAPHICS(false ,"graphics.atlas"),
     PLAYER_GRAPHICS(false ,"warrior.atlas"),
+    BOSS_GRAPHICS(false ,"Boss.atlas"),
     UI(true ,"ui.atlas")
 }
 
