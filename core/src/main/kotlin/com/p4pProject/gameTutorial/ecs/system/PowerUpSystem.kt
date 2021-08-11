@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
+import com.p4pProject.gameTutorial.V_HEIGHT
 import com.p4pProject.gameTutorial.V_WIDTH
 import com.p4pProject.gameTutorial.audio.AudioService
 import com.p4pProject.gameTutorial.ecs.asset.SoundAsset
@@ -17,6 +18,7 @@ import ktx.log.debug
 import ktx.log.error
 import ktx.log.logger
 import kotlin.math.min
+import kotlin.random.Random
 
 
 private val LOG = logger<PowerUpSystem>()
@@ -59,6 +61,7 @@ class PowerUpSystem (
 
     override fun update(deltaTime: Float) {
         super.update(deltaTime)
+
         spawnTime -= deltaTime
         if (spawnTime<=0f){
             spawnTime = MathUtils.random(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL)
@@ -73,7 +76,8 @@ class PowerUpSystem (
                 return
             }
 
-            spawnPowerUp(powerUpType, 1f * MathUtils.random(0, V_WIDTH - 1), 16f)
+            spawnPowerUp(powerUpType, 1f * MathUtils.random(1, V_WIDTH - 1),
+                1f * MathUtils.random(1, V_HEIGHT - 1))
         }
     }
 
@@ -83,18 +87,24 @@ class PowerUpSystem (
                 setInitialPosition(x,y,0f)
                 LOG.debug { "Spawn power of type $powerUpType at $position" }
             }
-            with<PowerUpComponent> { type = powerUpType }
+            with<PowerUpComponent> { type = powerUpType; duration = getRandomDuration() }
             with<AnimationComponent> { type = powerUpType.animationType }
             with<GraphicComponent>()
-            with<MoveComponent> { speed.y = POWER_UP_SPEED }
+            with<MoveComponent>()
         }
     }
 
+    private fun getRandomDuration(): Float { return Random.nextFloat() * 30 }
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
+        val powerUp = entity[PowerUpComponent.mapper]
         require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
+        require(powerUp != null ){"Entity |entity| must have a PowerUpComponent. entity=$entity"}
 
-        if(transform.position.y <= 1f){
+        powerUp.duration -= deltaTime
+
+        if(powerUp.duration <= 0){
             entity.addComponent<RemoveComponent>(engine)
             return
         }
