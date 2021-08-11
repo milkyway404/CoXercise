@@ -69,14 +69,14 @@ class PlayerAnimationComponent : Component, Pool.Poolable {
 
 
     override fun reset() {
-         typeUp = AnimationType.NONE
-         typeDown = AnimationType.NONE
-         typeLeft = AnimationType.NONE
-         typeRight = AnimationType.NONE
-        typeAttackRight = AnimationType.NONE
-        typeAttackLeft = AnimationType.NONE
-        typeAttackUp = AnimationType.NONE
-        typeAttackDown = AnimationType.NONE
+//         typeUp = AnimationType.NONE
+//         typeDown = AnimationType.NONE
+//         typeLeft = AnimationType.NONE
+//         typeRight = AnimationType.NONE
+//        typeAttackRight = AnimationType.NONE
+//        typeAttackLeft = AnimationType.NONE
+//        typeAttackUp = AnimationType.NONE
+//        typeAttackDown = AnimationType.NONE
     }
 
     companion object {

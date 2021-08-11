@@ -40,8 +40,8 @@ class GameScreen(
 ): GameTutorialScreen(game), GameEventListener {
 
     private lateinit var playerr : Entity
-    private lateinit var hpBar: Image
-    private lateinit var hpText: TextField
+    private var hpBar: Image? = null
+    private var hpText: TextField? = null
 
     private fun spawnPlayer (){
          playerr = engine.entity{
@@ -55,6 +55,7 @@ class GameScreen(
             with<PlayerComponent>()
             with<FacingComponent>()
         }
+        updateHp(100f, 100f)
 
 
         // The added fire
@@ -154,8 +155,8 @@ class GameScreen(
     }
 
     fun updateHp(hp: Float, maxHp: Float) {
-        hpBar.scaleX = MathUtils.clamp(hp / maxHp, 0f, 1f)
-        hpText.text = hp.toInt().toString()
+        hpBar?.scaleX = MathUtils.clamp(hp / maxHp, 0f, 1f)
+        hpText?.text = hp.toInt().toString()
     }
 
     override fun onEvent(event: GameEvent) {
