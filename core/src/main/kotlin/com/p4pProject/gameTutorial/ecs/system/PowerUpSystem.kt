@@ -22,19 +22,10 @@ import kotlin.random.Random
 
 
 private val LOG = logger<PowerUpSystem>()
-private const val MAX_SPAWN_INTERVAL = 1.5f
-private const val MIN_SPAWN_INTERVAL = 0.9f
-private const val POWER_UP_SPEED = -8.75f
-
-private class SpawnPattern(
-    type1:PowerUpType = PowerUpType.NONE,
-    type2:PowerUpType = PowerUpType.NONE,
-    type3:PowerUpType = PowerUpType.NONE,
-    type4:PowerUpType = PowerUpType.NONE,
-    type5:PowerUpType = PowerUpType.NONE,
-    val types : GdxArray<PowerUpType> = gdxArrayOf(type1, type2, type3, type4, type5)
-
-)
+private const val MAX_SPAWN_INTERVAL = 10f
+private const val MIN_SPAWN_INTERVAL = 3f
+private const val MIN_POWER_UP_DURATION = 5f
+private const val MAX_POWER_UP_DURATION = 20f
 
 class PowerUpSystem (
     private val gameEventManager: GameEventManager,
@@ -52,12 +43,6 @@ class PowerUpSystem (
     }
 
     private var spawnTime = 0f
-    private val spawnPatterns = gdxArrayOf(
-        SpawnPattern(type1 = PowerUpType.SPEED_1, type2 = PowerUpType.SPEED_2, type5 = PowerUpType.LIFE),
-        SpawnPattern(type2 = PowerUpType.LIFE, type3 = PowerUpType.SHIELD, type4 = PowerUpType.SPEED_2)
-    )
-
-    private val currentSpawnPattern = GdxArray<PowerUpType>()
 
     override fun update(deltaTime: Float) {
         super.update(deltaTime)
@@ -66,17 +51,7 @@ class PowerUpSystem (
         if (spawnTime<=0f){
             spawnTime = MathUtils.random(MIN_SPAWN_INTERVAL, MAX_SPAWN_INTERVAL)
 
-            if (currentSpawnPattern.isEmpty){
-                currentSpawnPattern.addAll(spawnPatterns[MathUtils.random(0, spawnPatterns.size -1)].types)
-                LOG.debug { "Next pattern: $currentSpawnPattern" }
-            }
-
-            val powerUpType = currentSpawnPattern.removeIndex(0)
-            if(powerUpType == PowerUpType.NONE){
-                return
-            }
-
-            spawnPowerUp(powerUpType, 1f * MathUtils.random(1, V_WIDTH - 1),
+            spawnPowerUp(PowerUpType.MP_GAIN, 1f * MathUtils.random(1, V_WIDTH - 1),
                 1f * MathUtils.random(1, V_HEIGHT - 1))
         }
     }
@@ -94,7 +69,8 @@ class PowerUpSystem (
         }
     }
 
-    private fun getRandomDuration(): Float { return Random.nextFloat() * 30 }
+    private fun getRandomDuration(): Float { return Random.nextFloat() *
+            (MAX_POWER_UP_DURATION- MIN_POWER_UP_DURATION) + MIN_POWER_UP_DURATION }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
@@ -140,10 +116,8 @@ class PowerUpSystem (
 
             LOG.debug { "Picking up power up of type $powerUpType" }
 
-            //player[MoveComponent.mapper]?.let { it.speed.y += powerUpType.speedGain }
             player[PlayerComponent.mapper]?.let {
-                it.hp = min(it.maxHp, it.hp + powerUpType.lifeGain)
-                //it.shield = min(it.maxShield, it.shield + powerUpType.speedGain)
+                it.mp = min(it.maxMp, it.mp + powerUpType.mpGain)
             }
             audioService.play(powerUpType.soundAsset)
         gameEventManager.dispatchEvent(

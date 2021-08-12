@@ -55,7 +55,11 @@ class GameScreen(
             with<PlayerComponent>()
             with<FacingComponent>()
         }
-        updateHp(100f, 100f)
+        val playerComp = playerr[PlayerComponent.mapper]
+        require(playerComp != null)
+
+        updateHp(playerComp.hp.toFloat(), playerComp.maxHp.toFloat())
+        updateMp(playerComp.mp.toFloat(), playerComp.maxMp.toFloat())
 
 
         // The added fire
@@ -78,6 +82,7 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.PlayerDeath::class, this)
         gameEventManager.addListener(GameEvent.PlayerHit::class, this)
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
+        gameEventManager.addListener(GameEvent.PlayerStep::class, this)
         audioService.play(MusicAsset.GAME)
         spawnPlayer ()
 
@@ -124,13 +129,12 @@ class GameScreen(
 
                 row()
 
-
                 mpBar = image(SkinImage.MP_BAR.atlasKey) {
                     color.a = 0.8f
                 }
 
                 mpText = textArea {
-                    text = "100"
+                    text = "0"
                 }
 
                 setFillParent(true)
@@ -168,9 +172,15 @@ class GameScreen(
         })
     }
 
-    fun updateHp(hp: Float, maxHp: Float) {
+    private fun updateHp(hp: Float, maxHp: Float) {
         hpBar?.scaleX = MathUtils.clamp(hp / maxHp, 0f, 1f)
         hpText?.text = hp.toInt().toString()
+    }
+
+    private fun updateMp(mp: Float, maxMp: Float) {
+        LOG.debug{ "mp updated to $mp, maxMp=$maxMp"}
+        mpBar?.scaleX = MathUtils.clamp(mp / maxMp, 0f, 1f)
+        mpText?.text = mp.toInt().toString()
     }
 
     override fun onEvent(event: GameEvent) {
@@ -186,11 +196,17 @@ class GameScreen(
                 updateHp(event.hp.toFloat(), event.maxHp.toFloat())
             }
             is GameEvent.CollectPowerUp -> {
-                val hp = event.player[PlayerComponent.mapper]?.hp?.toFloat()
-                val maxHp = event.player[PlayerComponent.mapper]?.maxHp?.toFloat()
-                if (hp != null && maxHp != null) {
-                    updateHp(hp, maxHp)
+                val mp = event.player[PlayerComponent.mapper]?.mp?.toFloat()
+                val maxMp = event.player[PlayerComponent.mapper]?.maxMp?.toFloat()
+                LOG.debug{ "Collected powerup, mp=$mp, maxMP=$maxMp" }
+                if (mp != null && maxMp != null) {
+                    updateMp(mp, maxMp)
                 }
+            }
+            is GameEvent.PlayerStep -> {
+                val mp = event.player.mp.toFloat()
+                val maxMp = event.player.maxMp.toFloat()
+                updateMp(mp, maxMp)
             }
         }
     }

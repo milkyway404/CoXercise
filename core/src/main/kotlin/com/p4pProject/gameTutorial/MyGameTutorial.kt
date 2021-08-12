@@ -66,7 +66,7 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
         val playerGraphicAtlas = assets[TextureAtlasAsset.PLAYER_GRAPHICS.descriptor]
 
         addSystem(PlayerInputSystem(gameViewport, gameEventManager))
-        addSystem(MoveSystem())
+        addSystem(MoveSystem(gameEventManager))
         addSystem(PowerUpSystem(gameEventManager, audioService))
         addSystem(DamageSystem(gameEventManager))
         addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))

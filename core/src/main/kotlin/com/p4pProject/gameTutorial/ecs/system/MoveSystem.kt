@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.MathUtils
 import com.p4pProject.gameTutorial.V_HEIGHT
 import com.p4pProject.gameTutorial.V_WIDTH
 import com.p4pProject.gameTutorial.ecs.component.*
+import com.p4pProject.gameTutorial.event.GameEvent
+import com.p4pProject.gameTutorial.event.GameEventManager
 import ktx.ashley.allOf
 import ktx.ashley.get
 import kotlin.math.*
@@ -16,7 +18,9 @@ private const val UPDATE_RATE = 1/25f
 private const val SENSOR_SENSITIVITY_THRESHOLD = 4
 private const val STEP_DISTANCE = 1f
 
-class MoveSystem : IteratingSystem (allOf(TransformComponent::class, MoveComponent::class).exclude(RemoveComponent::class.java).get()) {
+class MoveSystem(
+    private val gameEventManager: GameEventManager
+) : IteratingSystem (allOf(TransformComponent::class, MoveComponent::class).exclude(RemoveComponent::class.java).get()) {
 
     private var accumulator = 0f
     private var magnitudePrevious = 0.0
@@ -65,6 +69,11 @@ class MoveSystem : IteratingSystem (allOf(TransformComponent::class, MoveCompone
                 entity[FacingComponent.mapper]?.let { facing ->
                     movePlayer(transform, move, player, facing, deltaTime)
                 }
+                player.mp++
+                gameEventManager.dispatchEvent(GameEvent.PlayerStep.apply {
+                    this.player = player
+                })
+
             }
         }else {
             // other movement (boss, power-ups, etc)

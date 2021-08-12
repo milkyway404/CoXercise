@@ -127,12 +127,5 @@ class RenderSystem(
 
     override fun onEvent(event: GameEvent) {
         val powerUpEvent = event as GameEvent.CollectPowerUp
-        if (powerUpEvent.type == PowerUpType.SPEED_1){
-            backgroundScrollSpeed.y -= 0.25f
-        }
-
-        if (powerUpEvent.type == PowerUpType.SPEED_2){
-            backgroundScrollSpeed.y -= 0.5f
-        }
     }
 }
