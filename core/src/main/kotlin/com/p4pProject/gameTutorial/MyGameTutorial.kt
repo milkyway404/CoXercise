@@ -67,7 +67,7 @@ class MyGameTutorial : KtxGame<GameTutorialScreen>() {
         val bossGraphicAtlas = assets[TextureAtlasAsset.BOSS_GRAPHICS.descriptor]
 
         addSystem(PlayerInputSystem(gameViewport, gameEventManager))
-        addSystem(MoveSystem())
+        addSystem(MoveSystem(gameEventManager))
         addSystem(PowerUpSystem(gameEventManager, audioService))
         addSystem(DamageSystem(gameEventManager))
         addSystem(PlayerDamageSystem(gameEventManager))

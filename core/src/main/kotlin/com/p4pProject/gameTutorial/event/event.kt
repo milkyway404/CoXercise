@@ -2,6 +2,7 @@ package com.p4pProject.gameTutorial.event
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.ObjectMap
+import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.PowerUpType
 import ktx.collections.GdxSet
 import java.time.LocalDateTime
@@ -43,6 +44,10 @@ sealed class GameEvent{
         var damage = 0
         var startTime: LocalDateTime = LocalDateTime.now()
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+    }
+
+    object PlayerStep: GameEvent ()  {
+        lateinit var player: PlayerComponent
     }
 
     object BossAttack: GameEvent () {

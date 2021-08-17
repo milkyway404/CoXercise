@@ -1,5 +1,6 @@
 package com.p4pProject.gameTutorial.ui
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.p4pProject.gameTutorial.ecs.asset.BitmapFontAsset
@@ -31,7 +32,8 @@ enum class SkinScrollPane {
 enum class SkinImage(val atlasKey: String) {
     GAME_HUD("game_hud"),
     WARNING("warning"),
-    LIFE_BAR("life_bar"),
+    HP_BAR("life_bar"),
+    MP_BAR("mp_bar"),
     SHIELD_BAR("shield_bar"),
     WARRIOR_ATTACK("warriorAttack"),
     PLAY("play"),
@@ -57,13 +59,22 @@ fun createSkin(assets: AssetStorage) {
         createTextButtonStyles(defaultFont, skin)
         createWindowStyles(skin, defaultFont)
         createScrollPaneStyles(skin)
-        createHpBarStyles(skin)
+        createHpBarStyles(skin, defaultFont)
     }
 }
 
-private fun Skin.createHpBarStyles(skin: Skin) {
-    imageButton(SkinImage.LIFE_BAR.name) {
-        over = skin.getDrawable(SkinImage.LIFE_BAR.atlasKey)
+private fun Skin.createHpBarStyles(skin: Skin, defaultFont: BitmapFont) {
+//    imageButton(SkinImage.HP_BAR.name) {
+//        over = skin.getDrawable(SkinImage.HP_BAR.atlasKey)
+//    }
+//    imageButton(SkinImage.MP_BAR.name) {
+//        over = skin.newDrawable(SkinImage.MP_BAR.atlasKey, Color(0f, 0f, 255f, 1f))
+//        color("blue",0f,0f,255f,1f)
+//    }
+
+    textField {
+        font = defaultFont
+        fontColor = Color(1f,1f,1f,1f)
     }
 }
 

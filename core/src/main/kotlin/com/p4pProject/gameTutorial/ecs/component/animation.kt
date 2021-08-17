@@ -18,7 +18,7 @@ enum class AnimationType (
     NONE(""),
     DARK_MATTER("dark_matter"),
     FIRE("fire"),
-    SPEED_1("orb_blue"),
+    MP("orb_blue"),
     SPEED_2("orb_yellow"),
     LIFE("life"),
     SHIELD("shield"),
@@ -74,14 +74,14 @@ class PlayerAnimationComponent : Component, Pool.Poolable {
 
 
     override fun reset() {
-         typeUp = AnimationType.NONE
-         typeDown = AnimationType.NONE
-         typeLeft = AnimationType.NONE
-         typeRight = AnimationType.NONE
-        typeAttackRight = AnimationType.NONE
-        typeAttackLeft = AnimationType.NONE
-        typeAttackUp = AnimationType.NONE
-        typeAttackDown = AnimationType.NONE
+//         typeUp = AnimationType.NONE
+//         typeDown = AnimationType.NONE
+//         typeLeft = AnimationType.NONE
+//         typeRight = AnimationType.NONE
+//        typeAttackRight = AnimationType.NONE
+//        typeAttackLeft = AnimationType.NONE
+//        typeAttackUp = AnimationType.NONE
+//        typeAttackDown = AnimationType.NONE
     }
 
     companion object {
