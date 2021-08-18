@@ -11,7 +11,7 @@ import com.p4pProject.gameTutorial.event.GameEventManager
 import ktx.app.KtxScreen
 import ktx.assets.async.AssetStorage
 
-abstract class GameTutorialScreen (
+abstract class GameBaseScreen (
     val game: MyGameTutorial,
     val gameViewport: Viewport = game.gameViewport,
     val uiViewport: Viewport =game.uiViewport,

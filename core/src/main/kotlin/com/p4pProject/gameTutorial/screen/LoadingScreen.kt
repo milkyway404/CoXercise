@@ -1,7 +1,6 @@
 package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut
 import com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence
@@ -23,7 +22,7 @@ import ktx.collections.gdxArrayOf
 import ktx.scene2d.*
 
 
-class LoadingScreen(game: MyGameTutorial) : GameTutorialScreen(game){
+class LoadingScreen(game: MyGameTutorial) : GameBaseScreen(game){
 
     private lateinit var progressBar : Image
     private lateinit var touchToBeginLabel: Label

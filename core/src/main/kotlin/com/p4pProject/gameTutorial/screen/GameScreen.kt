@@ -2,10 +2,8 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.TextField
 import com.p4pProject.gameTutorial.*
 import com.p4pProject.gameTutorial.ecs.asset.MusicAsset
@@ -14,7 +12,6 @@ import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.ui.SkinImage
 import com.p4pProject.gameTutorial.ui.SkinImageButton
-import com.p4pProject.gameTutorial.ui.SkinLabel
 import ktx.actors.onClick
 import ktx.ashley.entity
 import ktx.ashley.get
@@ -35,7 +32,7 @@ private const val MAX_DELTA_TIME = 1/20f
 class GameScreen(
     game: MyGameTutorial,
     private val engine: Engine = game.engine
-): GameTutorialScreen(game), GameEventListener {
+): GameBaseScreen(game), GameEventListener {
 
     private lateinit var playerr : Entity
     private lateinit var boss : Entity

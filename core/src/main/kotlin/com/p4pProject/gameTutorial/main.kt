@@ -16,7 +16,7 @@ import com.p4pProject.gameTutorial.ecs.asset.TextureAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAtlasAsset
 import com.p4pProject.gameTutorial.ecs.system.*
 import com.p4pProject.gameTutorial.event.GameEventManager
-import com.p4pProject.gameTutorial.screen.GameTutorialScreen
+import com.p4pProject.gameTutorial.screen.GameBaseScreen
 import com.p4pProject.gameTutorial.screen.LoadingScreen
 import com.p4pProject.gameTutorial.ui.createSkin
 import kotlinx.coroutines.joinAll
@@ -36,7 +36,7 @@ const val V_WIDTH = 16
 const val V_HEIGHT = 9
 const val BACKGROUND_V_WIDTH = 1462
 const val BACKGROUND_V_HEIGHT = 822
-class MyGameTutorial : KtxGame<GameTutorialScreen>() {
+class MyGameTutorial : KtxGame<GameBaseScreen>() {
     val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val uiViewport = FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat());
     val backgroundViewport = FitViewport(BACKGROUND_V_WIDTH.toFloat(), BACKGROUND_V_HEIGHT.toFloat());
