@@ -28,14 +28,23 @@ enum class AnimationType (
     BOSS_LEFT("SkeletonWithSwordLeftIdle"),
     BOSS_RIGHT("SkeletonWithSwordRightIdle"),
 
-    PLAYER_UP("WarriorUpIdle"),
-    PLAYER_DOWN("WarriorDownIdle"),
-    PLAYER_LEFT("WarriorLeftIdle"),
-    PLAYER_RIGHT("WarriorRightIdle"),
-    ATTACK_RIGHT("WarriorRightAttack"),
-    ATTACK_LEFT("WarriorLeftAttack"),
-    ATTACK_UP("WarriorUpAttack"),
-    ATTACK_DOWN("WarriorDownAttack")
+    WARRIOR_UP("WarriorUpIdle"),
+    WARRIOR_DOWN("WarriorDownIdle"),
+    WARRIOR_LEFT("WarriorLeftIdle"),
+    WARRIOR_RIGHT("WarriorRightIdle"),
+    WARRIOR_ATTACK_RIGHT("WarriorRightAttack"),
+    WARRIOR_ATTACK_LEFT("WarriorLeftAttack"),
+    WARRIOR_ATTACK_UP("WarriorUpAttack"),
+    WARRIOR_ATTACK_DOWN("WarriorDownAttack"),
+
+    ARCHER_UP("GoblinSlingerUpIdle"),
+    ARCHER_DOWN("GoblinSlingerDownIdle"),
+    ARCHER_LEFT("GoblinSlingerLeftIdle"),
+    ARCHER_RIGHT("GoblinSlingerRightIdle"),
+    ARCHER_ATTACK_RIGHT("GoblinSlingerRightAttack"),
+    ARCHER_ATTACK_LEFT("GoblinSlingerLeftAttack"),
+    ARCHER_ATTACK_UP("GoblinSlingerUpAttack"),
+    ARCHER_ATTACK_DOWN("GoblinSlingerDownAttack")
 }
 
 class Animation2D (
@@ -59,33 +68,64 @@ class AnimationComponent : Component, Pool.Poolable {
     }
 }
 
-class PlayerAnimationComponent : Component, Pool.Poolable {
-    var typeUp = AnimationType.PLAYER_UP
-    var typeDown = AnimationType.PLAYER_DOWN
-    var typeLeft = AnimationType.PLAYER_LEFT
-    var typeRight = AnimationType.PLAYER_RIGHT
-    var typeAttackRight = AnimationType.ATTACK_RIGHT
-    var typeAttackLeft = AnimationType.ATTACK_LEFT
-    var typeAttackUp = AnimationType.ATTACK_UP
-    var typeAttackDown = AnimationType.ATTACK_DOWN
+class WarriorAnimationComponent : Component, Pool.Poolable {
+    var typeUp = AnimationType.WARRIOR_UP
+    var typeDown = AnimationType.WARRIOR_DOWN
+    var typeLeft = AnimationType.WARRIOR_LEFT
+    var typeRight = AnimationType.WARRIOR_RIGHT
+    var typeAttackRight = AnimationType.WARRIOR_ATTACK_RIGHT
+    var typeAttackLeft = AnimationType.WARRIOR_ATTACK_LEFT
+    var typeAttackUp = AnimationType.WARRIOR_ATTACK_UP
+    var typeAttackDown = AnimationType.WARRIOR_ATTACK_DOWN
     var stateTime = 0f
 
     lateinit var animation : Animation2D
 
 
     override fun reset() {
-//         typeUp = AnimationType.NONE
-//         typeDown = AnimationType.NONE
-//         typeLeft = AnimationType.NONE
-//         typeRight = AnimationType.NONE
-//        typeAttackRight = AnimationType.NONE
-//        typeAttackLeft = AnimationType.NONE
-//        typeAttackUp = AnimationType.NONE
-//        typeAttackDown = AnimationType.NONE
+        typeUp = AnimationType.NONE
+        typeDown = AnimationType.NONE
+        typeLeft = AnimationType.NONE
+        typeRight = AnimationType.NONE
+        typeAttackRight = AnimationType.NONE
+        typeAttackLeft = AnimationType.NONE
+        typeAttackUp = AnimationType.NONE
+        typeAttackDown = AnimationType.NONE
     }
 
     companion object {
-        val mapper = mapperFor<PlayerAnimationComponent>()
+        val mapper = mapperFor<WarriorAnimationComponent>()
+    }
+}
+
+class ArcherAnimationComponent : Component, Pool.Poolable {
+
+    var typeUp = AnimationType.ARCHER_UP
+    var typeDown = AnimationType.ARCHER_DOWN
+    var typeLeft = AnimationType.ARCHER_LEFT
+    var typeRight = AnimationType.ARCHER_RIGHT
+    var typeAttackRight = AnimationType.ARCHER_ATTACK_RIGHT
+    var typeAttackLeft = AnimationType.ARCHER_ATTACK_LEFT
+    var typeAttackUp = AnimationType.ARCHER_ATTACK_UP
+    var typeAttackDown = AnimationType.ARCHER_ATTACK_DOWN
+    var stateTime = 0f
+
+    lateinit var animation : Animation2D
+
+
+    override fun reset() {
+        typeUp = AnimationType.NONE
+        typeDown = AnimationType.NONE
+        typeLeft = AnimationType.NONE
+        typeRight = AnimationType.NONE
+        typeAttackRight = AnimationType.NONE
+        typeAttackLeft = AnimationType.NONE
+        typeAttackUp = AnimationType.NONE
+        typeAttackDown = AnimationType.NONE
+    }
+
+    companion object {
+        val mapper = mapperFor<ArcherAnimationComponent>()
     }
 }
 

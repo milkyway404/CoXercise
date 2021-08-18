@@ -15,10 +15,11 @@ import ktx.log.error
 import ktx.log.logger
 import java.util.*
 
+
 private val LOG = logger<WarriorAnimationSystem>()
-class BossAnimationSystem(
+class WarriorAnimationSystem(
     private val atlas: TextureAtlas
-): IteratingSystem(allOf(BossComponent::class, FacingComponent::class, GraphicComponent::class, BossAnimationComponent::class).get()),
+): IteratingSystem(allOf(PlayerComponent::class, FacingComponent::class, GraphicComponent::class, WarriorAnimationComponent::class).get()),
     EntityListener {
 
     private val animationCache = EnumMap<AnimationType, Animation2D>(AnimationType::class.java)
@@ -40,19 +41,24 @@ class BossAnimationSystem(
         val graphic = entity[GraphicComponent.mapper]
         require(graphic != null ){"Entity |entity| must have a GraphicComponent. entity=$entity"}
 
-        val aniCmp = entity[BossAnimationComponent.mapper]
-        require(aniCmp != null ){"Entity |entity| must have a BossAnimationComponent. entity=$entity"}
+        val aniCmp = entity[WarriorAnimationComponent.mapper]
+        require(aniCmp != null ){"Entity |entity| must have a WarriorAnimationComponent. entity=$entity"}
 
-        val boss = entity[BossComponent.mapper]
-        require(boss != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
-
-//        if(facing.direction == facing.lastDirection && graphic.sprite.texture!= null){
-//            LOG.debug { "lol gotcha" }
-//            return
-//        }
+        val player = entity[PlayerComponent.mapper]
+        require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
         facing.lastDirection = facing.direction
 
+
+        if(player.isAttacking){
+            val region =  when(facing.direction){
+                FacingDirection.WEST -> animateLeftAttack(aniCmp, deltaTime)
+                FacingDirection.EAST -> animateRightAttack(aniCmp, deltaTime)
+                FacingDirection.NORTH -> animateUpAttack(aniCmp, deltaTime)
+                FacingDirection.SOUTH -> animateDownAttack(aniCmp, deltaTime)
+            }
+            graphic.setSpriteRegion(region)
+        }else{
             val region = when(facing.direction){
                 FacingDirection.WEST -> animateIdleLeft(aniCmp, deltaTime)
                 FacingDirection.EAST -> animateIdleRight(aniCmp, deltaTime)
@@ -60,6 +66,7 @@ class BossAnimationSystem(
                 FacingDirection.SOUTH -> animateIdleDown(aniCmp, deltaTime)
             }
             graphic.setSpriteRegion(region)
+        }
 
         /*val region = when(facing.direction){
                 FacingDirection.WEST -> animateLeft(aniCmp, deltaTime)
@@ -74,14 +81,14 @@ class BossAnimationSystem(
     }
 
     override fun entityAdded(entity: Entity) {
-        entity[BossAnimationComponent.mapper]?.let{ aniCmp ->
+        entity[WarriorAnimationComponent.mapper]?.let{ aniCmp ->
             aniCmp.animation = getAnimation(aniCmp.typeUp)
             val frame = aniCmp.animation.getKeyFrame(aniCmp.stateTime)
             entity[GraphicComponent.mapper]?.setSpriteRegion(frame)
         }
     }
 
-    private fun animateIdleUp(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateIdleUp(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
         if (aniCmp.typeUp == aniCmp.animation.type){
             // animation is correctly set -> update it
             aniCmp.stateTime += deltaTime
@@ -93,7 +100,7 @@ class BossAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateIdleDown(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateIdleDown(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
 
         if (aniCmp.typeDown == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -106,7 +113,7 @@ class BossAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateIdleLeft(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateIdleLeft(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
 
         if (aniCmp.typeLeft == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -119,7 +126,7 @@ class BossAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateIdleRight(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateIdleRight(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
 
         if (aniCmp.typeRight == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -132,9 +139,59 @@ class BossAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
+    private fun animateRightAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeAttackRight == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAnimation(aniCmp.typeAttackRight)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateLeftAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeAttackLeft == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAnimation(aniCmp.typeAttackLeft)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+    private fun animateUpAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeAttackUp == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAnimation(aniCmp.typeAttackUp)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+    private fun animateDownAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeAttackDown == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAnimation(aniCmp.typeAttackDown)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
 
 
-    private fun getAnimation(type : AnimationType) : Animation2D {
+
+    private fun getAnimation(type : AnimationType) : Animation2D{
         var animation = animationCache[type]
         if(animation == null){
             var regions = atlas.findRegions(type.atlasKey)

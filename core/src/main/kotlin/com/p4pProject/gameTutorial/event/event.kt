@@ -2,6 +2,8 @@ package com.p4pProject.gameTutorial.event
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.ObjectMap
+import com.p4pProject.gameTutorial.ecs.component.FacingComponent
+import com.p4pProject.gameTutorial.ecs.component.FacingDirection
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.PowerUpType
 import ktx.collections.GdxSet
@@ -39,8 +41,16 @@ sealed class GameEvent{
         override fun toString() = "PlayerHit(player = $boss, hp=$hp, maxHp=$maxHp)"
     }
 
-    object PlayerAttack : GameEvent (){
+    object WarriorAttackEvent : GameEvent (){
         lateinit var player : Entity
+        var damage = 0
+        var startTime: LocalDateTime = LocalDateTime.now()
+        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+    }
+
+    object ArcherAttackEvent : GameEvent (){
+        lateinit var player : Entity
+        lateinit var facing : FacingDirection
         var damage = 0
         var startTime: LocalDateTime = LocalDateTime.now()
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"

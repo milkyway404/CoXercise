@@ -47,7 +47,7 @@ class GameScreen(
                 setInitialPosition(9f,3f,-1f)
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
-            with<PlayerAnimationComponent>()
+            with<ArcherAnimationComponent>()
             with<MoveComponent>()
             with<GraphicComponent>()
             with<PlayerComponent>()
@@ -160,10 +160,19 @@ class GameScreen(
                 imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
                     color.a = 1.0f
                     onClick {
-                       gameEventManager.dispatchEvent(GameEvent.PlayerAttack.apply {
+//                       gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
+//                            this.damage = 0
+//                            this.player = playerr
+//                       })
+
+                        gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
+                            val facing = playerr[FacingComponent.mapper]
+                            require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
+
+                            this.facing = facing.direction
                             this.damage = 0
                             this.player = playerr
-                       })
+                        })
                     }
                 }
                 setFillParent(true)
@@ -174,15 +183,15 @@ class GameScreen(
         stage.isDebugAll = true
 
         // TODO implement actual boss logic
-        gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
-            this.damage = 1
-            this.startX = 0
-            this.endX = 5
-            this.startY = 0
-            this.endY = 5
-            this.startTime = LocalDateTime.now()
-            this.duration = 2000
-        })
+//        gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
+//            this.damage = 1
+//            this.startX = 0
+//            this.endX = 5
+//            this.startY = 0
+//            this.endY = 5
+//            this.startTime = LocalDateTime.now()
+//            this.duration = 2000
+//        })
     }
 
     private fun updateHp(hp: Float, maxHp: Float) {

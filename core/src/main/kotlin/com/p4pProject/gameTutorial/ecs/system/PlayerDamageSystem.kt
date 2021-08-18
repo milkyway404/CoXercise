@@ -4,10 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Game
-import com.p4pProject.gameTutorial.ecs.component.BossComponent
-import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
-import com.p4pProject.gameTutorial.ecs.component.RemoveComponent
-import com.p4pProject.gameTutorial.ecs.component.TransformComponent
+import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
@@ -33,7 +30,7 @@ class PlayerDamageSystem (
     private val gameEventManager: GameEventManager
 ) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
 
-    private var playerAttackArea : PlayerAttackArea = PlayerAttackArea(0, 0f,
+    private var attackArea : AttackArea = AttackArea(0, 0f,
         0f, 0f, 0f)
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -42,14 +39,12 @@ class PlayerDamageSystem (
         val boss = entity[BossComponent.mapper]
         require(boss != null ){"Entity |entity| must have a BossComponent. entity=$entity"}
 
-        // TODO: attach transform to player to enable multiple players
-
-            if (transform.position.x >= playerAttackArea.startX &&
-                transform.position.x <= playerAttackArea.endX &&
-                transform.position.y >= playerAttackArea.startY &&
-                transform.position.y <= playerAttackArea.endY) {
+            if (transform.position.x >= attackArea.startX &&
+                transform.position.x <= attackArea.endX &&
+                transform.position.y >= attackArea.startY &&
+                transform.position.y <= attackArea.endY) {
                 //ouch
-                boss.hp -= playerAttackArea.damage
+                boss.hp -= attackArea.damage
 
                 gameEventManager.dispatchEvent(GameEvent.BossHit.apply {
                     this.boss = entity
@@ -71,18 +66,20 @@ class PlayerDamageSystem (
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-        gameEventManager.addListener(GameEvent.PlayerAttack::class, this)
+        gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-        gameEventManager.removeListener(GameEvent.PlayerAttack::class, this)
+        gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
         // player is attacking
         when (event) {
-            is GameEvent.PlayerAttack -> {
+            is GameEvent.WarriorAttackEvent -> {
                 val transform = event.player[TransformComponent.mapper]
                 require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
                 val player = event.player[PlayerComponent.mapper]
@@ -92,16 +89,46 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                playerAttackArea = if(!player.isAttacking){
-                    PlayerAttackArea(event.damage, (transform.position.x -1f),
+                attackArea = if(!player.isAttacking){
+                    AttackArea(event.damage, (transform.position.x -1f),
                         (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f))
                 }else{
-                    PlayerAttackArea(0, 0f, 0f, 0f, 0f)
+                    AttackArea(0, 0f, 0f, 0f, 0f)
+                }
+            }
+
+            is GameEvent.ArcherAttackEvent -> {
+                LOG.debug { "asdfasf" }
+                val transform = event.player[TransformComponent.mapper]
+                require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
+                val player = event.player[PlayerComponent.mapper]
+                require(player != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
+
+                LOG.debug { "${player.isAttacking}" }
+
+                //SHOULD BE FIXED!!!!!
+                //TEMPORARY SOLUTION
+                attackArea = if(!player.isAttacking){
+                    if(event.facing==FacingDirection.NORTH){
+                        AttackArea(event.damage, (transform.position.x -0.5f),
+                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +32f))
+                    }else if(event.facing==FacingDirection.SOUTH){
+                        AttackArea(event.damage, (transform.position.x -0.5f),
+                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y))
+                    }else if(event.facing==FacingDirection.EAST){
+                        AttackArea(event.damage, (transform.position.x),
+                            (transform.position.x +32f), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                    }else{
+                        AttackArea(event.damage, (transform.position.x -32f),
+                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                    }
+                }else{
+                    AttackArea(0, 0f, 0f, 0f, 0f)
                 }
             }
         }
     }
 
-    private class PlayerAttackArea(val damage: Int, val startX: Float, val endX: Float, val startY: Float,
+    private class AttackArea(val damage: Int, val startX: Float, val endX: Float, val startY: Float,
                                    val endY: Float)
 }

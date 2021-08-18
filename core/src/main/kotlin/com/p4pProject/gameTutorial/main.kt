@@ -63,7 +63,8 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
     val engine: Engine by lazy { PooledEngine().apply {
 
         val graphicsAtlas = assets[TextureAtlasAsset.GAME_GRAPHICS.descriptor]
-        val playerGraphicAtlas = assets[TextureAtlasAsset.PLAYER_GRAPHICS.descriptor]
+        val warriorGraphicAtlas = assets[TextureAtlasAsset.WARRIOR_GRAPHICS.descriptor]
+        val archerGraphicAtlas = assets[TextureAtlasAsset.ARCHER_GRAPHICS.descriptor]
         val bossGraphicAtlas = assets[TextureAtlasAsset.BOSS_GRAPHICS.descriptor]
 
         addSystem(PlayerInputSystem(gameViewport, gameEventManager))
@@ -73,13 +74,14 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         addSystem(PlayerDamageSystem(gameEventManager))
         addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))
         addSystem(
-            PlayerAnimationSystem(
-                playerGraphicAtlas
+            WarriorAnimationSystem(
+                warriorGraphicAtlas
             )
         )
         addSystem(BossAnimationSystem(
             bossGraphicAtlas
         ))
+        addSystem(ArcherAnimationSystem(archerGraphicAtlas))
         addSystem(AttachSystem())
         addSystem(AnimationSystem(graphicsAtlas))
         addSystem(RenderSystem(
