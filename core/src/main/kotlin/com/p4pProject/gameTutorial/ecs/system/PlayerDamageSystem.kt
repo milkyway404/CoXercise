@@ -110,15 +110,15 @@ class PlayerDamageSystem (
                 attackArea = if(!player.isAttacking){
                     if(event.facing==FacingDirection.NORTH){
                         AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +32f))
+                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f))
                     }else if(event.facing==FacingDirection.SOUTH){
                         AttackArea(event.damage, (transform.position.x -0.5f),
                             (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y))
                     }else if(event.facing==FacingDirection.EAST){
                         AttackArea(event.damage, (transform.position.x),
-                            (transform.position.x +32f), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f))
                     }else{
-                        AttackArea(event.damage, (transform.position.x -32f),
+                        AttackArea(event.damage, (transform.position.x -124f),
                             (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f))
                     }
                 }else{

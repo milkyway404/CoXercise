@@ -3,6 +3,7 @@ package com.p4pProject.gameTutorial.ecs.system
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.MathUtils
 import com.p4pProject.gameTutorial.V_HEIGHT
 import com.p4pProject.gameTutorial.V_WIDTH
@@ -58,6 +59,22 @@ class MoveSystem(
 
         val player = entity[PlayerComponent.mapper]
         if(player != null && !player.isAttacking) {
+
+            if(Gdx.input.isKeyPressed(Input.Keys.W)){
+                movePlayer(transform, move, player,FacingDirection.NORTH , deltaTime)
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.A)){
+                movePlayer(transform, move, player,FacingDirection.WEST , deltaTime)
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.S)){
+                movePlayer(transform, move, player,FacingDirection.SOUTH , deltaTime)
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.D)){
+                movePlayer(transform, move, player,FacingDirection.EAST , deltaTime)
+            }
             val magnitude = sqrt((Gdx.input.accelerometerX.pow(2) + Gdx.input.accelerometerY.pow(2)
                     + Gdx.input.accelerometerZ.pow(2)).toDouble())
             val magnitudeDelta = magnitude - magnitudePrevious
@@ -67,7 +84,7 @@ class MoveSystem(
                 Gdx.app.log("step", "TAKING A STEP")
                 // player movement
                 entity[FacingComponent.mapper]?.let { facing ->
-                    movePlayer(transform, move, player, facing, deltaTime)
+                    movePlayer(transform, move, player, facing.direction, deltaTime)
                 }
                 player.mp++
                 gameEventManager.dispatchEvent(GameEvent.PlayerStep.apply {
@@ -85,11 +102,11 @@ class MoveSystem(
         transform:TransformComponent,
         move:MoveComponent,
         player:PlayerComponent,
-        facing:FacingComponent,
+        facing:FacingDirection,
         deltaTime:Float){
 
-        Gdx.app.log("direction", facing.direction.toString())
-        when (facing.direction) {
+        Gdx.app.log("direction", facing.toString())
+        when (facing) {
             FacingDirection.NORTH -> transform.position.y = MathUtils.clamp(
                 transform.position.y + 1,
                 0f,

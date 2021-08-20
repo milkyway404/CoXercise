@@ -56,6 +56,13 @@ sealed class GameEvent{
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
     }
 
+    object PriestAttackEvent : GameEvent (){
+        lateinit var player : Entity
+        var damage = 0
+        var startTime: LocalDateTime = LocalDateTime.now()
+        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+    }
+
     object PlayerStep: GameEvent ()  {
         lateinit var player: PlayerComponent
     }
