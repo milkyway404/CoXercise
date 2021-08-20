@@ -40,14 +40,17 @@ class GameScreen(
 ): GameBaseScreen(game), GameEventListener {
 
     private lateinit var playerr : Entity
+    private lateinit var warrior: Entity
+    private lateinit var archer: Entity
+    private lateinit var priest: Entity
     private lateinit var boss : Entity
     private var hpBar: Image? = null
     private var hpText: TextField? = null
     private var mpBar: Image? = null
     private var mpText: TextField? = null
 
-    private fun spawnPlayer (){
-         playerr = engine.entity{
+    private fun spawnPlayers (){
+         warrior = engine.entity{
             with<TransformComponent>{
                 setInitialPosition(9f,3f,-1f)
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
@@ -56,13 +59,31 @@ class GameScreen(
             with<GraphicComponent>()
             with<PlayerComponent>()
             with<FacingComponent>()
+            with<WarriorAnimationComponent>()
+            with<WarriorComponent>()
         }
-        addCharacterComponentsToPlayerAndInitialise()
+
+        archer = engine.entity{
+            with<TransformComponent>{
+                setInitialPosition(9f,3f,-1f)
+                setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
+            }
+            with<MoveComponent>()
+            with<GraphicComponent>()
+            with<PlayerComponent>()
+            with<FacingComponent>()
+            with<ArcherAnimationComponent>()
+            with<ArcherComponent>()
+        }
+
+        // TODO add priest
+
+        playerr = when (CURRENT_CHARACTER) {
+            CharacterType.WARRIOR -> warrior
+            CharacterType.ARCHER -> archer
+            CharacterType.PRIEST -> priest
+        }
         updatePlayerHpMp()
-    }
-
-    private fun spawnOtherPlayers() {
-
     }
 
     private fun getPlayerComp(): PlayerComponent {
@@ -78,21 +99,6 @@ class GameScreen(
 
         updateHp(playerComp.hp.toFloat(), playerComp.maxHp.toFloat())
         updateMp(playerComp.mp.toFloat(), playerComp.maxMp.toFloat())
-
-    }
-
-    private fun addCharacterComponentsToPlayerAndInitialise() {
-        when (CURRENT_CHARACTER) {
-            CharacterType.WARRIOR -> {
-                playerr.addComponent<WarriorAnimationComponent>(engine)
-                playerr.addComponent<WarriorComponent>(engine)
-            }
-            CharacterType.ARCHER -> {
-                playerr.addComponent<ArcherAnimationComponent>(engine)
-                playerr.addComponent<ArcherComponent>(engine)
-            }
-            //CharacterType.PRIEST -> currentPlayer.addComponent<PriestAnimationComponent>(engine)
-        }
 
     }
 
@@ -118,7 +124,7 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
         audioService.play(MusicAsset.GAME)
-        spawnPlayer ()
+        spawnPlayers ()
         spawnBoss()
 
         val background = engine.entity{
@@ -244,7 +250,7 @@ class GameScreen(
                 preferences.flush {
                     this["highscore"] = event.distance
                 }
-                spawnPlayer()
+                spawnPlayers()
             }
             is GameEvent.PlayerHit -> {
                 updateHp(event.hp.toFloat(), event.maxHp.toFloat())
