@@ -1,0 +1,370 @@
+
+priest.png
+size: 2048, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+NecromancerDownAttack
+  rotate: false
+  xy: 651, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerDownAttack
+  rotate: false
+  xy: 1201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerDownAttack
+  rotate: false
+  xy: 1201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerDownAttack
+  rotate: false
+  xy: 301, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerDownAttack
+  rotate: false
+  xy: 1601, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+NecromancerDownAttack
+  rotate: false
+  xy: 901, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 6
+NecromancerDownIdle
+  rotate: false
+  xy: 1401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerDownAttack
+  rotate: false
+  xy: 1401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerDownIdle
+  rotate: false
+  xy: 1401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerDownIdle
+  rotate: false
+  xy: 551, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerDownIdle
+  rotate: false
+  xy: 1051, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerDownIdle
+  rotate: false
+  xy: 1051, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerDownIdle
+  rotate: false
+  xy: 151, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+NecromancerLeftAttack
+  rotate: false
+  xy: 1801, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerLeftAttack
+  rotate: false
+  xy: 1351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerLeftAttack
+  rotate: false
+  xy: 501, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerLeftAttack
+  rotate: false
+  xy: 501, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerLeftAttack
+  rotate: false
+  xy: 1001, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerLeftAttack
+  rotate: false
+  xy: 1, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+NecromancerLeftAttack
+  rotate: false
+  xy: 1451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 6
+NecromancerLeftIdle
+  rotate: false
+  xy: 601, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerLeftIdle
+  rotate: false
+  xy: 601, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerLeftIdle
+  rotate: false
+  xy: 1151, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerLeftIdle
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerLeftIdle
+  rotate: false
+  xy: 251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerLeftIdle
+  rotate: false
+  xy: 851, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+NecromancerRightAttack
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerRightIdle
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerRightIdle
+  rotate: false
+  xy: 101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerRightAttack
+  rotate: false
+  xy: 1501, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerRightAttack
+  rotate: false
+  xy: 701, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerRightAttack
+  rotate: false
+  xy: 701, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerRightAttack
+  rotate: false
+  xy: 1251, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerRightAttack
+  rotate: false
+  xy: 351, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+NecromancerRightAttack
+  rotate: false
+  xy: 1651, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 6
+NecromancerRightIdle
+  rotate: false
+  xy: 1101, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerRightIdle
+  rotate: false
+  xy: 201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerRightIdle
+  rotate: false
+  xy: 201, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerRightIdle
+  rotate: false
+  xy: 751, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+NecromancerUpAttack
+  rotate: false
+  xy: 1301, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerUpAttack
+  rotate: false
+  xy: 451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerUpAttack
+  rotate: false
+  xy: 451, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerUpAttack
+  rotate: false
+  xy: 951, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerUpAttack
+  rotate: false
+  xy: 51, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5
+NecromancerUpAttack
+  rotate: false
+  xy: 1551, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 6
+NecromancerUpIdle
+  rotate: false
+  xy: 801, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+NecromancerUpAttack
+  rotate: false
+  xy: 801, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerUpIdle
+  rotate: false
+  xy: 801, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 0
+NecromancerUpIdle
+  rotate: false
+  xy: 1751, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+NecromancerUpIdle
+  rotate: false
+  xy: 401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 4
+NecromancerUpIdle
+  rotate: false
+  xy: 401, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+NecromancerUpIdle
+  rotate: false
+  xy: 1701, 1
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 5

@@ -54,7 +54,9 @@ class PlayerInputSystem(
         tmpVec.x = Gdx.input.x.toFloat()
         gameViewport.unproject(tmpVec)
         val diffX = tmpVec.x - transform.position.x - transform.size.x * 0.5f
-        facing.direction = getFacingDirection()
+
+        //facing.direction = getFacingDirection()
+
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
             facing.direction = FacingDirection.NORTH
         }

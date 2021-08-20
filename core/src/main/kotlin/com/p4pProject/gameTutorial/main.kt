@@ -65,6 +65,7 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         val graphicsAtlas = assets[TextureAtlasAsset.GAME_GRAPHICS.descriptor]
         val warriorGraphicAtlas = assets[TextureAtlasAsset.WARRIOR_GRAPHICS.descriptor]
         val archerGraphicAtlas = assets[TextureAtlasAsset.ARCHER_GRAPHICS.descriptor]
+        val priestGraphicAtlas = assets[TextureAtlasAsset.PRIEST_GRAPHICS.descriptor]
         val bossGraphicAtlas = assets[TextureAtlasAsset.BOSS_GRAPHICS.descriptor]
 
         addSystem(PlayerInputSystem(gameViewport, gameEventManager))
@@ -77,6 +78,11 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
             WarriorAnimationSystem(
                 warriorGraphicAtlas
             )
+        )
+        addSystem(
+            PriestAnimationSystem(
+                priestGraphicAtlas
+        )
         )
         addSystem(BossAnimationSystem(
             bossGraphicAtlas

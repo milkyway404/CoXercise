@@ -44,7 +44,16 @@ enum class AnimationType (
     ARCHER_ATTACK_RIGHT("GoblinSlingerRightAttack"),
     ARCHER_ATTACK_LEFT("GoblinSlingerLeftAttack"),
     ARCHER_ATTACK_UP("GoblinSlingerUpAttack"),
-    ARCHER_ATTACK_DOWN("GoblinSlingerDownAttack")
+    ARCHER_ATTACK_DOWN("GoblinSlingerDownAttack"),
+
+    PRIEST_UP("NecromancerUpIdle"),
+    PRIEST_DOWN("NecromancerDownIdle"),
+    PRIEST_LEFT("NecromancerLeftIdle"),
+    PRIEST_RIGHT("NecromancerRightIdle"),
+    PRIEST_ATTACK_RIGHT("NecromancerRightAttack"),
+    PRIEST_ATTACK_LEFT("NecromancerLeftAttack"),
+    PRIEST_ATTACK_UP("NecromancerUpAttack"),
+    PRIEST_ATTACK_DOWN("NecromancerDownAttack")
 }
 
 class Animation2D (
@@ -126,6 +135,37 @@ class ArcherAnimationComponent : Component, Pool.Poolable {
 
     companion object {
         val mapper = mapperFor<ArcherAnimationComponent>()
+    }
+}
+
+class PriestAnimationComponent : Component, Pool.Poolable {
+
+    var typeUp = AnimationType.PRIEST_UP
+    var typeDown = AnimationType.PRIEST_DOWN
+    var typeLeft = AnimationType.PRIEST_LEFT
+    var typeRight = AnimationType.PRIEST_RIGHT
+    var typeAttackRight = AnimationType.PRIEST_ATTACK_RIGHT
+    var typeAttackLeft = AnimationType.PRIEST_ATTACK_LEFT
+    var typeAttackUp = AnimationType.PRIEST_ATTACK_UP
+    var typeAttackDown = AnimationType.PRIEST_ATTACK_DOWN
+    var stateTime = 0f
+
+    lateinit var animation : Animation2D
+
+
+    override fun reset() {
+        typeUp = AnimationType.NONE
+        typeDown = AnimationType.NONE
+        typeLeft = AnimationType.NONE
+        typeRight = AnimationType.NONE
+        typeAttackRight = AnimationType.NONE
+        typeAttackLeft = AnimationType.NONE
+        typeAttackUp = AnimationType.NONE
+        typeAttackDown = AnimationType.NONE
+    }
+
+    companion object {
+        val mapper = mapperFor<PriestAnimationComponent>()
     }
 }
 
