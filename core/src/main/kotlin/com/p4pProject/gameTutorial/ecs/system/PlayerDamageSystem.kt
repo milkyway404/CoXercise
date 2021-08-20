@@ -98,7 +98,6 @@ class PlayerDamageSystem (
             }
 
             is GameEvent.ArcherAttackEvent -> {
-                LOG.debug { "asdfasf" }
                 val transform = event.player[TransformComponent.mapper]
                 require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
                 val player = event.player[PlayerComponent.mapper]

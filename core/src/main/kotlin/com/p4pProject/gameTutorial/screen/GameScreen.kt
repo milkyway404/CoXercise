@@ -13,6 +13,7 @@ import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.ui.SkinImage
 import com.p4pProject.gameTutorial.ui.SkinImageButton
 import ktx.actors.onClick
+import ktx.ashley.addComponent
 import ktx.ashley.entity
 import ktx.ashley.get
 import ktx.ashley.with
@@ -25,9 +26,13 @@ import ktx.scene2d.*
 import java.time.LocalDateTime
 import kotlin.math.min
 
+enum class CharacterType {
+    WARRIOR, ARCHER, PRIEST
+}
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
+val CURRENT_CHARACTER = CharacterType.WARRIOR
 
 class GameScreen(
     game: MyGameTutorial,
@@ -47,31 +52,48 @@ class GameScreen(
                 setInitialPosition(9f,3f,-1f)
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
-            with<ArcherAnimationComponent>()
             with<MoveComponent>()
             with<GraphicComponent>()
             with<PlayerComponent>()
             with<FacingComponent>()
         }
-        val playerComp = playerr[PlayerComponent.mapper]
-        require(playerComp != null)
+        addCharacterComponentsToPlayerAndInitialise()
+        updatePlayerHpMp()
+    }
+
+    private fun spawnOtherPlayers() {
+
+    }
+
+    private fun getPlayerComp(): PlayerComponent {
+        return when (CURRENT_CHARACTER) {
+            CharacterType.WARRIOR -> playerr[WarriorComponent.mapper]!!
+            CharacterType.ARCHER -> playerr[ArcherComponent.mapper]!!
+            CharacterType.PRIEST -> playerr[PriestComponent.mapper]!!
+        }
+    }
+
+    private fun updatePlayerHpMp() {
+        val playerComp = getPlayerComp()
 
         updateHp(playerComp.hp.toFloat(), playerComp.maxHp.toFloat())
         updateMp(playerComp.mp.toFloat(), playerComp.maxMp.toFloat())
 
+    }
 
-        // The added fire
-        /*engine.entity {
-            with<TransformComponent>()
-            with<AttachComponent> {
-                entity = player
-                offset.set(1f * UNIT_SCALE, -6f * UNIT_SCALE)
+    private fun addCharacterComponentsToPlayerAndInitialise() {
+        when (CURRENT_CHARACTER) {
+            CharacterType.WARRIOR -> {
+                playerr.addComponent<WarriorAnimationComponent>(engine)
+                playerr.addComponent<WarriorComponent>(engine)
             }
-            with<GraphicComponent>()
-            with<AnimationComponent> {
-                type = AnimationType.FIRE
+            CharacterType.ARCHER -> {
+                playerr.addComponent<ArcherAnimationComponent>(engine)
+                playerr.addComponent<ArcherComponent>(engine)
             }
-        }*/
+            //CharacterType.PRIEST -> currentPlayer.addComponent<PriestAnimationComponent>(engine)
+        }
+
     }
 
     private fun spawnBoss(){
@@ -137,7 +159,7 @@ class GameScreen(
                 }
 
                 hpText = textArea {
-                    text = "100"
+                    text = "-1"
                 }
 
                 row()
@@ -147,7 +169,7 @@ class GameScreen(
                 }
 
                 mpText = textArea {
-                    text = "0"
+                    text = "-1"
                 }
 
                 setFillParent(true)
@@ -157,28 +179,38 @@ class GameScreen(
             table {
                 right().bottom()
                 pad(5f)
-                imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
-                    color.a = 1.0f
-                    onClick {
-//                       gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
-//                            this.damage = 0
-//                            this.player = playerr
-//                       })
+                if (CURRENT_CHARACTER == CharacterType.WARRIOR) {
+                    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+                        color.a = 1.0f
+                        onClick {
+                            gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
+                                this.damage = 0
+                                this.player = playerr
+                            })
+                        }
+                    }
+                } else if (CURRENT_CHARACTER == CharacterType.ARCHER) {
+                    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+                        color.a = 1.0f
+                        onClick {
 
-                        gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
-                            val facing = playerr[FacingComponent.mapper]
-                            require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
+                            gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
+                                val facing = playerr[FacingComponent.mapper]
+                                require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
 
-                            this.facing = facing.direction
-                            this.damage = 0
-                            this.player = playerr
-                        })
+                                this.facing = facing.direction
+                                this.damage = 0
+                                this.player = playerr
+                            })
+                        }
                     }
                 }
+
                 setFillParent(true)
                 pack()
             }
         }
+        updatePlayerHpMp()
         // allows you to see the borders of components on screen
         stage.isDebugAll = true
 

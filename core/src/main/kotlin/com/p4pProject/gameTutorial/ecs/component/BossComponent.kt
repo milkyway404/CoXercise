@@ -9,16 +9,16 @@ const val BOSS_MAX_HP = 300
 
 class BossComponent : Component, Pool.Poolable {
 
-    var hp = MAX_HP
-    var maxHp = MAX_HP
+    var hp = BOSS_MAX_HP
+    var maxHp = BOSS_MAX_HP
     //var shield = 0f
     //var maxShield = MAX_SHIElD
     var distance = 0f
     var isAttacking = false
 
     override fun reset() {
-        hp = MAX_HP
-        maxHp = MAX_HP
+        hp = BOSS_MAX_HP
+        maxHp = BOSS_MAX_HP
         //shield = 0f
         //maxShield = MAX_SHIElD
         distance = 0f

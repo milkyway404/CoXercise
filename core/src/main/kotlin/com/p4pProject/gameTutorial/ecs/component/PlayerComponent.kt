@@ -7,25 +7,56 @@ import ktx.ashley.mapperFor
 const val MAX_HP = 100
 const val MAX_MP = 100
 
-class PlayerComponent : Component, Pool.Poolable {
+open class PlayerComponent : Component, Pool.Poolable {
 
-    var hp = MAX_HP
-    var maxHp = MAX_HP
-    var mp = 0
-    var maxMp = MAX_MP
+    open var hp = MAX_HP
+    open val maxHp = MAX_HP
+    open var mp = 0
+    open val maxMp = MAX_MP
     var distance = 0f
     var isAttacking = false
 
     override fun reset() {
          hp = MAX_HP
-         maxHp = MAX_HP
          mp = 0
-         maxMp = MAX_MP
          distance = 0f
         isAttacking = false
     }
 
     companion object{
         val mapper = mapperFor<PlayerComponent>()
+    }
+}
+
+class WarriorComponent: PlayerComponent() {
+    override val maxHp = 200
+    override val maxMp = 100
+    override var hp: Int = maxHp
+    override var mp: Int = 0
+
+    companion object{
+        val mapper = mapperFor<WarriorComponent>()
+    }
+}
+
+class ArcherComponent: PlayerComponent() {
+    override val maxHp = 50
+    override val maxMp = 50
+    override var hp: Int = maxHp
+    override var mp: Int = 0
+
+    companion object{
+        val mapper = mapperFor<ArcherComponent>()
+    }
+}
+
+class PriestComponent: PlayerComponent() {
+    override val maxHp = 200
+    override val maxMp = 100
+    override var hp: Int = maxHp
+    override var mp: Int = 0
+
+    companion object{
+        val mapper = mapperFor<PriestComponent>()
     }
 }

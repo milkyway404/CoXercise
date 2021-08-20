@@ -35,7 +35,7 @@ class PlayerInputSystem(
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

@@ -57,9 +57,6 @@ class DamageSystem (
                 })
 
                 if(player.hp <= 0f){
-                    gameEventManager.dispatchEvent(GameEvent.PlayerDeath.apply {
-                        this.distance = player.distance
-                    })
                     entity.addComponent<RemoveComponent>(engine){
                         delay = DEATH_EXPLOSION_DURATION
                     }
