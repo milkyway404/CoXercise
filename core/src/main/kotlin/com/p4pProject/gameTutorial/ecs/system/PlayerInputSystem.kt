@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.p4pProject.gameTutorial.ecs.component.*
@@ -54,6 +55,21 @@ class PlayerInputSystem(
         gameViewport.unproject(tmpVec)
         val diffX = tmpVec.x - transform.position.x - transform.size.x * 0.5f
         facing.direction = getFacingDirection()
+        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+            facing.direction = FacingDirection.NORTH
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+            facing.direction = FacingDirection.WEST
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.S)){
+            facing.direction = FacingDirection.SOUTH
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+            facing.direction = FacingDirection.EAST
+        }
 
         player.isAttacking = playerIsAttacking
     }
