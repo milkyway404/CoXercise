@@ -10,6 +10,8 @@ import com.p4pProject.gameTutorial.V_WIDTH
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
+import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
+import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
 import ktx.ashley.get
 import kotlin.math.*
@@ -52,6 +54,25 @@ class MoveSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        // verify that the entity is actually the main player's
+        when (CURRENT_CHARACTER) {
+            CharacterType.WARRIOR -> {
+                if (entity[WarriorComponent.mapper] == null) {
+                    return
+                }
+            }
+            CharacterType.ARCHER -> {
+                if (entity[ArcherComponent.mapper] == null) {
+                    return
+                }
+            }
+            CharacterType.PRIEST -> {
+                if (entity[PriestComponent.mapper] == null) {
+                    return
+                }
+            }
+        }
+
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
         val move = entity[MoveComponent.mapper]
