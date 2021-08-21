@@ -30,15 +30,21 @@ class PlayerInputSystem(
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.WarriorAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestAttackFinishEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.WarriorAttackFinishEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherAttackFinishEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestAttackFinishEvent::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

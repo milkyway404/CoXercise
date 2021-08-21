@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
+import com.p4pProject.gameTutorial.event.GameEvent
+import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
 import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
@@ -20,7 +22,7 @@ import java.util.*
 
 private val LOG = logger<WarriorAnimationSystem>()
 class WarriorAnimationSystem(
-    private val atlas: TextureAtlas
+    private val atlas: TextureAtlas, private val gameEventManager: GameEventManager
 ): IteratingSystem(allOf(PlayerComponent::class, FacingComponent::class, GraphicComponent::class, WarriorAnimationComponent::class).get()),
     EntityListener {
 
@@ -169,6 +171,10 @@ class WarriorAnimationSystem(
             aniCmp.stateTime = 0f
             aniCmp.animation = getAttackAnimation(aniCmp.typeAttackRight)
         }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+        }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
@@ -182,6 +188,10 @@ class WarriorAnimationSystem(
             aniCmp.stateTime = 0f
             aniCmp.animation = getAttackAnimation(aniCmp.typeAttackLeft)
         }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+        }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
     private fun animateUpAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
@@ -194,6 +204,10 @@ class WarriorAnimationSystem(
             aniCmp.stateTime = 0f
             aniCmp.animation = getAttackAnimation(aniCmp.typeAttackUp)
         }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+        }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
     private fun animateDownAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
@@ -205,6 +219,10 @@ class WarriorAnimationSystem(
             //change animation
             aniCmp.stateTime = 0f
             aniCmp.animation = getAttackAnimation(aniCmp.typeAttackDown)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }

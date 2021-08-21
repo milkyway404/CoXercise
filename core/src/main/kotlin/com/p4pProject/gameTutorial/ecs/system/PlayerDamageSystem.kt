@@ -21,9 +21,6 @@ import kotlin.math.max
 
 
 // DO NOT LEAVE LIKE THIS
-private const val DAMAGE_PER_SECOND = 25f
-private const val DEATH_EXPLOSION_DURATION = 0.9f
-
 private val LOG = logger<PlayerDamageSystem>()
 
 class PlayerDamageSystem (
@@ -67,6 +64,7 @@ class PlayerDamageSystem (
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.BossHit::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
     }
@@ -74,8 +72,8 @@ class PlayerDamageSystem (
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
@@ -86,8 +84,6 @@ class PlayerDamageSystem (
                 require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
                 val player = event.player[PlayerComponent.mapper]
                 require(player != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
-
-                LOG.debug { "${player.isAttacking}" }
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
@@ -144,6 +140,10 @@ class PlayerDamageSystem (
                 }else{
                     AttackArea(0, 0f, 0f, 0f, 0f)
                 }
+            }
+
+            is GameEvent.BossHit -> {
+                attackArea = AttackArea(0, 0f, 0f, 0f, 0f)
             }
 
         }
