@@ -4,6 +4,13 @@ size: 256, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+archerAttack
+  rotate: false
+  xy: 1, 9
+  size: 22, 20
+  orig: 22, 20
+  offset: 0, 0
+  index: -1
 font11_gradient
   rotate: false
   xy: 1, 121
@@ -20,7 +27,7 @@ font8
   index: -1
 frame
   rotate: false
-  xy: 131, 198
+  xy: 49, 9
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -28,7 +35,7 @@ frame
   index: -1
 frame_transparent
   rotate: false
-  xy: 25, 9
+  xy: 155, 220
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -43,7 +50,7 @@ game_hud
   index: -1
 label_frame
   rotate: false
-  xy: 131, 220
+  xy: 131, 198
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -51,7 +58,7 @@ label_frame
   index: -1
 label_frame_transparent
   rotate: false
-  xy: 153, 220
+  xy: 131, 176
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -59,7 +66,7 @@ label_frame_transparent
   index: -1
 life_bar
   rotate: false
-  xy: 47, 23
+  xy: 153, 212
   size: 22, 6
   split: 2, 2, 2, 2
   pad: 0, 0, 0, 0
@@ -77,28 +84,35 @@ mp_bar
   index: -1
 no_sound
   rotate: false
-  xy: 175, 231
+  xy: 131, 165
   size: 11, 9
   orig: 11, 9
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 138, 189
+  xy: 71, 11
   size: 6, 7
   orig: 6, 7
   offset: 0, 0
   index: -1
 play
   rotate: false
-  xy: 131, 163
+  xy: 184, 231
   size: 5, 9
   orig: 5, 9
   offset: 0, 0
   index: -1
+priestAttack
+  rotate: false
+  xy: 25, 9
+  size: 22, 20
+  orig: 22, 20
+  offset: 0, 0
+  index: -1
 quit
   rotate: false
-  xy: 47, 13
+  xy: 153, 202
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -112,7 +126,7 @@ scroll_knob
   index: -1
 scroll_v
   rotate: false
-  xy: 131, 174
+  xy: 177, 218
   size: 5, 22
   split: 0, 0, 8, 9
   orig: 5, 22
@@ -129,7 +143,7 @@ shield_bar
   index: -1
 sound
   rotate: false
-  xy: 153, 209
+  xy: 71, 20
   size: 11, 9
   orig: 11, 9
   offset: 0, 0
@@ -143,7 +157,7 @@ warning
   index: -1
 warriorAttack
   rotate: false
-  xy: 1, 9
+  xy: 131, 220
   size: 22, 20
   orig: 22, 20
   offset: 0, 0

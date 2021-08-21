@@ -207,7 +207,8 @@ class GameScreen(
                         }
                     }
                 } else if (CURRENT_CHARACTER == CharacterType.ARCHER) {
-                    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+                    //TODO: add column default and big good image here for the buttons
+                    imageButton(SkinImageButton.ARCHER_ATTACK.name) {
                         color.a = 1.0f
                         onClick {
 
@@ -224,7 +225,7 @@ class GameScreen(
                 }
 
                 else if (CURRENT_CHARACTER == CharacterType.PRIEST) {
-                    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+                    imageButton(SkinImageButton.PRIEST_ATTACK.name) {
                         color.a = 1.0f
                         onClick {
 
