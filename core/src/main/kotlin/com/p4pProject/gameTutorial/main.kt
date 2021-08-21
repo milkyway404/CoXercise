@@ -19,6 +19,8 @@ import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.GameBaseScreen
 import com.p4pProject.gameTutorial.screen.LoadingScreen
 import com.p4pProject.gameTutorial.ui.createSkin
+import io.socket.client.IO
+import io.socket.client.Socket
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.app.KtxGame
@@ -37,6 +39,7 @@ const val V_HEIGHT = 9
 const val BACKGROUND_V_WIDTH = 1462
 const val BACKGROUND_V_HEIGHT = 822
 class MyGameTutorial : KtxGame<GameBaseScreen>() {
+    private lateinit var socket:Socket
     val gameViewport = FitViewport(V_WIDTH.toFloat(), V_HEIGHT.toFloat())
     val uiViewport = FitViewport(V_WIDTH_PIXELS.toFloat(), V_HEIGHT_PIXELS.toFloat());
     val backgroundViewport = FitViewport(BACKGROUND_V_WIDTH.toFloat(), BACKGROUND_V_HEIGHT.toFloat());
@@ -104,6 +107,8 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
     }
 
     override fun create() {
+        connectSocket()
+
         Gdx.app.logLevel = 3
         LOG.debug { "Create game instance" }
 
@@ -127,5 +132,12 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         batch.dispose()
         assets.dispose()
         stage.dispose()
+        socket.disconnect()
+    }
+
+    private fun connectSocket() {
+        // TODO change this URL if hosting
+        socket = IO.socket("http://localhost:9999")
+        socket.connect()
     }
 }

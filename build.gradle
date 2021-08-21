@@ -26,6 +26,14 @@ configure(subprojects - project(':android')) {
 	}
 }
 
+project(":core") {
+	apply plugin: "java"
+
+	dependencies {
+		implementation "io.socket:socket.io-client:2.0.1"
+	}
+}
+
 subprojects {
 	version = '0.0.1'
 	ext.appName = 'gameTutorial'
