@@ -57,7 +57,9 @@ class GameScreen(
             }
             with<MoveComponent>()
             with<GraphicComponent>()
-            with<PlayerComponent>()
+            with<PlayerComponent> {
+                setAsWarrior()
+            }
             with<FacingComponent>()
             with<WarriorAnimationComponent>()
         }
@@ -69,7 +71,10 @@ class GameScreen(
             }
             with<MoveComponent>()
             with<GraphicComponent>()
-            with<PlayerComponent>()
+            with<PlayerComponent>{
+                setAsArcher()
+
+            }
             with<FacingComponent>()
             with<ArcherAnimationComponent>()
         }
@@ -81,7 +86,10 @@ class GameScreen(
             }
             with<MoveComponent>()
             with<GraphicComponent>()
-            with<PlayerComponent>()
+            with<PlayerComponent> {
+                setAsPriest()
+
+            }
             with<FacingComponent>()
             with<PriestAnimationComponent>()
         }
@@ -199,6 +207,23 @@ class GameScreen(
                         }
                     }
                 } else if (CURRENT_CHARACTER == CharacterType.ARCHER) {
+                    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+                        color.a = 1.0f
+                        onClick {
+
+                            gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
+                                val facing = playerr[FacingComponent.mapper]
+                                require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
+
+                                this.facing = facing.direction
+                                this.damage = 0
+                                this.player = playerr
+                            })
+                        }
+                    }
+                }
+
+                else if (CURRENT_CHARACTER == CharacterType.PRIEST) {
                     imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
                         color.a = 1.0f
                         onClick {
