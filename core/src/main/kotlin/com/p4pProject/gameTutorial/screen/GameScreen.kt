@@ -32,7 +32,7 @@ enum class CharacterType {
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
-val CURRENT_CHARACTER = CharacterType.WARRIOR
+val CURRENT_CHARACTER = CharacterType.ARCHER
 
 class GameScreen(
     game: MyGameTutorial,
@@ -60,7 +60,6 @@ class GameScreen(
             with<PlayerComponent>()
             with<FacingComponent>()
             with<WarriorAnimationComponent>()
-            with<WarriorComponent>()
         }
 
         archer = engine.entity{
@@ -73,7 +72,18 @@ class GameScreen(
             with<PlayerComponent>()
             with<FacingComponent>()
             with<ArcherAnimationComponent>()
-            with<ArcherComponent>()
+        }
+
+        priest = engine.entity{
+            with<TransformComponent>{
+                setInitialPosition(9f,3f,-1f)
+                setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
+            }
+            with<MoveComponent>()
+            with<GraphicComponent>()
+            with<PlayerComponent>()
+            with<FacingComponent>()
+            with<PriestAnimationComponent>()
         }
 
         // TODO add priest
@@ -86,16 +96,9 @@ class GameScreen(
         updatePlayerHpMp()
     }
 
-    private fun getPlayerComp(): PlayerComponent {
-        return when (CURRENT_CHARACTER) {
-            CharacterType.WARRIOR -> playerr[WarriorComponent.mapper]!!
-            CharacterType.ARCHER -> playerr[ArcherComponent.mapper]!!
-            CharacterType.PRIEST -> playerr[PriestComponent.mapper]!!
-        }
-    }
-
     private fun updatePlayerHpMp() {
-        val playerComp = getPlayerComp()
+
+        val playerComp =playerr[PlayerComponent.mapper]!!
 
         updateHp(playerComp.hp.toFloat(), playerComp.maxHp.toFloat())
         updateMp(playerComp.mp.toFloat(), playerComp.maxMp.toFloat())
@@ -123,7 +126,7 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.PlayerHit::class, this)
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
-        audioService.play(MusicAsset.GAME)
+        //audioService.play(MusicAsset.GAME)
         spawnPlayers ()
         spawnBoss()
 

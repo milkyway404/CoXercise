@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
+import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
+import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.log.debug
@@ -34,6 +36,23 @@ class PriestAnimationSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        when (CURRENT_CHARACTER) {
+            CharacterType.WARRIOR -> {
+                if (entity[WarriorAnimationComponent.mapper] == null) {
+                    return
+                }
+            }
+            CharacterType.ARCHER -> {
+                if (entity[ArcherAnimationComponent.mapper] == null) {
+                    return
+                }
+            }
+            CharacterType.PRIEST -> {
+                if (entity[PriestAnimationComponent.mapper] == null) {
+                    return
+                }
+            }
+        }
         val facing = entity[FacingComponent.mapper]
         require(facing != null ){"Entity |entity| must have a FacingComponent. entity=$entity"}
 

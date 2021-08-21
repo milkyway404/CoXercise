@@ -38,21 +38,22 @@ class ArcherAnimationSystem(
     override fun processEntity(entity: Entity, deltaTime: Float) {
         when (CURRENT_CHARACTER) {
             CharacterType.WARRIOR -> {
-                if (entity[WarriorComponent.mapper] == null) {
+                if (entity[WarriorAnimationComponent.mapper] == null) {
                     return
                 }
             }
             CharacterType.ARCHER -> {
-                if (entity[ArcherComponent.mapper] == null) {
+                if (entity[ArcherAnimationComponent.mapper] == null) {
                     return
                 }
             }
             CharacterType.PRIEST -> {
-                if (entity[PriestComponent.mapper] == null) {
+                if (entity[PriestAnimationComponent.mapper] == null) {
                     return
                 }
             }
         }
+
         val facing = entity[FacingComponent.mapper]
         require(facing != null ){"Entity |entity| must have a FacingComponent. entity=$entity"}
 

@@ -27,36 +27,3 @@ open class PlayerComponent : Component, Pool.Poolable {
         val mapper = mapperFor<PlayerComponent>()
     }
 }
-
-class WarriorComponent: PlayerComponent() {
-    override val maxHp = 200
-    override val maxMp = 100
-    override var hp: Int = maxHp
-    override var mp: Int = 0
-
-    companion object{
-        val mapper = mapperFor<WarriorComponent>()
-    }
-}
-
-class ArcherComponent: PlayerComponent() {
-    override val maxHp = 50
-    override val maxMp = 50
-    override var hp: Int = maxHp
-    override var mp: Int = 0
-
-    companion object{
-        val mapper = mapperFor<ArcherComponent>()
-    }
-}
-
-class PriestComponent: PlayerComponent() {
-    override val maxHp = 200
-    override val maxMp = 100
-    override var hp: Int = maxHp
-    override var mp: Int = 0
-
-    companion object{
-        val mapper = mapperFor<PriestComponent>()
-    }
-}

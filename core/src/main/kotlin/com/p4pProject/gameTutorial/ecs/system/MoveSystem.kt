@@ -57,17 +57,17 @@ class MoveSystem(
         // verify that the entity is actually the main player's
         when (CURRENT_CHARACTER) {
             CharacterType.WARRIOR -> {
-                if (entity[WarriorComponent.mapper] == null) {
+                if (entity[WarriorAnimationComponent.mapper] == null) {
                     return
                 }
             }
             CharacterType.ARCHER -> {
-                if (entity[ArcherComponent.mapper] == null) {
+                if (entity[ArcherAnimationComponent.mapper] == null) {
                     return
                 }
             }
             CharacterType.PRIEST -> {
-                if (entity[PriestComponent.mapper] == null) {
+                if (entity[PriestAnimationComponent.mapper] == null) {
                     return
                 }
             }
