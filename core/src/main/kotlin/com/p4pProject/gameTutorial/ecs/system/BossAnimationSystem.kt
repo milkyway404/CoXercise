@@ -145,7 +145,7 @@ class BossAnimationSystem(
             }else{
                 LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
             }
-            animation = Animation2D(type, regions, type.playMode, type.speedRate)
+            animation = Animation2D(type, regions, type.playModeLoop, type.speedRate)
             animationCache[type] = animation
         }
         return animation

@@ -32,7 +32,7 @@ enum class CharacterType {
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
-val CURRENT_CHARACTER = CharacterType.ARCHER
+val CURRENT_CHARACTER = CharacterType.PRIEST
 
 class GameScreen(
     game: MyGameTutorial,
@@ -228,11 +228,9 @@ class GameScreen(
                         color.a = 1.0f
                         onClick {
 
-                            gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
+                            gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
                                 val facing = playerr[FacingComponent.mapper]
                                 require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
-
-                                this.facing = facing.direction
                                 this.damage = 0
                                 this.player = playerr
                             })

@@ -100,7 +100,7 @@ class PriestAnimationSystem(
 
     override fun entityAdded(entity: Entity) {
         entity[PriestAnimationComponent.mapper]?.let{ aniCmp ->
-            aniCmp.animation = getAnimation(aniCmp.typeUp)
+            aniCmp.animation = getIdleAnimation(aniCmp.typeUp)
             val frame = aniCmp.animation.getKeyFrame(aniCmp.stateTime)
             entity[GraphicComponent.mapper]?.setSpriteRegion(frame)
         }
@@ -113,7 +113,7 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeUp)
+            aniCmp.animation = getIdleAnimation(aniCmp.typeUp)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -126,7 +126,7 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeDown)
+            aniCmp.animation = getIdleAnimation(aniCmp.typeDown)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -139,7 +139,7 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeLeft)
+            aniCmp.animation = getIdleAnimation(aniCmp.typeLeft)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -152,7 +152,7 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeRight)
+            aniCmp.animation = getIdleAnimation(aniCmp.typeRight)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -165,7 +165,7 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeAttackRight)
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackRight)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -178,7 +178,7 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeAttackLeft)
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackLeft)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -190,7 +190,7 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeAttackUp)
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackUp)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -202,14 +202,12 @@ class PriestAnimationSystem(
         }else{
             //change animation
             aniCmp.stateTime = 0f
-            aniCmp.animation = getAnimation(aniCmp.typeAttackDown)
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackDown)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-
-
-    private fun getAnimation(type : AnimationType) : Animation2D {
+    private fun getIdleAnimation(type : AnimationType) : Animation2D {
         var animation = animationCache[type]
         if(animation == null){
             var regions = atlas.findRegions(type.atlasKey)
@@ -220,7 +218,24 @@ class PriestAnimationSystem(
             }else{
                 LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
             }
-            animation = Animation2D(type, regions, type.playMode, type.speedRate)
+            animation = Animation2D(type, regions, type.playModeLoop, type.speedRate)
+            animationCache[type] = animation
+        }
+        return animation
+    }
+
+    private fun getAttackAnimation(type : AnimationType) : Animation2D {
+        var animation = animationCache[type]
+        if(animation == null){
+            var regions = atlas.findRegions(type.atlasKey)
+            if(regions.isEmpty){
+                LOG.error { "No regions found for ${type.atlasKey}" }
+                regions = atlas.findRegions("error")
+                if (regions == null) throw GdxRuntimeException("There is no error region in the atlas")
+            }else{
+                LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
+            }
+            animation = Animation2D(type, regions, type.playModeNormal, type.speedRate)
             animationCache[type] = animation
         }
         return animation

@@ -31,12 +31,14 @@ class PlayerInputSystem(
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

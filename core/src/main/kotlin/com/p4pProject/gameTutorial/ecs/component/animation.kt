@@ -12,7 +12,8 @@ private const val DEFAULT_FRAME_DURATION = 1/20f
 
 enum class AnimationType (
     val atlasKey: String,
-    val playMode: Animation.PlayMode = Animation.PlayMode.LOOP,
+    val playModeLoop: Animation.PlayMode = Animation.PlayMode.LOOP,
+    val playModeNormal: Animation.PlayMode = Animation.PlayMode.NORMAL,
     val speedRate: Float = 1f
         ){
     NONE(""),

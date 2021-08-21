@@ -68,12 +68,14 @@ class PlayerDamageSystem (
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
@@ -125,6 +127,25 @@ class PlayerDamageSystem (
                     AttackArea(0, 0f, 0f, 0f, 0f)
                 }
             }
+
+            is GameEvent.PriestAttackEvent -> {
+                val transform = event.player[TransformComponent.mapper]
+                require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
+                val player = event.player[PlayerComponent.mapper]
+                require(player != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
+
+                LOG.debug { "${player.isAttacking}" }
+
+                //SHOULD BE FIXED!!!!!
+                //TEMPORARY SOLUTION
+                attackArea = if(!player.isAttacking){
+                    AttackArea(event.damage, (transform.position.x -32f),
+                        (transform.position.x +32f), (transform.position.y -32f), (transform.position.y +32f))
+                }else{
+                    AttackArea(0, 0f, 0f, 0f, 0f)
+                }
+            }
+
         }
     }
 
