@@ -21,6 +21,7 @@ import com.p4pProject.gameTutorial.screen.LoadingScreen
 import com.p4pProject.gameTutorial.ui.createSkin
 import io.socket.client.IO
 import io.socket.client.Socket
+import io.socket.emitter.Emitter
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.app.KtxGame
@@ -29,6 +30,8 @@ import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
 import ktx.log.debug
 import ktx.log.logger
+import org.json.JSONObject
+import java.util.*
 
 private val LOG = logger<MyGameTutorial>()
 const val V_WIDTH_PIXELS = 240
@@ -108,7 +111,7 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
 
     override fun create() {
         connectSocket()
-
+        configSocketEvents()
         Gdx.app.logLevel = 3
         LOG.debug { "Create game instance" }
 
@@ -139,5 +142,17 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         // TODO change this URL if hosting
         socket = IO.socket("http://localhost:9999")
         socket.connect()
+    }
+
+    private fun configSocketEvents() {
+        socket.on(Socket.EVENT_CONNECT) {
+            Gdx.app.log("SocketIO", "connected")
+        }.on("socketID") { args ->
+            val data = args[0] as JSONObject
+            Gdx.app.log("SocketIO", "My ID: ${data.getString("id")}")
+        }.on("newPlayer") { args ->
+            val data = args[0] as JSONObject
+            Gdx.app.log("SocketIO", "New Player ID: ${data.getString("id")}")
+        }
     }
 }
