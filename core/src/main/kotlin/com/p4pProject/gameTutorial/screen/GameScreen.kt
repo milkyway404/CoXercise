@@ -32,7 +32,7 @@ enum class CharacterType {
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
-val CURRENT_CHARACTER = CharacterType.PRIEST
+val CURRENT_CHARACTER = CharacterType.WARRIOR
 
 class GameScreen(
     game: MyGameTutorial,
@@ -134,6 +134,7 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.PlayerHit::class, this)
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
+        gameEventManager.addListener(GameEvent.UpdateMp::class, this)
         //audioService.play(MusicAsset.GAME)
         spawnPlayers ()
         spawnBoss()
@@ -195,8 +196,19 @@ class GameScreen(
 
             table {
                 right().bottom()
-                pad(5f)
+                pad(10f)
                 if (CURRENT_CHARACTER == CharacterType.WARRIOR) {
+                    imageButton(SkinImageButton.WARRIOR_SPECIAL.name) {
+                        color.a = 1.0f
+                        onClick {
+                            //TODO need to add mp logic here as event does not work correctly
+                            gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
+                                this.damage = 0
+                                this.player = playerr
+                            })
+                        }
+                    }
+                    row()
                     imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
                         color.a = 1.0f
                         onClick {
@@ -286,6 +298,13 @@ class GameScreen(
                 val mp = event.player[PlayerComponent.mapper]?.mp?.toFloat()
                 val maxMp = event.player[PlayerComponent.mapper]?.maxMp?.toFloat()
                 LOG.debug{ "Collected powerup, mp=$mp, maxMP=$maxMp" }
+                if (mp != null && maxMp != null) {
+                    updateMp(mp, maxMp)
+                }
+            }
+            is GameEvent.UpdateMp ->{
+                val mp = event.player.mp.toFloat()
+                val maxMp = event.player.maxMp.toFloat()
                 if (mp != null && maxMp != null) {
                     updateMp(mp, maxMp)
                 }

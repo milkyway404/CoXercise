@@ -27,7 +27,7 @@ font8
   index: -1
 frame
   rotate: false
-  xy: 49, 9
+  xy: 131, 176
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -35,7 +35,7 @@ frame
   index: -1
 frame_transparent
   rotate: false
-  xy: 155, 220
+  xy: 49, 9
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -50,7 +50,7 @@ game_hud
   index: -1
 label_frame
   rotate: false
-  xy: 131, 198
+  xy: 155, 220
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -58,7 +58,7 @@ label_frame
   index: -1
 label_frame_transparent
   rotate: false
-  xy: 131, 176
+  xy: 155, 198
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -66,7 +66,7 @@ label_frame_transparent
   index: -1
 life_bar
   rotate: false
-  xy: 153, 212
+  xy: 71, 23
   size: 22, 6
   split: 2, 2, 2, 2
   pad: 0, 0, 0, 0
@@ -84,21 +84,21 @@ mp_bar
   index: -1
 no_sound
   rotate: false
-  xy: 131, 165
+  xy: 153, 187
   size: 11, 9
   orig: 11, 9
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 71, 11
+  xy: 184, 233
   size: 6, 7
   orig: 6, 7
   offset: 0, 0
   index: -1
 play
   rotate: false
-  xy: 184, 231
+  xy: 177, 207
   size: 5, 9
   orig: 5, 9
   offset: 0, 0
@@ -112,7 +112,7 @@ priestAttack
   index: -1
 quit
   rotate: false
-  xy: 153, 202
+  xy: 71, 13
   size: 8, 8
   orig: 8, 8
   offset: 0, 0
@@ -143,7 +143,7 @@ shield_bar
   index: -1
 sound
   rotate: false
-  xy: 71, 20
+  xy: 131, 165
   size: 11, 9
   orig: 11, 9
   offset: 0, 0
@@ -158,6 +158,13 @@ warning
 warriorAttack
   rotate: false
   xy: 131, 220
+  size: 22, 20
+  orig: 22, 20
+  offset: 0, 0
+  index: -1
+warriorSepcialAttack
+  rotate: false
+  xy: 131, 198
   size: 22, 20
   orig: 22, 20
   offset: 0, 0
