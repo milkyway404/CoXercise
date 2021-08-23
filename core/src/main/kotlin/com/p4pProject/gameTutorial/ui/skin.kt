@@ -21,6 +21,10 @@ enum class SkinTextButton {
     DEFAULT, TRANSPARENT, LABEL, LABEL_TRANSPARENT
 }
 
+enum class SkinTextField {
+    DEFAULT
+}
+
 enum class SkinWindow {
     DEFAULT
 }
@@ -63,6 +67,13 @@ fun createSkin(assets: AssetStorage) {
         createWindowStyles(skin, defaultFont)
         createScrollPaneStyles(skin)
         createHpBarStyles(skin, defaultFont)
+        createTextFieldStyles(skin, defaultFont)
+    }
+}
+
+private fun Skin.createTextFieldStyles(skin: Skin, defaultFont: BitmapFont) {
+    textField {
+        font = defaultFont
     }
 }
 
@@ -75,7 +86,7 @@ private fun Skin.createHpBarStyles(skin: Skin, defaultFont: BitmapFont) {
 //        color("blue",0f,0f,255f,1f)
 //    }
 
-    textField {
+    textField(SkinTextField.DEFAULT.name) {
         font = defaultFont
         fontColor = Color(1f,1f,1f,1f)
     }

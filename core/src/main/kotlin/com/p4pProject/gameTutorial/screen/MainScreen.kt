@@ -8,23 +8,30 @@ import com.badlogic.gdx.utils.Align
 import com.p4pProject.gameTutorial.MyGameTutorial
 import com.p4pProject.gameTutorial.ui.SkinLabel
 import com.p4pProject.gameTutorial.ui.SkinTextButton
+import com.p4pProject.gameTutorial.ui.SkinTextField
+import com.p4pProject.gameTutorial.ui.SkinWindow
+import io.socket.client.IO
+import io.socket.client.Socket
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import ktx.actors.onChange
 import ktx.actors.onClick
 import ktx.actors.plus
 import ktx.actors.plusAssign
 import ktx.async.KtxAsync
-import ktx.scene2d.actors
-import ktx.scene2d.label
-import ktx.scene2d.table
-import ktx.scene2d.textButton
+import ktx.scene2d.*
 
 class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
+    private lateinit var invalidLobbyLabel: Label
+    private lateinit var socket: Socket
+    private lateinit var lobbyID: String
+
     override fun show() {
-        setupUI();
-        KtxAsync.launch {
-            assetsLoaded()
-        }
+        Gdx.app.log("Show", "Showing")
+        connectAndSetupSocket()
+        setupUI()
     }
 
     private fun setupUI() {
@@ -46,6 +53,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                 row()
                 textButton("Singleplayer Mode", SkinTextButton.DEFAULT.name) {
                     onClick {
+                        game.addScreen(LoadingScreen(game))
                         game.removeScreen<MainScreen>()
                         dispose()
                         game.setScreen<LoadingScreen>()
@@ -54,9 +62,37 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                 row()
                 textButton("Multiplayer Mode", SkinTextButton.DEFAULT.name) {
                     onClick {
-                        game.removeScreen<MainScreen>()
-                        dispose()
-                        game.setScreen<LobbyScreen>()
+                        stage.actors {
+                            dialog("Lobby ID", SkinWindow.DEFAULT.name) {
+                                table {
+                                    textButton("Create Lobby", SkinTextButton.DEFAULT.name) {
+                                        onClick {
+                                            createLobby()
+                                        }
+                                    }
+                                    row()
+
+                                    textField("lobby id", SkinTextField.DEFAULT.name) {
+                                        onChange {
+                                            lobbyID = text
+                                        }
+                                        alignment = Align.center
+
+                                    }
+                                    row()
+                                    textButton("Join Lobby", SkinTextButton.DEFAULT.name) {
+                                        onClick {
+                                            joinLobbyIfValid()
+                                        }
+                                    }
+                                    row()
+                                    invalidLobbyLabel = label("Lobby ID invalid", SkinLabel.DEFAULT.name) {
+                                        color.a = 0f
+                                    }
+                                }.pad(10f)
+                            }
+                        }
+
                     }
                 }
 
@@ -73,6 +109,10 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     }
 
     override fun render(delta: Float) {
+        if (assets.progress.isFinished && game.containsScreen<LobbyScreen>()) {
+            changeToLobbyScreen()
+        }
+
         stage.run {
             viewport.apply()
             act()
@@ -80,8 +120,44 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
         }
     }
 
-    private fun assetsLoaded() {
-        game.addScreen(LobbyScreen(game))
-        game.addScreen(LoadingScreen(game))
+    private fun connectAndSetupSocket() {
+        socket = IO.socket("http://localhost:9999")
+        socket.connect()
+    }
+
+    private fun createLobby() {
+        socket.emit("create lobby")
+        socket.on("lobby created") { args ->
+            Gdx.app.log("Lobby", "lobby created")
+            lobbyID = args[0] as String
+            Gdx.app.log("Lobby", "id: $lobbyID")
+            addLobbyScreen()
+        }
+    }
+
+    private fun addLobbyScreen() {
+        if (game.containsScreen<LobbyScreen>()) {
+            return
+        }
+        Gdx.app.log("Lobby", "adding screen")
+        game.addScreen(LobbyScreen(game, lobbyID))
+        Gdx.app.log("Lobby", "" + game.containsScreen<LobbyScreen>())
+    }
+
+    private fun changeToLobbyScreen() {
+        game.removeScreen<MainScreen>()
+        dispose()
+
+        game.setScreen<LobbyScreen>()
+    }
+
+    private fun joinLobbyIfValid() {
+        socket.emit("join room", lobbyID)
+        socket.on("invalid lobby id") {
+            invalidLobbyLabel.color.a = 1f
+        }
+        socket.on("join room successful") {
+            addLobbyScreen()
+        }
     }
 }
