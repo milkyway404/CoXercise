@@ -18,6 +18,7 @@ import com.p4pProject.gameTutorial.ecs.system.*
 import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.GameBaseScreen
 import com.p4pProject.gameTutorial.screen.LoadingScreen
+import com.p4pProject.gameTutorial.screen.MainScreen
 import com.p4pProject.gameTutorial.ui.createSkin
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -123,8 +124,8 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         KtxAsync.launch {
             assetRefs.joinAll()
             createSkin(assets)
-            addScreen(LoadingScreen(this@MyGameTutorial))
-            setScreen<LoadingScreen>()
+            addScreen(MainScreen(this@MyGameTutorial))
+            setScreen<MainScreen>()
 
         }
     }
