@@ -83,18 +83,19 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         addSystem(CameraShakeSystem(gameViewport.camera, gameEventManager))
         addSystem(
             WarriorAnimationSystem(
-                warriorGraphicAtlas
+                warriorGraphicAtlas, gameEventManager
             )
         )
         addSystem(
             PriestAnimationSystem(
-                priestGraphicAtlas
+                priestGraphicAtlas,
+                gameEventManager
         )
         )
         addSystem(BossAnimationSystem(
             bossGraphicAtlas
         ))
-        addSystem(ArcherAnimationSystem(archerGraphicAtlas))
+        addSystem(ArcherAnimationSystem(archerGraphicAtlas, gameEventManager))
         addSystem(AttachSystem())
         addSystem(AnimationSystem(graphicsAtlas))
         addSystem(RenderSystem(

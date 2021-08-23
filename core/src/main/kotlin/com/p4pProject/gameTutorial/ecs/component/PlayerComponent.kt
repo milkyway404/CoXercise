@@ -21,6 +21,7 @@ class PlayerComponent : Component, Pool.Poolable {
     open var maxMp = WARRIOR_MAX_MP
     var distance = 0f
     var isAttacking = false
+    var isSpecialAttacking = false
     var characterType = PlayerType.WARRIOR
 
 

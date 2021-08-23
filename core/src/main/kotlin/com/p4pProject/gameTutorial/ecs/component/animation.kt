@@ -37,6 +37,10 @@ enum class AnimationType (
     WARRIOR_ATTACK_LEFT("WarriorLeftAttack"),
     WARRIOR_ATTACK_UP("WarriorUpAttack"),
     WARRIOR_ATTACK_DOWN("WarriorDownAttack"),
+    WARRIOR_SPECIAL_ATTACK_RIGHT("WarriorRightSpecialAttack"),
+    WARRIOR_SPECIAL_ATTACK_LEFT("WarriorLeftSpecialAttack"),
+    WARRIOR_SPECIAL_ATTACK_UP("WarriorUpSpecialAttack"),
+    WARRIOR_SPECIAL_ATTACK_DOWN("WarriorDownSpecialAttack"),
 
     ARCHER_UP("GoblinSlingerUpIdle"),
     ARCHER_DOWN("GoblinSlingerDownIdle"),
@@ -87,6 +91,10 @@ class WarriorAnimationComponent : Component, Pool.Poolable {
     var typeAttackLeft = AnimationType.WARRIOR_ATTACK_LEFT
     var typeAttackUp = AnimationType.WARRIOR_ATTACK_UP
     var typeAttackDown = AnimationType.WARRIOR_ATTACK_DOWN
+    var typeSpecialAttackRight = AnimationType.WARRIOR_SPECIAL_ATTACK_RIGHT
+    var typeSpecialAttackLeft = AnimationType.WARRIOR_SPECIAL_ATTACK_LEFT
+    var typeSpecialAttackUp = AnimationType.WARRIOR_SPECIAL_ATTACK_UP
+    var typeSpecialAttackDown = AnimationType.WARRIOR_SPECIAL_ATTACK_DOWN
     var stateTime = 0f
 
     lateinit var animation : Animation2D
