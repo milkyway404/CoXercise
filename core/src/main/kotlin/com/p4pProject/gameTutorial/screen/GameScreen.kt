@@ -201,11 +201,14 @@ class GameScreen(
                     imageButton(SkinImageButton.WARRIOR_SPECIAL.name) {
                         color.a = 1.0f
                         onClick {
-                            //TODO need to add mp logic here as event does not work correctly
-                            gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
-                                this.damage = 0
-                                this.player = playerr
-                            })
+                            val player = playerr[PlayerComponent.mapper]
+                            require(player != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
+                            if(player.mp >= 20){
+                                gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
+                                    this.damage = 0
+                                    this.player = playerr
+                                })
+                            }
                         }
                     }
                     row()

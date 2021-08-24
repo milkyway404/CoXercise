@@ -29,7 +29,7 @@ class PlayerDamageSystem (
 
     private var attackArea : AttackArea = AttackArea(0, 0f,
         0f, 0f, 0f)
-    
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
