@@ -32,7 +32,7 @@ enum class CharacterType {
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
-val CURRENT_CHARACTER = CharacterType.WARRIOR
+val CURRENT_CHARACTER = CharacterType.PRIEST
 
 class GameScreen(
     game: MyGameTutorial,
@@ -204,6 +204,12 @@ class GameScreen(
                             val player = playerr[PlayerComponent.mapper]
                             require(player != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
                             if(player.mp >= 20){
+                                player.mp = player.mp - 20
+                                val mp = player.mp.toFloat()
+                                val maxMp = player.maxMp.toFloat()
+                                if (mp != null && maxMp != null) {
+                                    updateMp(mp, maxMp)
+                                }
                                 gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
                                     this.damage = 0
                                     this.player = playerr
@@ -240,6 +246,26 @@ class GameScreen(
                 }
 
                 else if (CURRENT_CHARACTER == CharacterType.PRIEST) {
+                    imageButton(SkinImageButton.PRIEST_SPECIAL.name) {
+                        color.a = 1.0f
+                        onClick {
+                            val player = playerr[PlayerComponent.mapper]
+                            require(player != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
+                            if(player.mp >= 20){
+                                player.mp = player.mp - 20
+                                val mp = player.mp.toFloat()
+                                val maxMp = player.maxMp.toFloat()
+                                if (mp != null && maxMp != null) {
+                                    updateMp(mp, maxMp)
+                                }
+                                gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
+                                    this.healing = 0
+                                    this.player = playerr
+                                })
+                            }
+                        }
+                    }
+                    row()
                     imageButton(SkinImageButton.PRIEST_ATTACK.name) {
                         color.a = 1.0f
                         onClick {
@@ -305,13 +331,7 @@ class GameScreen(
                     updateMp(mp, maxMp)
                 }
             }
-            is GameEvent.UpdateMp ->{
-                val mp = event.player.mp.toFloat()
-                val maxMp = event.player.maxMp.toFloat()
-                if (mp != null && maxMp != null) {
-                    updateMp(mp, maxMp)
-                }
-            }
+
             is GameEvent.PlayerStep -> {
                 val mp = event.player.mp.toFloat()
                 val maxMp = event.player.maxMp.toFloat()

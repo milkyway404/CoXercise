@@ -14,7 +14,7 @@ enum class SkinLabel {
 }
 
 enum class SkinImageButton {
-    PAUSE_PLAY, QUIT, SOUND_ON_OFF, WARRIOR_ATTACK, ARCHER_ATTACK, PRIEST_ATTACK, WARRIOR_SPECIAL
+    PAUSE_PLAY, QUIT, SOUND_ON_OFF, WARRIOR_ATTACK, ARCHER_ATTACK, PRIEST_ATTACK, WARRIOR_SPECIAL, PRIEST_SPECIAL
 }
 
 enum class SkinTextButton {
@@ -39,6 +39,7 @@ enum class SkinImage(val atlasKey: String) {
     WARRIOR_SPECIAL("warriorSepcialAttack"),
     ARCHER_ATTACK("archerAttack"),
     PRIEST_ATTACK("priestAttack"),
+    PRIEST_SPECIAL("priestSpecialAttack"),
     PLAY("play"),
     PAUSE("pause"),
     QUIT("quit"),
@@ -144,6 +145,10 @@ private fun Skin.createImageButtonStyles(skin: Skin) {
     }
     imageButton(SkinImageButton.PRIEST_ATTACK.name) {
         imageUp = skin.getDrawable(SkinImage.PRIEST_ATTACK.atlasKey)
+        imageDown = imageUp
+    }
+    imageButton(SkinImageButton.PRIEST_SPECIAL.name) {
+        imageUp = skin.getDrawable(SkinImage.PRIEST_SPECIAL.atlasKey)
         imageDown = imageUp
     }
     imageButton(SkinImageButton.WARRIOR_ATTACK.name) {

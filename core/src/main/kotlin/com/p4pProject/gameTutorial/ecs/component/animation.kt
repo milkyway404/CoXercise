@@ -58,7 +58,11 @@ enum class AnimationType (
     PRIEST_ATTACK_RIGHT("NecromancerRightAttack"),
     PRIEST_ATTACK_LEFT("NecromancerLeftAttack"),
     PRIEST_ATTACK_UP("NecromancerUpAttack"),
-    PRIEST_ATTACK_DOWN("NecromancerDownAttack")
+    PRIEST_ATTACK_DOWN("NecromancerDownAttack"),
+    PRIEST_SPECIAL_ATTACK_RIGHT("NecromancerRightSpecialAttack"),
+    PRIEST_SPECIAL_ATTACK_LEFT("NecromancerLeftSpecialAttack"),
+    PRIEST_SPECIAL_ATTACK_UP("NecromancerUpSpecialAttack"),
+    PRIEST_SPECIAL_ATTACK_DOWN("NecromancerDownSpecialAttack")
 }
 
 class Animation2D (
@@ -157,6 +161,10 @@ class PriestAnimationComponent : Component, Pool.Poolable {
     var typeAttackLeft = AnimationType.PRIEST_ATTACK_LEFT
     var typeAttackUp = AnimationType.PRIEST_ATTACK_UP
     var typeAttackDown = AnimationType.PRIEST_ATTACK_DOWN
+    var typeSpecialAttackRight = AnimationType.PRIEST_SPECIAL_ATTACK_RIGHT
+    var typeSpecialAttackLeft = AnimationType.PRIEST_SPECIAL_ATTACK_LEFT
+    var typeSpecialAttackUp = AnimationType.PRIEST_SPECIAL_ATTACK_UP
+    var typeSpecialAttackDown = AnimationType.PRIEST_SPECIAL_ATTACK_DOWN
     var stateTime = 0f
 
     lateinit var animation : Animation2D

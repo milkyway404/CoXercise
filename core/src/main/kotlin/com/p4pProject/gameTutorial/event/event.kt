@@ -72,6 +72,12 @@ sealed class GameEvent{
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
     }
 
+    object PriestSpecialAttackEvent : GameEvent (){
+        lateinit var player : Entity
+        var healing = 0
+        override fun toString() = "PlayerHit(player = $player, damage=$healing)"
+    }
+
     object PriestAttackFinishEvent : GameEvent (){
     }
 

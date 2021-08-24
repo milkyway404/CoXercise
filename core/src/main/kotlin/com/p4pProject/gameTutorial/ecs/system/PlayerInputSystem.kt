@@ -37,6 +37,7 @@ class PlayerInputSystem(
         gameEventManager.addListener(GameEvent.ArcherAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackFinishEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestSpecialAttackEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
@@ -48,6 +49,7 @@ class PlayerInputSystem(
         gameEventManager.removeListener(GameEvent.ArcherAttackFinishEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestAttackFinishEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestSpecialAttackEvent::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -127,16 +129,10 @@ class PlayerInputSystem(
                 playerIsSpecialAttacking = false
             }
             is GameEvent.WarriorSpecialAttackEvent ->{
-                val player = event.player[PlayerComponent.mapper]
-                require(player != null) { "Entity |entity| must have a PlayerComponent. entity=${event.player}" }
-                if(player.mp >= 20){
-                    player.mp = player.mp - 20
                     playerIsSpecialAttacking = true
-                }
-                gameEventManager.dispatchEvent(GameEvent.UpdateMp.apply {
-                    this.player = player;
-
-                })
+            }
+            is GameEvent.PriestSpecialAttackEvent ->{
+                playerIsSpecialAttacking = true
             }
         }
 

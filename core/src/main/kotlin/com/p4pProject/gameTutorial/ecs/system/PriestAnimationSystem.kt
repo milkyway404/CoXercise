@@ -78,6 +78,14 @@ class PriestAnimationSystem(
                 FacingDirection.SOUTH -> animateDownAttack(aniCmp, deltaTime)
             }
             graphic.setSpriteRegion(region)
+        }else if(player.isSpecialAttacking){
+            val region =  when(facing.direction){
+                FacingDirection.WEST -> animateLeftSpecialAttack(aniCmp, deltaTime)
+                FacingDirection.EAST -> animateRightSpecialAttack(aniCmp, deltaTime)
+                FacingDirection.NORTH -> animateUpSpecialAttack(aniCmp, deltaTime)
+                FacingDirection.SOUTH -> animateDownSpecialAttack(aniCmp, deltaTime)
+            }
+            graphic.setSpriteRegion(region)
         }else{
             val region = when(facing.direction){
                 FacingDirection.WEST -> animateIdleLeft(aniCmp, deltaTime)
@@ -217,6 +225,72 @@ class PriestAnimationSystem(
         }
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.PriestAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateRightSpecialAttack(aniCmp:PriestAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackRight == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeSpecialAttackRight)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateLeftSpecialAttack(aniCmp:PriestAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackLeft == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeSpecialAttackLeft)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+    private fun animateUpSpecialAttack(aniCmp:PriestAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackUp == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeSpecialAttackUp)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+    private fun animateDownSpecialAttack(aniCmp:PriestAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackDown == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeSpecialAttackDown)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
