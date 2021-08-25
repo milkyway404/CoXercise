@@ -31,7 +31,7 @@ io.on('connection', function(socket) {
         const lobbyID = createNewLobby()
         console.log('creating lobby...' + lobbyID);
         socket.join(lobbyID);
-        console.log(socket.id + " has joined room " + lobbyID);
+        console.log(socket.id + " has joined lobby " + lobbyID);
         var player = {
             "socketID": socket.id,
             "characterType": data
@@ -40,8 +40,8 @@ io.on('connection', function(socket) {
         socket.emit('lobby created', lobbyID)
     })
 
-    socket.on('join room', function(data) {
-        console.log('join room');
+    socket.on('join lobby', function(data) {
+        console.log('join lobby');
         // verify lobbyid
         console.log(data.lobbyID);
         const lobbyID = data.lobbyID;
@@ -54,7 +54,7 @@ io.on('connection', function(socket) {
         const characterType = data.chosenCharacter;
         if (characterAlreadyExists(lobbyID, characterType)) {
             console.log('character already chosen');
-            socket.emit('invalid lobby id');
+            socket.emit('character taken');
             return;
         }
 
@@ -67,11 +67,10 @@ io.on('connection', function(socket) {
         console.log('updating player : ' + lobbies[lobbyID]);
 
 
-        socket.emit('join room successful')
+        socket.emit('join lobby successful')
         socket.join(lobbyID);
-        console.log(socket.id + " has joined room " + lobbyID);
-        //socket.to(lobbyID).emit('update players', lobbies[lobbyID]);
-        socket.emit('update players', lobbies[lobbyID])
+        console.log(socket.id + " has joined lobby " + lobbyID);
+        socket.to(lobbyID).emit('update players', lobbies[lobbyID]);
     })
 })
 

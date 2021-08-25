@@ -2,24 +2,19 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.p4pProject.gameTutorial.MyGameTutorial
+import com.p4pProject.gameTutorial.socket.emit.SocketEmit
+import com.p4pProject.gameTutorial.socket.on.SocketOn
 import com.p4pProject.gameTutorial.ui.SkinLabel
 import com.p4pProject.gameTutorial.ui.SkinTextButton
 import com.p4pProject.gameTutorial.ui.SkinTextField
 import com.p4pProject.gameTutorial.ui.SkinWindow
 import io.socket.client.IO
 import io.socket.client.Socket
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import ktx.actors.onChange
 import ktx.actors.onClick
-import ktx.actors.plus
-import ktx.actors.plusAssign
-import ktx.async.KtxAsync
 import ktx.scene2d.*
 import org.json.JSONObject
 
@@ -30,9 +25,10 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     private lateinit var lobbyID: String
     private var chosenCharacterType: CharacterType? = null
 
-    override fun show() {
-        Gdx.app.log("Show", "Showing")
+    init {
         connectAndSetupSocket()
+    }
+    override fun show() {
         setupUI()
     }
 
@@ -156,27 +152,31 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     private fun connectAndSetupSocket() {
         socket = IO.socket("http://localhost:9999")
         socket.connect()
+        SocketOn.lobbyCreated(socket, addLobbyScreen = { addLobbyScreen(lobbyID) });
+        SocketOn.invalidLobbyID(socket, invalidLobbyID = { invalidLobbyID() });
+        SocketOn.characterTaken(socket, characterTaken = { characterTaken() });
+        SocketOn.joinLobbySuccessful(socket, addLobbyScreen = { addLobbyScreen() });
+
     }
 
     private fun createLobby() {
         if (chosenCharacterType == null) {
             return;
         }
-        socket.emit("create lobby", chosenCharacterType?.name)
-        socket.on("lobby created") { args ->
-            Gdx.app.log("Lobby", "lobby created")
-            lobbyID = args[0] as String
-            Gdx.app.log("Lobby", "id: $lobbyID")
-            addLobbyScreen()
-        }
+        SocketEmit.createLobby(socket, chosenCharacterType!!.name);
+
     }
 
-    private fun addLobbyScreen() {
+    private fun addLobbyScreen(lobbyID: String? = null) {
+        if (lobbyID != null) {
+            this.lobbyID = lobbyID;
+        }
+
         if (game.containsScreen<LobbyScreen>()) {
             return
         }
         Gdx.app.log("Lobby", "adding screen")
-        game.addScreen(LobbyScreen(game, lobbyID, socket))
+        game.addScreen(LobbyScreen(game, this.lobbyID, socket))
         Gdx.app.log("Lobby", "" + game.containsScreen<LobbyScreen>())
     }
 
@@ -192,13 +192,16 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
         data.put("lobbyID", lobbyID);
         data.put("chosenCharacter", chosenCharacterType?.name);
         Gdx.app.log("Data", data.toString());
-        socket.emit("join room", data)
+        SocketEmit.joinLobby(socket, data);
+    }
 
-        socket.on("invalid lobby id") {
-            invalidLobbyLabel.color.a = 1f
-        }
-        socket.on("join room successful") {
-            addLobbyScreen()
-        }
+    private fun invalidLobbyID() {
+        invalidLobbyLabel.setText("invalid lobby ID")
+        invalidLobbyLabel.color.a = 1f
+    }
+
+    private fun characterTaken() {
+        invalidLobbyLabel.setText("character already taken")
+        invalidLobbyLabel.color.a = 1f
     }
 }
