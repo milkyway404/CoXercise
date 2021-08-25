@@ -21,12 +21,14 @@ import ktx.actors.plus
 import ktx.actors.plusAssign
 import ktx.async.KtxAsync
 import ktx.scene2d.*
+import org.json.JSONObject
 
 class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
     private lateinit var invalidLobbyLabel: Label
     private lateinit var socket: Socket
     private lateinit var lobbyID: String
+    private var chosenCharacterType: CharacterType? = null
 
     override fun show() {
         Gdx.app.log("Show", "Showing")
@@ -71,6 +73,24 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                                         }
                                     }
                                     row()
+                                    textButton(CharacterType.WARRIOR.name, SkinTextButton.DEFAULT.name) {
+                                        onClick {
+                                            chosenCharacterType = CharacterType.WARRIOR
+                                        }
+                                    }
+                                    row()
+                                    textButton(CharacterType.ARCHER.name, SkinTextButton.DEFAULT.name) {
+                                        onClick {
+                                            chosenCharacterType = CharacterType.ARCHER
+                                        }
+                                    }
+                                    row()
+                                    textButton(CharacterType.PRIEST.name, SkinTextButton.DEFAULT.name) {
+                                        onClick {
+                                            chosenCharacterType = CharacterType.PRIEST
+                                        }
+                                    }
+                                    row()
 
                                     textField("lobby id", SkinTextField.DEFAULT.name) {
                                         onChange {
@@ -109,7 +129,8 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     }
 
     override fun render(delta: Float) {
-        if (assets.progress.isFinished && game.containsScreen<LobbyScreen>()) {
+        if (assets.progress.isFinished && game.containsScreen<LobbyScreen>() &&
+                chosenCharacterType != null && isValidLobbyID()) {
             changeToLobbyScreen()
         }
 
@@ -120,13 +141,28 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
         }
     }
 
+    private fun isValidLobbyID(): Boolean {
+        if (!this::lobbyID.isInitialized) {
+            return false;
+        }
+
+        if (lobbyID.matches(Regex("([A-z]){5}")) && lobbyID.length == 5) {
+            return true;
+        }
+
+        return false;
+    }
+
     private fun connectAndSetupSocket() {
         socket = IO.socket("http://localhost:9999")
         socket.connect()
     }
 
     private fun createLobby() {
-        socket.emit("create lobby")
+        if (chosenCharacterType == null) {
+            return;
+        }
+        socket.emit("create lobby", chosenCharacterType?.name)
         socket.on("lobby created") { args ->
             Gdx.app.log("Lobby", "lobby created")
             lobbyID = args[0] as String
@@ -140,19 +176,24 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
             return
         }
         Gdx.app.log("Lobby", "adding screen")
-        game.addScreen(LobbyScreen(game, lobbyID))
+        game.addScreen(LobbyScreen(game, lobbyID, socket))
         Gdx.app.log("Lobby", "" + game.containsScreen<LobbyScreen>())
     }
 
     private fun changeToLobbyScreen() {
         game.removeScreen<MainScreen>()
         dispose()
-
         game.setScreen<LobbyScreen>()
     }
 
     private fun joinLobbyIfValid() {
-        socket.emit("join room", lobbyID)
+        Gdx.app.log("Socket", "attempting to join lobby " + lobbyID + " with character " + chosenCharacterType?.name)
+        val data = JSONObject();
+        data.put("lobbyID", lobbyID);
+        data.put("chosenCharacter", chosenCharacterType?.name);
+        Gdx.app.log("Data", data.toString());
+        socket.emit("join room", data)
+
         socket.on("invalid lobby id") {
             invalidLobbyLabel.color.a = 1f
         }
