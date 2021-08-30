@@ -72,6 +72,11 @@ io.on('connection', function(socket) {
         console.log(socket.id + " has joined lobby " + lobbyID);
         socket.to(lobbyID).emit('update players', lobbies[lobbyID]);
     })
+
+    socket.on('get lobby players', function(data) {
+        console.log('getting lobby players for ' + socket.id);
+        socket.emit('update players', lobbies[data]);
+    })
 })
 
 function characterAlreadyExists(lobbyID, characterType) {

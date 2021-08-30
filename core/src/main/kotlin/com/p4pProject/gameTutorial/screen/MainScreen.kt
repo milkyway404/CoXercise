@@ -22,7 +22,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
     private lateinit var invalidLobbyLabel: Label
     private lateinit var socket: Socket
-    private lateinit var lobbyID: String
+    private var lobbyID: String = ""
     private var chosenCharacterType: CharacterType? = null
 
     init {
@@ -138,7 +138,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     }
 
     private fun isValidLobbyID(): Boolean {
-        if (!this::lobbyID.isInitialized) {
+        if (this.lobbyID.isBlank()) {
             return false;
         }
 
@@ -152,10 +152,10 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     private fun connectAndSetupSocket() {
         socket = IO.socket("http://localhost:9999")
         socket.connect()
-        SocketOn.lobbyCreated(socket, addLobbyScreen = { addLobbyScreen(lobbyID) });
+        SocketOn.lobbyCreated(socket, callback = { lobbyID -> addLobbyScreen(lobbyID) });
         SocketOn.invalidLobbyID(socket, invalidLobbyID = { invalidLobbyID() });
         SocketOn.characterTaken(socket, characterTaken = { characterTaken() });
-        SocketOn.joinLobbySuccessful(socket, addLobbyScreen = { addLobbyScreen() });
+        SocketOn.joinLobbySuccessful(socket, callback = { addLobbyScreen() });
 
     }
 
@@ -175,7 +175,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
         if (game.containsScreen<LobbyScreen>()) {
             return
         }
-        Gdx.app.log("Lobby", "adding screen")
+        Gdx.app.log("Lobby", "adding screen with lobbyID$this.lobbyID")
         game.addScreen(LobbyScreen(game, this.lobbyID, socket))
         Gdx.app.log("Lobby", "" + game.containsScreen<LobbyScreen>())
     }

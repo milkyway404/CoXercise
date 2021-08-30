@@ -13,13 +13,14 @@ class SocketOn(private val socket: Socket) {
     }
 
     companion object {
-        fun lobbyCreated(socket: Socket, addLobbyScreen: ((String) -> Unit)? = null) {
+        fun lobbyCreated(socket: Socket, callback: ((String) -> Unit)? = null) {
             socket.on("lobby created") { args ->
                 Gdx.app.log("Lobby", "lobby created")
-                if (addLobbyScreen != null) {
+                if (callback != null) {
                     val lobbyID = args[0] as String
                     Gdx.app.log("Lobby", "id: $lobbyID")
-                    addLobbyScreen(lobbyID);
+
+                    callback(lobbyID);
                 };
             }
         }
@@ -40,15 +41,15 @@ class SocketOn(private val socket: Socket) {
             }
         }
 
-        fun joinLobbySuccessful(socket: Socket, addLobbyScreen: (() -> Unit)?) {
+        fun joinLobbySuccessful(socket: Socket, callback: (() -> Unit)?) {
             socket.on("join lobby successful") {
-                if (addLobbyScreen != null) {
-                    addLobbyScreen()
+                if (callback != null) {
+                    callback()
                 }
             }
         }
 
-        fun updatePlayers(socket: Socket, updatePlayers: ((List<LobbyScreen.Player>) -> Unit)?) {
+        fun updatePlayers(socket: Socket, callback: ((List<LobbyScreen.Player>) -> Unit)?) {
             socket.on("update players") { args ->
                 Gdx.app.log("Socket", "update players");
                 val players = args[0] as JSONArray
@@ -59,8 +60,8 @@ class SocketOn(private val socket: Socket) {
                     val playerSocketID = player.getString("socketID");
                     playersList.add(LobbyScreen.Player(playerSocketID, playerCharacterType))
                 }
-                if (updatePlayers != null) {
-                    updatePlayers(playersList)
+                if (callback != null) {
+                    callback(playersList)
                 };
             }
         }

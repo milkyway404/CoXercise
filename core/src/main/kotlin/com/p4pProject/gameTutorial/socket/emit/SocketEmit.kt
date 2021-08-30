@@ -13,5 +13,9 @@ class SocketEmit() {
         fun joinLobby(socket: Socket, data: JSONObject) {
             socket.emit("join lobby", data)
         }
+
+        fun getLobbyPlayers(socket: Socket, lobbyID: String) {
+            socket.emit("get lobby players", lobbyID)
+        }
     }
 }
