@@ -89,6 +89,10 @@ sealed class GameEvent{
         lateinit var player: PlayerComponent
     }
 
+    object UpdateHp: GameEvent ()  {
+        lateinit var player: PlayerComponent
+    }
+
 
     object BossAttack: GameEvent () {
         var damage = 0

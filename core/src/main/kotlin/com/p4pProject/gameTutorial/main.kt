@@ -90,6 +90,7 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         ))
         addSystem(ArcherAnimationSystem(archerGraphicAtlas, gameEventManager))
         addSystem(AttachSystem())
+        addSystem(HealSystem(gameEventManager))
         addSystem(AnimationSystem(graphicsAtlas))
         addSystem(RenderSystem(
             batch,

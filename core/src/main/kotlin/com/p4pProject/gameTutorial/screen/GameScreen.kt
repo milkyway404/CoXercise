@@ -104,7 +104,7 @@ class GameScreen(
         updatePlayerHpMp()
     }
 
-    private fun updatePlayerHpMp() {
+    fun updatePlayerHpMp() {
 
         val playerComp =playerr[PlayerComponent.mapper]!!
 
@@ -135,6 +135,7 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
         gameEventManager.addListener(GameEvent.UpdateMp::class, this)
+        gameEventManager.addListener(GameEvent.UpdateHp::class, this)
         //audioService.play(MusicAsset.GAME)
         spawnPlayers ()
         spawnBoss()
@@ -330,6 +331,10 @@ class GameScreen(
                 if (mp != null && maxMp != null) {
                     updateMp(mp, maxMp)
                 }
+            }
+
+            is GameEvent.UpdateHp -> {
+                updatePlayerHpMp()
             }
 
             is GameEvent.PlayerStep -> {
