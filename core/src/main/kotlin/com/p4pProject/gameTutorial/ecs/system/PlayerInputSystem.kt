@@ -34,6 +34,7 @@ class PlayerInputSystem(
         gameEventManager.addListener(GameEvent.WarriorAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.WarriorSpecialAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherSpecialAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackFinishEvent::class, this)
@@ -46,6 +47,7 @@ class PlayerInputSystem(
         gameEventManager.removeListener(GameEvent.WarriorAttackFinishEvent::class, this)
         gameEventManager.removeListener(GameEvent.WarriorSpecialAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherSpecialAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherAttackFinishEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestAttackFinishEvent::class, this)
@@ -129,7 +131,10 @@ class PlayerInputSystem(
                 playerIsSpecialAttacking = false
             }
             is GameEvent.WarriorSpecialAttackEvent ->{
-                    playerIsSpecialAttacking = true
+                playerIsSpecialAttacking = true
+            }
+            is GameEvent.ArcherSpecialAttackEvent -> {
+                playerIsSpecialAttacking = true
             }
             is GameEvent.PriestSpecialAttackEvent ->{
                 playerIsSpecialAttacking = true

@@ -79,7 +79,18 @@ class ArcherAnimationSystem(
                 FacingDirection.SOUTH -> animateDownAttack(aniCmp, deltaTime)
             }
             graphic.setSpriteRegion(region)
-        }else{
+
+        }else if(player.isSpecialAttacking){
+            val region =  when(facing.direction){
+                FacingDirection.WEST -> animateLeftSpecialAttack(aniCmp, deltaTime)
+                FacingDirection.EAST -> animateRightSpecialAttack(aniCmp, deltaTime)
+                FacingDirection.NORTH -> animateUpSpecialAttack(aniCmp, deltaTime)
+                FacingDirection.SOUTH -> animateDownSpecialAttack(aniCmp, deltaTime)
+            }
+            graphic.setSpriteRegion(region)
+        }
+
+        else{
             val region = when(facing.direction){
                 FacingDirection.WEST -> animateIdleLeft(aniCmp, deltaTime)
                 FacingDirection.EAST -> animateIdleRight(aniCmp, deltaTime)
@@ -221,6 +232,70 @@ class ArcherAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
+    private fun animateRightSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackRight == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getSpecialAttackAnimation(aniCmp.typeSpecialAttackRight)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateLeftSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackLeft == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getSpecialAttackAnimation(aniCmp.typeSpecialAttackLeft)
+        }
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+    private fun animateUpSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackUp == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getSpecialAttackAnimation(aniCmp.typeSpecialAttackUp)
+        }
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateDownSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float): TextureRegion {
+
+        if (aniCmp.typeSpecialAttackDown == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getSpecialAttackAnimation(aniCmp.typeSpecialAttackDown)
+        }
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent))
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
     private fun getIdleAnimation(type : AnimationType) : Animation2D {
         var animation = animationCache[type]
         if(animation == null){
@@ -250,6 +325,23 @@ class ArcherAnimationSystem(
                 LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
             }
             animation = Animation2D(type, regions, type.playModeNormal, type.speedRate)
+            animationCache[type] = animation
+        }
+        return animation
+    }
+
+    private fun getSpecialAttackAnimation(type : AnimationType) : Animation2D {
+        var animation = animationCache[type]
+        if(animation == null){
+            var regions = atlas.findRegions(type.atlasKey)
+            if(regions.isEmpty){
+                LOG.error { "No regions found for ${type.atlasKey}" }
+                regions = atlas.findRegions("error")
+                if (regions == null) throw GdxRuntimeException("There is no error region in the atlas")
+            }else{
+                LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
+            }
+            animation = Animation2D(type, regions, type.playModeNormal, type.speedRate /3f)
             animationCache[type] = animation
         }
         return animation

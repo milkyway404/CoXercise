@@ -79,7 +79,7 @@ class MoveSystem(
         require(move != null ){"Entity |entity| must have a MoveComponent. entity=$entity"}
 
         val player = entity[PlayerComponent.mapper]
-        if(player != null && !player.isAttacking) {
+        if(player != null && !player.isAttacking && !player.isSpecialAttacking) {
 
             if(Gdx.input.isKeyPressed(Input.Keys.W)){
                 movePlayer(transform, move, player,FacingDirection.NORTH , deltaTime)

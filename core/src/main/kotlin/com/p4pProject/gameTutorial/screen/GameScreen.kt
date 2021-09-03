@@ -32,7 +32,7 @@ enum class CharacterType {
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
-val CURRENT_CHARACTER = CharacterType.PRIEST
+val CURRENT_CHARACTER = CharacterType.ARCHER
 
 class GameScreen(
     game: MyGameTutorial,
@@ -230,6 +230,32 @@ class GameScreen(
                     }
                 } else if (CURRENT_CHARACTER == CharacterType.ARCHER) {
                     //TODO: add column default and big good image here for the buttons
+                    imageButton(SkinImageButton.ARCHER_ATTACK.name) {
+                        color.a = 1.0f
+                        onClick {
+                            val player = playerr[PlayerComponent.mapper]
+                            require(player != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
+                            if(player.mp >= 20){
+                                player.mp = player.mp - 20
+                                val mp = player.mp.toFloat()
+                                val maxMp = player.maxMp.toFloat()
+                                if (mp != null && maxMp != null) {
+                                    updateMp(mp, maxMp)
+                                }
+                                gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
+                                    val facing = playerr[FacingComponent.mapper]
+                                    require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$playerr" }
+
+                                    this.facing = facing.direction
+                                    this.damage = 0
+                                    this.player = playerr
+                                })
+                            }
+
+
+                        }
+                    }
+                    row()
                     imageButton(SkinImageButton.ARCHER_ATTACK.name) {
                         color.a = 1.0f
                         onClick {

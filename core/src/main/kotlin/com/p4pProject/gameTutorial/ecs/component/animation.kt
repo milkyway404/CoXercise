@@ -9,6 +9,7 @@ import ktx.collections.GdxArray
 
 
 private const val DEFAULT_FRAME_DURATION = 1/20f
+private const val SPECIAL_FRAME_DURATION = 1/5f
 
 enum class AnimationType (
     val atlasKey: String,
@@ -50,6 +51,10 @@ enum class AnimationType (
     ARCHER_ATTACK_LEFT("GoblinSlingerLeftAttack"),
     ARCHER_ATTACK_UP("GoblinSlingerUpAttack"),
     ARCHER_ATTACK_DOWN("GoblinSlingerDownAttack"),
+    ARCHER_SPECIAl_ATTACK_RIGHT("GoblinSlingerRightAttack"),
+    ARCHER_SPECIAl_ATTACK_LEFT("GoblinSlingerLeftAttack"),
+    ARCHER_SPECIAl_ATTACK_UP("GoblinSlingerUpAttack"),
+    ARCHER_SPECIAl_ATTACK_DOWN("GoblinSlingerDownAttack"),
 
     PRIEST_UP("NecromancerUpIdle"),
     PRIEST_DOWN("NecromancerDownIdle"),
@@ -130,6 +135,10 @@ class ArcherAnimationComponent : Component, Pool.Poolable {
     var typeAttackLeft = AnimationType.ARCHER_ATTACK_LEFT
     var typeAttackUp = AnimationType.ARCHER_ATTACK_UP
     var typeAttackDown = AnimationType.ARCHER_ATTACK_DOWN
+    var typeSpecialAttackRight = AnimationType.ARCHER_SPECIAl_ATTACK_RIGHT
+    var typeSpecialAttackLeft = AnimationType.ARCHER_SPECIAl_ATTACK_LEFT
+    var typeSpecialAttackUp = AnimationType.ARCHER_SPECIAl_ATTACK_UP
+    var typeSpecialAttackDown = AnimationType.ARCHER_SPECIAl_ATTACK_DOWN
     var stateTime = 0f
 
     lateinit var animation : Animation2D
