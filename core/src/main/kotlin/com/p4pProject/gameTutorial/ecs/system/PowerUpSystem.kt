@@ -11,6 +11,8 @@ import com.p4pProject.gameTutorial.ecs.asset.SoundAsset
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
+import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
+import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.*
 import ktx.collections.GdxArray
 import ktx.collections.gdxArrayOf
@@ -109,6 +111,21 @@ class PowerUpSystem (
     }
 
     private fun collectPowerUp(player: Entity, powerUp: Entity) {
+        if(CURRENT_CHARACTER == CharacterType.WARRIOR){
+            if(player[PlayerComponent.mapper]?.characterType != PlayerType.WARRIOR){
+                return
+            }
+        }
+        if(CURRENT_CHARACTER == CharacterType.ARCHER){
+            if(player[PlayerComponent.mapper]?.characterType != PlayerType.ARCHER){
+                return
+            }
+        }
+        if(CURRENT_CHARACTER == CharacterType.PRIEST){
+            if(player[PlayerComponent.mapper]?.characterType != PlayerType.PRIEST){
+                return
+            }
+        }
         val powerUpCmp = powerUp[PowerUpComponent.mapper]
         require(powerUpCmp != null ){"Entity |entity| must have a PowerUpComponent. entity=$powerUp"}
 
