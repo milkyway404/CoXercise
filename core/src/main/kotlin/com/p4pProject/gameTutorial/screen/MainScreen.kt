@@ -53,6 +53,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                 textButton("Singleplayer Mode", SkinTextButton.DEFAULT.name) {
                     onClick {
                         // TODO: Allow user to pick character type in single-player mode
+                        chosenCharacterType = CharacterType.WARRIOR
                         game.addScreen(LoadingScreen(game, socket, "", CharacterType.WARRIOR))
                         game.removeScreen<MainScreen>()
                         dispose()
