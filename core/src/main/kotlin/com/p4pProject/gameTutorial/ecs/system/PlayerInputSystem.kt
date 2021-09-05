@@ -26,19 +26,28 @@ class PlayerInputSystem(
     private val tmpVec = Vector2()
 
     private var playerIsAttacking : Boolean = false
+    private var playerIsSpecialAttacking : Boolean = false
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.WarriorAttackFinishEvent::class, this)
+        gameEventManager.addListener(GameEvent.WarriorSpecialAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestAttackFinishEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.WarriorAttackFinishEvent::class, this)
+        gameEventManager.removeListener(GameEvent.WarriorSpecialAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherAttackFinishEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestAttackFinishEvent::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -76,6 +85,7 @@ class PlayerInputSystem(
         }
 
         player.isAttacking = playerIsAttacking
+        player.isSpecialAttacking = playerIsSpecialAttacking
     }
 
     private fun getFacingDirection(): FacingDirection {
@@ -94,6 +104,41 @@ class PlayerInputSystem(
     }
 
     override fun onEvent(event: GameEvent) {
-        playerIsAttacking = !playerIsAttacking
+        when(event){
+            is GameEvent.WarriorAttackEvent ->{
+                playerIsAttacking = true
+            }
+            is GameEvent.ArcherAttackEvent ->{
+                playerIsAttacking = true
+            }
+            is GameEvent.PriestAttackEvent ->{
+                playerIsAttacking = true
+            }
+            is GameEvent.WarriorAttackFinishEvent ->{
+                playerIsAttacking = false
+                playerIsSpecialAttacking = false
+            }
+            is GameEvent.ArcherAttackFinishEvent ->{
+                playerIsAttacking = false
+                playerIsSpecialAttacking = false
+            }
+            is GameEvent.PriestAttackFinishEvent ->{
+                playerIsAttacking = false
+                playerIsSpecialAttacking = false
+            }
+            is GameEvent.WarriorSpecialAttackEvent ->{
+                val player = event.player[PlayerComponent.mapper]
+                require(player != null) { "Entity |entity| must have a PlayerComponent. entity=${event.player}" }
+                if(player.mp >= 20){
+                    player.mp = player.mp - 20
+                    playerIsSpecialAttacking = true
+                }
+                gameEventManager.dispatchEvent(GameEvent.UpdateMp.apply {
+                    this.player = player;
+
+                })
+            }
+        }
+
     }
 }

@@ -47,11 +47,23 @@ sealed class GameEvent{
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
     }
 
+    object WarriorAttackFinishEvent : GameEvent (){
+    }
+
+    object WarriorSpecialAttackEvent : GameEvent (){
+        lateinit var player : Entity
+        var damage = 0
+        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+    }
+
     object ArcherAttackEvent : GameEvent (){
         lateinit var player : Entity
         lateinit var facing : FacingDirection
         var damage = 0
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+    }
+
+    object ArcherAttackFinishEvent : GameEvent (){
     }
 
     object PriestAttackEvent : GameEvent (){
@@ -60,9 +72,17 @@ sealed class GameEvent{
         override fun toString() = "PlayerHit(player = $player, damage=$damage)"
     }
 
+    object PriestAttackFinishEvent : GameEvent (){
+    }
+
     object PlayerStep: GameEvent ()  {
         lateinit var player: PlayerComponent
     }
+
+    object UpdateMp: GameEvent ()  {
+        lateinit var player: PlayerComponent
+    }
+
 
     object BossAttack: GameEvent () {
         var damage = 0

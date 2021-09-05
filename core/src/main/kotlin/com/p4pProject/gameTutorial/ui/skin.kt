@@ -14,11 +14,15 @@ enum class SkinLabel {
 }
 
 enum class SkinImageButton {
-    PAUSE_PLAY, QUIT, SOUND_ON_OFF, WARRIOR_ATTACK
+    PAUSE_PLAY, QUIT, SOUND_ON_OFF, WARRIOR_ATTACK, ARCHER_ATTACK, PRIEST_ATTACK, WARRIOR_SPECIAL
 }
 
 enum class SkinTextButton {
     DEFAULT, TRANSPARENT, LABEL, LABEL_TRANSPARENT
+}
+
+enum class SkinTextField {
+    DEFAULT
 }
 
 enum class SkinWindow {
@@ -36,6 +40,9 @@ enum class SkinImage(val atlasKey: String) {
     MP_BAR("mp_bar"),
     SHIELD_BAR("shield_bar"),
     WARRIOR_ATTACK("warriorAttack"),
+    WARRIOR_SPECIAL("warriorSepcialAttack"),
+    ARCHER_ATTACK("archerAttack"),
+    PRIEST_ATTACK("priestAttack"),
     PLAY("play"),
     PAUSE("pause"),
     QUIT("quit"),
@@ -60,6 +67,13 @@ fun createSkin(assets: AssetStorage) {
         createWindowStyles(skin, defaultFont)
         createScrollPaneStyles(skin)
         createHpBarStyles(skin, defaultFont)
+        createTextFieldStyles(skin, defaultFont)
+    }
+}
+
+private fun Skin.createTextFieldStyles(skin: Skin, defaultFont: BitmapFont) {
+    textField {
+        font = defaultFont
     }
 }
 
@@ -72,7 +86,7 @@ private fun Skin.createHpBarStyles(skin: Skin, defaultFont: BitmapFont) {
 //        color("blue",0f,0f,255f,1f)
 //    }
 
-    textField {
+    textField(SkinTextField.DEFAULT.name) {
         font = defaultFont
         fontColor = Color(1f,1f,1f,1f)
     }
@@ -125,6 +139,24 @@ private fun Skin.createTextButtonStyles(
 // Use this to create new buttons
 private fun Skin.createImageButtonStyles(skin: Skin) {
 
+    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+        imageUp = skin.getDrawable(SkinImage.WARRIOR_ATTACK.atlasKey)
+        imageDown = imageUp
+    }
+
+    imageButton(SkinImageButton.WARRIOR_SPECIAL.name) {
+        imageUp = skin.getDrawable(SkinImage.WARRIOR_SPECIAL.atlasKey)
+        imageDown = imageUp
+    }
+
+    imageButton(SkinImageButton.ARCHER_ATTACK.name) {
+        imageUp = skin.getDrawable(SkinImage.ARCHER_ATTACK.atlasKey)
+        imageDown = imageUp
+    }
+    imageButton(SkinImageButton.PRIEST_ATTACK.name) {
+        imageUp = skin.getDrawable(SkinImage.PRIEST_ATTACK.atlasKey)
+        imageDown = imageUp
+    }
     imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
         imageUp = skin.getDrawable(SkinImage.WARRIOR_ATTACK.atlasKey)
         imageDown = imageUp

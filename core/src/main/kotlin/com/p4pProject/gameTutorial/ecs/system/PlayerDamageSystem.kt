@@ -21,9 +21,6 @@ import kotlin.math.max
 
 
 // DO NOT LEAVE LIKE THIS
-private const val DAMAGE_PER_SECOND = 25f
-private const val DEATH_EXPLOSION_DURATION = 0.9f
-
 private val LOG = logger<PlayerDamageSystem>()
 
 class PlayerDamageSystem (
@@ -32,7 +29,7 @@ class PlayerDamageSystem (
 
     private var attackArea : AttackArea = AttackArea(0, 0f,
         0f, 0f, 0f)
-
+    
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
@@ -67,6 +64,8 @@ class PlayerDamageSystem (
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.WarriorSpecialAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.BossHit::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
     }
@@ -74,8 +73,9 @@ class PlayerDamageSystem (
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.WarriorSpecialAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
@@ -87,16 +87,24 @@ class PlayerDamageSystem (
                 val player = event.player[PlayerComponent.mapper]
                 require(player != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
 
-                LOG.debug { "${player.isAttacking}" }
+                //SHOULD BE FIXED!!!!!
+                //TEMPORARY SOLUTION
+                attackArea = AttackArea(event.damage, (transform.position.x -1f),
+                        (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f))
+                AttackArea(0, 0f, 0f, 0f, 0f)
+
+            }
+
+            is GameEvent.WarriorSpecialAttackEvent -> {
+                val transform = event.player[TransformComponent.mapper]
+                require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
+                val player = event.player[PlayerComponent.mapper]
+                require(player != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = if(!player.isAttacking){
-                    AttackArea(event.damage, (transform.position.x -1f),
+                attackArea = AttackArea(event.damage, (transform.position.x -1f),
                         (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f))
-                }else{
-                    AttackArea(0, 0f, 0f, 0f, 0f)
-                }
             }
 
             is GameEvent.ArcherAttackEvent -> {
@@ -144,6 +152,10 @@ class PlayerDamageSystem (
                 }else{
                     AttackArea(0, 0f, 0f, 0f, 0f)
                 }
+            }
+
+            is GameEvent.BossHit -> {
+                attackArea = AttackArea(0, 0f, 0f, 0f, 0f)
             }
 
         }

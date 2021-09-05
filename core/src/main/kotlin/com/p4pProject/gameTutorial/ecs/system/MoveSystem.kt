@@ -10,8 +10,9 @@ import com.p4pProject.gameTutorial.V_WIDTH
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
-import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
+import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import com.p4pProject.gameTutorial.screen.CharacterType
+import com.p4pProject.gameTutorial.socket.emit.SocketEmit
 import ktx.ashley.allOf
 import ktx.ashley.get
 import kotlin.math.*
@@ -27,6 +28,8 @@ class MoveSystem(
 
     private var accumulator = 0f
     private var magnitudePrevious = 0.0
+    private var previousX = -1f;
+    private var previousY = -1f;
 
     override fun update(deltaTime: Float) {
         accumulator +=deltaTime
@@ -55,7 +58,7 @@ class MoveSystem(
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         // verify that the entity is actually the main player's
-        when (CURRENT_CHARACTER) {
+        when (chosenCharacterType) {
             CharacterType.WARRIOR -> {
                 if (entity[WarriorAnimationComponent.mapper] == null) {
                     return
@@ -81,20 +84,19 @@ class MoveSystem(
         val player = entity[PlayerComponent.mapper]
         if(player != null && !player.isAttacking) {
 
-            if(Gdx.input.isKeyPressed(Input.Keys.W)){
-                movePlayer(transform, move, player,FacingDirection.NORTH , deltaTime)
-            }
-
-            if(Gdx.input.isKeyPressed(Input.Keys.A)){
-                movePlayer(transform, move, player,FacingDirection.WEST , deltaTime)
-            }
-
-            if(Gdx.input.isKeyPressed(Input.Keys.S)){
-                movePlayer(transform, move, player,FacingDirection.SOUTH , deltaTime)
-            }
-
-            if(Gdx.input.isKeyPressed(Input.Keys.D)){
-                movePlayer(transform, move, player,FacingDirection.EAST , deltaTime)
+            when {
+                Gdx.input.isKeyPressed(Input.Keys.W) -> {
+                    movePlayer(transform,FacingDirection.NORTH)
+                }
+                Gdx.input.isKeyPressed(Input.Keys.A) -> {
+                    movePlayer(transform,FacingDirection.WEST)
+                }
+                Gdx.input.isKeyPressed(Input.Keys.S) -> {
+                    movePlayer(transform,FacingDirection.SOUTH)
+                }
+                Gdx.input.isKeyPressed(Input.Keys.D) -> {
+                    movePlayer(transform, FacingDirection.EAST)
+                }
             }
             val magnitude = sqrt((Gdx.input.accelerometerX.pow(2) + Gdx.input.accelerometerY.pow(2)
                     + Gdx.input.accelerometerZ.pow(2)).toDouble())
@@ -105,26 +107,39 @@ class MoveSystem(
                 Gdx.app.log("step", "TAKING A STEP")
                 // player movement
                 entity[FacingComponent.mapper]?.let { facing ->
-                    movePlayer(transform, move, player, facing.direction, deltaTime)
+                    movePlayer(transform, facing.direction)
                 }
                 player.mp++
                 gameEventManager.dispatchEvent(GameEvent.PlayerStep.apply {
                     this.player = player
                 })
-
             }
+
+            movePlayerIfLocationChanged(transform);
         }else {
             // other movement (boss, power-ups, etc)
             moveEntity(transform, move, deltaTime)
         }
     }
 
+    private fun movePlayerIfLocationChanged(transform: TransformComponent) {
+        val currentX = transform.position.x;
+        val currentY = transform.position.y;
+        // The +1's are to prevent floats making the player spazz around.
+        if (previousX > currentX + 1) {
+            movePlayer(transform, FacingDirection.WEST);
+        } else if (previousX < currentX - 1) {
+            movePlayer(transform, FacingDirection.EAST)
+        } else if (previousY > currentY + 1) {
+            movePlayer(transform, FacingDirection.NORTH)
+        } else if (previousY < currentY - 1) {
+            movePlayer(transform, FacingDirection.SOUTH)
+        }
+    }
+
     private fun movePlayer(
         transform:TransformComponent,
-        move:MoveComponent,
-        player:PlayerComponent,
-        facing:FacingDirection,
-        deltaTime:Float){
+        facing:FacingDirection){
 
         Gdx.app.log("direction", facing.toString())
         when (facing) {
@@ -150,6 +165,8 @@ class MoveSystem(
             )
         }
         Gdx.app.log("POSITION", "x: " + transform.position.x + ", y: " + transform.position.y)
+        previousX = transform.position.x;
+        previousY = transform.position.y;
     }
 
     private fun moveEntity (transform: TransformComponent, move: MoveComponent, deltaTime: Float){
