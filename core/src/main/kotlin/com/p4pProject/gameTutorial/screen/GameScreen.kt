@@ -27,12 +27,12 @@ import java.time.LocalDateTime
 import kotlin.math.min
 
 enum class CharacterType {
-    WARRIOR, ARCHER, PRIEST
+    WARRIOR, ARCHER, PRIEST, BOSS
 }
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
-val CURRENT_CHARACTER = CharacterType.PRIEST
+val CURRENT_CHARACTER = CharacterType.BOSS
 
 class GameScreen(
     game: MyGameTutorial,
@@ -100,12 +100,15 @@ class GameScreen(
             CharacterType.WARRIOR -> warrior
             CharacterType.ARCHER -> archer
             CharacterType.PRIEST -> priest
+            CharacterType.BOSS -> boss
         }
-        updatePlayerHpMp()
+        if(CURRENT_CHARACTER != CharacterType.BOSS){
+            updatePlayerHpMp()
+        }
+
     }
 
     fun updatePlayerHpMp() {
-
         val playerComp =playerr[PlayerComponent.mapper]!!
 
         updateHp(playerComp.hp.toFloat(), playerComp.maxHp.toFloat())
@@ -120,7 +123,7 @@ class GameScreen(
                 setSize(50f * UNIT_SCALE, 50f * UNIT_SCALE)
             }
             with<BossAnimationComponent>()
-            //with<MoveComponent>()
+            with<MoveComponent>()
             with<GraphicComponent>()
             with<BossComponent>()
             with<FacingComponent>()
@@ -137,8 +140,9 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.UpdateMp::class, this)
         gameEventManager.addListener(GameEvent.UpdateHp::class, this)
         //audioService.play(MusicAsset.GAME)
-        spawnPlayers ()
         spawnBoss()
+        spawnPlayers()
+
 
         val background = engine.entity{
             with<TransformComponent>()
@@ -311,7 +315,9 @@ class GameScreen(
                 pack()
             }
         }
-        updatePlayerHpMp()
+        if(CURRENT_CHARACTER != CharacterType.BOSS){
+            updatePlayerHpMp()
+        }
         // allows you to see the borders of components on screen
         stage.isDebugAll = true
 
@@ -360,7 +366,9 @@ class GameScreen(
             }
 
             is GameEvent.UpdateHp -> {
-                updatePlayerHpMp()
+                if(CURRENT_CHARACTER != CharacterType.BOSS){
+                    updatePlayerHpMp()
+                }
             }
 
             is GameEvent.PlayerStep -> {

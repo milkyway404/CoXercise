@@ -17,8 +17,8 @@ import ktx.ashley.get
 import kotlin.math.*
 
 
-private const val UPDATE_RATE = 1/25f
-private const val SENSOR_SENSITIVITY_THRESHOLD = 4
+const val UPDATE_RATE = 1/25f
+const val SENSOR_SENSITIVITY_THRESHOLD = 4
 private const val STEP_DISTANCE = 1f
 
 class MoveSystem(
@@ -71,6 +71,11 @@ class MoveSystem(
                     return
                 }
             }
+            CharacterType.BOSS -> {
+                if (entity[BossAnimationComponent.mapper] == null) {
+                    return
+                }
+            }
         }
 
         val transform = entity[TransformComponent.mapper]
@@ -79,23 +84,25 @@ class MoveSystem(
         require(move != null ){"Entity |entity| must have a MoveComponent. entity=$entity"}
 
         val player = entity[PlayerComponent.mapper]
+        val boss = entity[BossComponent.mapper]
         if(player != null && !player.isAttacking && !player.isSpecialAttacking) {
 
             if(Gdx.input.isKeyPressed(Input.Keys.W)){
-                movePlayer(transform, move, player,FacingDirection.NORTH , deltaTime)
+                movePlayer(transform, FacingDirection.NORTH)
             }
 
             if(Gdx.input.isKeyPressed(Input.Keys.A)){
-                movePlayer(transform, move, player,FacingDirection.WEST , deltaTime)
+                movePlayer(transform, FacingDirection.WEST)
             }
 
             if(Gdx.input.isKeyPressed(Input.Keys.S)){
-                movePlayer(transform, move, player,FacingDirection.SOUTH , deltaTime)
+                movePlayer(transform, FacingDirection.SOUTH)
             }
 
             if(Gdx.input.isKeyPressed(Input.Keys.D)){
-                movePlayer(transform, move, player,FacingDirection.EAST , deltaTime)
+                movePlayer(transform, FacingDirection.EAST)
             }
+
             val magnitude = sqrt((Gdx.input.accelerometerX.pow(2) + Gdx.input.accelerometerY.pow(2)
                     + Gdx.input.accelerometerZ.pow(2)).toDouble())
             val magnitudeDelta = magnitude - magnitudePrevious
@@ -105,7 +112,7 @@ class MoveSystem(
                 Gdx.app.log("step", "TAKING A STEP")
                 // player movement
                 entity[FacingComponent.mapper]?.let { facing ->
-                    movePlayer(transform, move, player, facing.direction, deltaTime)
+                    movePlayer(transform, facing.direction)
                 }
                 player.mp++
                 gameEventManager.dispatchEvent(GameEvent.PlayerStep.apply {
@@ -113,7 +120,24 @@ class MoveSystem(
                 })
 
             }
-        }else {
+        }else if(boss != null){
+            if(Gdx.input.isKeyPressed(Input.Keys.W)){
+                movePlayer(transform, FacingDirection.NORTH)
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.A)){
+                movePlayer(transform, FacingDirection.WEST)
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.S)){
+                movePlayer(transform, FacingDirection.SOUTH)
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.D)){
+                movePlayer(transform, FacingDirection.EAST)
+            }
+        }
+        else {
             // other movement (boss, power-ups, etc)
             moveEntity(transform, move, deltaTime)
         }
@@ -121,12 +145,7 @@ class MoveSystem(
 
     private fun movePlayer(
         transform:TransformComponent,
-        move:MoveComponent,
-        player:PlayerComponent,
-        facing:FacingDirection,
-        deltaTime:Float){
-
-        Gdx.app.log("direction", facing.toString())
+        facing:FacingDirection){
         when (facing) {
             FacingDirection.NORTH -> transform.position.y = MathUtils.clamp(
                 transform.position.y + 1,
@@ -149,7 +168,7 @@ class MoveSystem(
                 V_WIDTH - transform.size.x
             )
         }
-        Gdx.app.log("POSITION", "x: " + transform.position.x + ", y: " + transform.position.y)
+        //Gdx.app.log("POSITION", "x: " + transform.position.x + ", y: " + transform.position.y)
     }
 
     private fun moveEntity (transform: TransformComponent, move: MoveComponent, deltaTime: Float){

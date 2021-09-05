@@ -129,6 +129,8 @@ class PowerUpSystem (
         val powerUpCmp = powerUp[PowerUpComponent.mapper]
         require(powerUpCmp != null ){"Entity |entity| must have a PowerUpComponent. entity=$powerUp"}
 
+
+        //check character here?
         powerUpCmp.type.also { powerUpType ->
 
             LOG.debug { "Picking up power up of type $powerUpType" }

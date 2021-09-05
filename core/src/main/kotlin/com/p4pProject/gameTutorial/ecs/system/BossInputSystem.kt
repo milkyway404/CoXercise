@@ -20,11 +20,11 @@ import ktx.log.logger
 import kotlin.math.roundToInt
 
 private const val TOUCH_TOLERANCE_DISTANCE = 0.3f
-private val LOG = logger<PlayerInputSystem>()
-class PlayerInputSystem(
+private val LOG = logger<BossInputSystem>()
+class BossInputSystem(
     private val gameViewport: Viewport,
     private val gameEventManager: GameEventManager
-    ) : GameEventListener, IteratingSystem(allOf(PlayerComponent::class, TransformComponent::class, FacingComponent::class).get()) {
+) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent::class, FacingComponent::class).get()) {
     private val tmpVec = Vector2()
 
     private var playerIsAttacking : Boolean = false
@@ -32,67 +32,21 @@ class PlayerInputSystem(
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-        gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.WarriorAttackFinishEvent::class, this)
-        gameEventManager.addListener(GameEvent.WarriorSpecialAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.WarriorSpecialAttackFinishEvent::class, this)
-        gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.ArcherSpecialAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.ArcherAttackFinishEvent::class, this)
-        gameEventManager.addListener(GameEvent.ArcherSpecialAttackFinishedEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestAttackFinishEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestSpecialAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestSpecialAttackFinishEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-        gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
-        gameEventManager.removeListener(GameEvent.WarriorAttackFinishEvent::class, this)
-        gameEventManager.removeListener(GameEvent.WarriorSpecialAttackEvent::class, this)
-        gameEventManager.removeListener(GameEvent.WarriorSpecialAttackFinishEvent::class, this)
-        gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
-        gameEventManager.removeListener(GameEvent.ArcherSpecialAttackEvent::class, this)
-        gameEventManager.removeListener(GameEvent.ArcherAttackFinishEvent::class, this)
-        gameEventManager.removeListener(GameEvent.ArcherSpecialAttackFinishedEvent::class, this)
-        gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
-        gameEventManager.removeListener(GameEvent.PriestAttackFinishEvent::class, this)
-        gameEventManager.removeListener(GameEvent.PriestSpecialAttackEvent::class, this)
-        gameEventManager.removeListener(GameEvent.PriestSpecialAttackFinishEvent::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-
-        when (CURRENT_CHARACTER) {
-            CharacterType.WARRIOR -> {
-                if (entity[WarriorAnimationComponent.mapper] == null) {
-                    return
-                }
-            }
-            CharacterType.ARCHER -> {
-                if (entity[ArcherAnimationComponent.mapper] == null) {
-                    return
-                }
-            }
-            CharacterType.PRIEST -> {
-                if (entity[PriestAnimationComponent.mapper] == null) {
-                    return
-                }
-            }
-            CharacterType.BOSS -> {
-                    return
-            }
-        }
-
         val facing = entity[FacingComponent.mapper]
         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$entity" }
 
         val transform = entity[TransformComponent.mapper]
         require(transform != null) { "Entity |entity| must have a TransformComponent. entity=$entity" }
 
-        val player = entity[PlayerComponent.mapper]
-        require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
+        val boss = entity[BossComponent.mapper]
+        require(boss != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
 
 
         //This part is the part that is the control
@@ -103,26 +57,33 @@ class PlayerInputSystem(
         //facing.direction = getFacingDirection()
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
-            facing.direction = FacingDirection.NORTH
+            if(CURRENT_CHARACTER == CharacterType.BOSS){
+                facing.direction = FacingDirection.NORTH
+            }
+
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            facing.direction = FacingDirection.WEST
+            if(CURRENT_CHARACTER == CharacterType.BOSS){
+                facing.direction = FacingDirection.WEST
+            }
 
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            facing.direction = FacingDirection.SOUTH
+            if(CURRENT_CHARACTER == CharacterType.BOSS){
+                facing.direction = FacingDirection.SOUTH
+            }
 
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            facing.direction = FacingDirection.EAST
-
+            if(CURRENT_CHARACTER == CharacterType.BOSS){
+                facing.direction = FacingDirection.EAST
+            }
         }
 
-        player.isAttacking = playerIsAttacking
-        player.isSpecialAttacking = playerIsSpecialAttacking
+        boss.isAttacking = playerIsAttacking
     }
 
     private fun getFacingDirection(): FacingDirection {

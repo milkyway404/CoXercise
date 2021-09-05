@@ -52,7 +52,6 @@ class BossAnimationSystem(
 //        }
 
         facing.lastDirection = facing.direction
-
             val region = when(facing.direction){
                 FacingDirection.WEST -> animateIdleLeft(aniCmp, deltaTime)
                 FacingDirection.EAST -> animateIdleRight(aniCmp, deltaTime)
@@ -146,6 +145,23 @@ class BossAnimationSystem(
                 LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
             }
             animation = Animation2D(type, regions, type.playModeLoop, type.speedRate)
+            animationCache[type] = animation
+        }
+        return animation
+    }
+
+    private fun getAttackAnimation(type : AnimationType) : Animation2D {
+        var animation = animationCache[type]
+        if(animation == null){
+            var regions = atlas.findRegions(type.atlasKey)
+            if(regions.isEmpty){
+                LOG.error { "No regions found for ${type.atlasKey}" }
+                regions = atlas.findRegions("error")
+                if (regions == null) throw GdxRuntimeException("There is no error region in the atlas")
+            }else{
+                LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
+            }
+            animation = Animation2D(type, regions, type.playModeNormal, type.speedRate)
             animationCache[type] = animation
         }
         return animation
