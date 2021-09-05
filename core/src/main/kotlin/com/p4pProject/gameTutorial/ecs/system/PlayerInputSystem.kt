@@ -33,12 +33,15 @@ class PlayerInputSystem(
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.WarriorAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.WarriorSpecialAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.WarriorSpecialAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherSpecialAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.ArcherAttackFinishEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherSpecialAttackFinishedEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.PriestSpecialAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestSpecialAttackFinishEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
@@ -46,12 +49,15 @@ class PlayerInputSystem(
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.WarriorAttackFinishEvent::class, this)
         gameEventManager.removeListener(GameEvent.WarriorSpecialAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.WarriorSpecialAttackFinishEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherSpecialAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.ArcherAttackFinishEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherSpecialAttackFinishedEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestAttackFinishEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestSpecialAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestSpecialAttackFinishEvent::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -120,14 +126,14 @@ class PlayerInputSystem(
             }
             is GameEvent.WarriorAttackFinishEvent ->{
                 playerIsAttacking = false
-                playerIsSpecialAttacking = false
             }
             is GameEvent.ArcherAttackFinishEvent ->{
                 playerIsAttacking = false
-                playerIsSpecialAttacking = false
             }
             is GameEvent.PriestAttackFinishEvent ->{
                 playerIsAttacking = false
+            }
+            is GameEvent.PriestSpecialAttackFinishEvent ->{
                 playerIsSpecialAttacking = false
             }
             is GameEvent.WarriorSpecialAttackEvent ->{
@@ -138,6 +144,12 @@ class PlayerInputSystem(
             }
             is GameEvent.PriestSpecialAttackEvent ->{
                 playerIsSpecialAttacking = true
+            }
+            is GameEvent.WarriorSpecialAttackFinishEvent ->{
+                playerIsSpecialAttacking = false
+            }
+            is GameEvent.ArcherSpecialAttackFinishedEvent ->{
+                playerIsSpecialAttacking = false
             }
         }
 

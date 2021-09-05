@@ -32,7 +32,7 @@ enum class CharacterType {
 
 private val LOG = logger<MyGameTutorial>()
 private const val MAX_DELTA_TIME = 1/20f
-val CURRENT_CHARACTER = CharacterType.ARCHER
+val CURRENT_CHARACTER = CharacterType.PRIEST
 
 class GameScreen(
     game: MyGameTutorial,

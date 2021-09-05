@@ -82,10 +82,10 @@ class WarriorAnimationSystem(
             graphic.setSpriteRegion(region)
         }else if(player.isSpecialAttacking){
             val region =  when(facing.direction){
-                FacingDirection.WEST -> animateLeftSpecialAttack(aniCmp, deltaTime)
-                FacingDirection.EAST -> animateRightSpecialAttack(aniCmp, deltaTime)
-                FacingDirection.NORTH -> animateUpSpecialAttack(aniCmp, deltaTime)
-                FacingDirection.SOUTH -> animateDownSpecialAttack(aniCmp, deltaTime)
+                FacingDirection.WEST -> animateLeftSpecialAttack(aniCmp, deltaTime, entity)
+                FacingDirection.EAST -> animateRightSpecialAttack(aniCmp, deltaTime, entity)
+                FacingDirection.NORTH -> animateUpSpecialAttack(aniCmp, deltaTime, entity)
+                FacingDirection.SOUTH -> animateDownSpecialAttack(aniCmp, deltaTime, entity)
             }
             graphic.setSpriteRegion(region)
         }else{
@@ -235,7 +235,7 @@ class WarriorAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateRightSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateRightSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float, player:Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackRight == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -247,12 +247,15 @@ class WarriorAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+            gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
+                this.player = player
+                this.damage = 0
+            }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateLeftSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateLeftSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float, player:Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackLeft == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -264,11 +267,14 @@ class WarriorAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+            gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
+                this.player = player
+                this.damage = 0
+            }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
-    private fun animateUpSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateUpSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float, player:Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackUp == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -280,11 +286,14 @@ class WarriorAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+            gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
+                this.player = player
+                this.damage = 0
+            }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
-    private fun animateDownSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float): TextureRegion {
+    private fun animateDownSpecialAttack(aniCmp:WarriorAnimationComponent, deltaTime: Float, player:Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackDown == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -296,7 +305,10 @@ class WarriorAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent((GameEvent.WarriorAttackFinishEvent))
+            gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
+                this.player = player
+                this.damage = 0
+            }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }

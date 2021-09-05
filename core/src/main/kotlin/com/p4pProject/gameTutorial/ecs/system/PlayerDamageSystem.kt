@@ -48,7 +48,6 @@ class PlayerDamageSystem (
                     hp = boss.hp
                     maxHp = boss.maxHp
                 })
-
 //                if(boss.hp <= 0f){
 //                    gameEventManager.dispatchEvent(GameEvent.PlayerDeath.apply {
 //                        //not necessary as from dark matter
@@ -59,23 +58,28 @@ class PlayerDamageSystem (
 //                    }
 //                }
             }
+        attackArea = AttackArea(0, 0f,
+            0f, 0f, 0f)
     }
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.WarriorAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.WarriorSpecialAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.WarriorSpecialAttackFinishEvent::class, this)
         gameEventManager.addListener(GameEvent.BossHit::class, this)
-        gameEventManager.addListener(GameEvent.ArcherAttackEvent::class, this)
-        gameEventManager.addListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherAttackFinishEvent::class, this)
+        gameEventManager.addListener(GameEvent.ArcherSpecialAttackFinishedEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestAttackFinishEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
         gameEventManager.removeListener(GameEvent.WarriorAttackEvent::class, this)
         gameEventManager.removeListener(GameEvent.WarriorSpecialAttackEvent::class, this)
-        gameEventManager.removeListener(GameEvent.ArcherAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherAttackFinishEvent::class, this)
+        gameEventManager.removeListener(GameEvent.ArcherSpecialAttackFinishedEvent::class, this)
         gameEventManager.removeListener(GameEvent.PriestAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestAttackFinishEvent::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
@@ -95,7 +99,7 @@ class PlayerDamageSystem (
 
             }
 
-            is GameEvent.WarriorSpecialAttackEvent -> {
+            is GameEvent.WarriorSpecialAttackFinishEvent -> {
                 val transform = event.player[TransformComponent.mapper]
                 require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
                 val player = event.player[PlayerComponent.mapper]
@@ -107,7 +111,7 @@ class PlayerDamageSystem (
                         (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f))
             }
 
-            is GameEvent.ArcherAttackEvent -> {
+            is GameEvent.ArcherAttackFinishEvent -> {
                 val transform = event.player[TransformComponent.mapper]
                 require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
                 val player = event.player[PlayerComponent.mapper]
@@ -117,8 +121,7 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = if(!player.isAttacking){
-                    if(event.facing==FacingDirection.NORTH){
+                attackArea = if(event.facing==FacingDirection.NORTH){
                         AttackArea(event.damage, (transform.position.x -0.5f),
                             (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f))
                     }else if(event.facing==FacingDirection.SOUTH){
@@ -131,12 +134,34 @@ class PlayerDamageSystem (
                         AttackArea(event.damage, (transform.position.x -124f),
                             (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f))
                     }
-                }else{
-                    AttackArea(0, 0f, 0f, 0f, 0f)
-                }
+
             }
 
-            is GameEvent.PriestAttackEvent -> {
+            is GameEvent.ArcherSpecialAttackFinishedEvent -> {
+                val transform = event.player[TransformComponent.mapper]
+                require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
+                val player = event.player[PlayerComponent.mapper]
+                require(player != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
+
+                //SHOULD BE FIXED!!!!!
+                //TEMPORARY SOLUTION
+                attackArea = if(event.facing==FacingDirection.NORTH){
+                        AttackArea(event.damage, (transform.position.x -0.5f),
+                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f))
+                    }else if(event.facing==FacingDirection.SOUTH){
+                        AttackArea(event.damage, (transform.position.x -0.5f),
+                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y))
+                    }else if(event.facing==FacingDirection.EAST){
+                        AttackArea(event.damage, (transform.position.x),
+                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                    }else{
+                        AttackArea(event.damage, (transform.position.x -124f),
+                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                    }
+
+            }
+
+            is GameEvent.PriestAttackFinishEvent -> {
                 val transform = event.player[TransformComponent.mapper]
                 require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
                 val player = event.player[PlayerComponent.mapper]
@@ -146,16 +171,8 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = if(!player.isAttacking){
-                    AttackArea(event.damage, (transform.position.x -32f),
+                attackArea = AttackArea(event.damage, (transform.position.x -32f),
                         (transform.position.x +32f), (transform.position.y -32f), (transform.position.y +32f))
-                }else{
-                    AttackArea(0, 0f, 0f, 0f, 0f)
-                }
-            }
-
-            is GameEvent.BossHit -> {
-                attackArea = AttackArea(0, 0f, 0f, 0f, 0f)
             }
 
         }
