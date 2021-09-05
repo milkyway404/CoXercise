@@ -127,10 +127,10 @@ sealed class GameEvent{
 
     object BossAttack: GameEvent () {
         var damage = 0
-        var startX = 0
-        var endX = 0
-        var startY = 0
-        var endY = 0
+        var startX = 0F
+        var endX = 0F
+        var startY = 0F
+        var endY = 0F
         var startTime: LocalDateTime = LocalDateTime.now()
         var duration = 0L
 

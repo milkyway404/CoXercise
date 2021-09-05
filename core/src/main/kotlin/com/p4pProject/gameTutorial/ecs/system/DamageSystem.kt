@@ -15,6 +15,7 @@ import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
 import ktx.log.debug
+import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.set
 import java.time.LocalDateTime
@@ -26,10 +27,13 @@ public const val DAMAGE_AREA_HEIGHT = 0f
 private const val DAMAGE_PER_SECOND = 25f
 private const val DEATH_EXPLOSION_DURATION = 0.9f
 
+private val LOG = logger<PlayerInputSystem>()
 class DamageSystem (
     private val gameEventManager: GameEventManager
         ) : GameEventListener, IteratingSystem(allOf(PlayerComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
-    private val bossAttackAreas = ArrayList<BossAttackArea>()
+    private var bossAttackAreas = BossAttackArea(0, 0F,
+       0F, 0F, 0F, LocalDateTime.now(),
+        0)
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
@@ -37,18 +41,13 @@ class DamageSystem (
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-        // TODO: attach transform to player to enable multiple players
-
-
-        removeExpiredBossAttacks();
-
-        for (bossAttack in bossAttackAreas) {
-            if (transform.position.x >= bossAttack.startX &&
-                    transform.position.x <= bossAttack.endX &&
-                    transform.position.y >= bossAttack.startY &&
-                    transform.position.y <= bossAttack.endY) {
+            if (transform.position.x >= bossAttackAreas.startX &&
+                    transform.position.x <= bossAttackAreas.endX &&
+                    transform.position.y >= bossAttackAreas.startY &&
+                    transform.position.y <= bossAttackAreas.endY) {
                 //ouch
-                player.hp -= bossAttack.damage
+                player.hp -= bossAttackAreas.damage
+                LOG.debug { "PlayerDamaged: ${player.characterType}" }
 
                 gameEventManager.dispatchEvent(GameEvent.PlayerHit.apply {
                     this.player = entity
@@ -62,7 +61,8 @@ class DamageSystem (
                     }
                 }
             }
-        }
+            removeExpiredBossAttacks(bossAttackAreas);
+
     }
 
     override fun addedToEngine(engine: Engine?) {
@@ -79,21 +79,21 @@ class DamageSystem (
         // boss is attacking lol
         when (event) {
             is GameEvent.BossAttack -> {
-                bossAttackAreas.add(BossAttackArea(event.damage, event.startX,
+                bossAttackAreas = BossAttackArea(event.damage, event.startX,
                     event.endX, event.startY, event.endY, event.startTime,
-                    event.duration))
+                    event.duration)
             }
         }
     }
 
-    private fun removeExpiredBossAttacks() {
-        for (bossAttack in bossAttackAreas) {
+    private fun removeExpiredBossAttacks(bossAttack: BossAttackArea) {
             if (LocalDateTime.now().minusSeconds(bossAttack.duration).isAfter(bossAttack.startTime)) {
-                bossAttackAreas.remove(bossAttack);
+                bossAttackAreas = BossAttackArea(0, 0F,
+                    0F, 0F, 0F, LocalDateTime.now(),
+                    0)
             }
-        }
     }
 
-    private class BossAttackArea(val damage: Int, val startX: Int, val endX: Int, val startY: Int,
-                                 val endY: Int, val startTime: LocalDateTime, val duration: Long)
+    private class BossAttackArea(val damage: Int, val startX: Float, val endX: Float, val startY: Float,
+                                 val endY: Float, val startTime: LocalDateTime, val duration: Long)
 }

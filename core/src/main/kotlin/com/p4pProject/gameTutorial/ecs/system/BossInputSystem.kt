@@ -17,6 +17,7 @@ import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.log.debug
 import ktx.log.logger
+import java.time.LocalDateTime
 import kotlin.math.roundToInt
 
 private const val TOUCH_TOLERANCE_DISTANCE = 0.3f
@@ -28,7 +29,6 @@ class BossInputSystem(
     private val tmpVec = Vector2()
 
     private var playerIsAttacking : Boolean = false
-    private var playerIsSpecialAttacking : Boolean = false
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
@@ -83,6 +83,22 @@ class BossInputSystem(
             }
         }
 
+        if(Gdx.input.isKeyPressed(Input.Keys.J)){
+            if(CURRENT_CHARACTER == CharacterType.BOSS){
+                gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
+            this.damage = 0
+            this.startX = transform.position.x - 1f
+            this.endX = transform.position.x + 1f
+            this.startY = transform.position.y - 1f
+            this.endY = transform.position.y + 1f
+            this.startTime = LocalDateTime.now()
+            this.duration = 0.1.toLong()
+        })
+            }
+        }
+
+
+
         boss.isAttacking = playerIsAttacking
     }
 
@@ -102,44 +118,6 @@ class BossInputSystem(
     }
 
     override fun onEvent(event: GameEvent) {
-        when(event){
-            is GameEvent.WarriorAttackEvent ->{
-                playerIsAttacking = true
-            }
-            is GameEvent.ArcherAttackEvent ->{
-                playerIsAttacking = true
-            }
-            is GameEvent.PriestAttackEvent ->{
-                playerIsAttacking = true
-            }
-            is GameEvent.WarriorAttackFinishEvent ->{
-                playerIsAttacking = false
-            }
-            is GameEvent.ArcherAttackFinishEvent ->{
-                playerIsAttacking = false
-            }
-            is GameEvent.PriestAttackFinishEvent ->{
-                playerIsAttacking = false
-            }
-            is GameEvent.PriestSpecialAttackFinishEvent ->{
-                playerIsSpecialAttacking = false
-            }
-            is GameEvent.WarriorSpecialAttackEvent ->{
-                playerIsSpecialAttacking = true
-            }
-            is GameEvent.ArcherSpecialAttackEvent -> {
-                playerIsSpecialAttacking = true
-            }
-            is GameEvent.PriestSpecialAttackEvent ->{
-                playerIsSpecialAttacking = true
-            }
-            is GameEvent.WarriorSpecialAttackFinishEvent ->{
-                playerIsSpecialAttacking = false
-            }
-            is GameEvent.ArcherSpecialAttackFinishedEvent ->{
-                playerIsSpecialAttacking = false
-            }
-        }
-
+        TODO("Not yet implemented")
     }
 }

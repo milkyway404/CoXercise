@@ -27,8 +27,15 @@ class PlayerInputSystem(
     ) : GameEventListener, IteratingSystem(allOf(PlayerComponent::class, TransformComponent::class, FacingComponent::class).get()) {
     private val tmpVec = Vector2()
 
-    private var playerIsAttacking : Boolean = false
-    private var playerIsSpecialAttacking : Boolean = false
+    private var warriorIsAttacking : Boolean = false
+    private var warriorIsSpecialAttacking : Boolean = false
+
+    private var archerIsAttacking : Boolean = false
+    private var archerIsSpecialAttacking : Boolean = false
+
+    private var priestIsAttacking : Boolean = false
+    private var priestIsSpecialAttacking : Boolean = false
+
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
@@ -121,8 +128,20 @@ class PlayerInputSystem(
 
         }
 
-        player.isAttacking = playerIsAttacking
-        player.isSpecialAttacking = playerIsSpecialAttacking
+        if(player.characterType == PlayerType.WARRIOR){
+            player.isAttacking = warriorIsAttacking
+            player.isSpecialAttacking = warriorIsSpecialAttacking
+        }
+
+        if(player.characterType == PlayerType.ARCHER){
+            player.isAttacking = archerIsAttacking
+            player.isSpecialAttacking = archerIsSpecialAttacking
+        }
+        if(player.characterType == PlayerType.PRIEST){
+            player.isAttacking = priestIsAttacking
+            player.isSpecialAttacking = priestIsSpecialAttacking
+        }
+
     }
 
     private fun getFacingDirection(): FacingDirection {
@@ -143,40 +162,40 @@ class PlayerInputSystem(
     override fun onEvent(event: GameEvent) {
         when(event){
             is GameEvent.WarriorAttackEvent ->{
-                playerIsAttacking = true
+                warriorIsAttacking = true
             }
             is GameEvent.ArcherAttackEvent ->{
-                playerIsAttacking = true
+                archerIsAttacking = true
             }
             is GameEvent.PriestAttackEvent ->{
-                playerIsAttacking = true
+                priestIsAttacking = true
             }
             is GameEvent.WarriorAttackFinishEvent ->{
-                playerIsAttacking = false
+                warriorIsAttacking = false
             }
             is GameEvent.ArcherAttackFinishEvent ->{
-                playerIsAttacking = false
+                archerIsAttacking = false
             }
             is GameEvent.PriestAttackFinishEvent ->{
-                playerIsAttacking = false
+                priestIsAttacking = false
             }
             is GameEvent.PriestSpecialAttackFinishEvent ->{
-                playerIsSpecialAttacking = false
+                priestIsSpecialAttacking = false
             }
             is GameEvent.WarriorSpecialAttackEvent ->{
-                playerIsSpecialAttacking = true
+                warriorIsSpecialAttacking = true
             }
             is GameEvent.ArcherSpecialAttackEvent -> {
-                playerIsSpecialAttacking = true
+                archerIsSpecialAttacking = true
             }
             is GameEvent.PriestSpecialAttackEvent ->{
-                playerIsSpecialAttacking = true
+                priestIsSpecialAttacking = true
             }
             is GameEvent.WarriorSpecialAttackFinishEvent ->{
-                playerIsSpecialAttacking = false
+                warriorIsSpecialAttacking = false
             }
             is GameEvent.ArcherSpecialAttackFinishedEvent ->{
-                playerIsSpecialAttacking = false
+                archerIsSpecialAttacking = false
             }
         }
 
