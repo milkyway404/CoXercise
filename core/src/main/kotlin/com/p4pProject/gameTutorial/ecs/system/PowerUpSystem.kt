@@ -11,7 +11,7 @@ import com.p4pProject.gameTutorial.ecs.asset.SoundAsset
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
-import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
+import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.*
 import ktx.collections.GdxArray
@@ -111,17 +111,17 @@ class PowerUpSystem (
     }
 
     private fun collectPowerUp(player: Entity, powerUp: Entity) {
-        if(CURRENT_CHARACTER == CharacterType.WARRIOR){
+        if(chosenCharacterType == CharacterType.WARRIOR){
             if(player[PlayerComponent.mapper]?.characterType != PlayerType.WARRIOR){
                 return
             }
         }
-        if(CURRENT_CHARACTER == CharacterType.ARCHER){
+        if(chosenCharacterType == CharacterType.ARCHER){
             if(player[PlayerComponent.mapper]?.characterType != PlayerType.ARCHER){
                 return
             }
         }
-        if(CURRENT_CHARACTER == CharacterType.PRIEST){
+        if(chosenCharacterType == CharacterType.PRIEST){
             if(player[PlayerComponent.mapper]?.characterType != PlayerType.PRIEST){
                 return
             }

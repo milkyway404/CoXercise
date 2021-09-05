@@ -11,7 +11,7 @@ import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
-import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
+import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
 import ktx.ashley.get
@@ -57,34 +57,31 @@ class BossInputSystem(
         //facing.direction = getFacingDirection()
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
-            if(CURRENT_CHARACTER == CharacterType.BOSS){
+            if(chosenCharacterType == CharacterType.BOSS){
                 facing.direction = FacingDirection.NORTH
             }
-
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            if(CURRENT_CHARACTER == CharacterType.BOSS){
+            if(chosenCharacterType == CharacterType.BOSS){
                 facing.direction = FacingDirection.WEST
             }
-
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            if(CURRENT_CHARACTER == CharacterType.BOSS){
+            if(chosenCharacterType == CharacterType.BOSS){
                 facing.direction = FacingDirection.SOUTH
             }
-
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            if(CURRENT_CHARACTER == CharacterType.BOSS){
+            if(chosenCharacterType == CharacterType.BOSS){
                 facing.direction = FacingDirection.EAST
             }
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.J)){
-            if(CURRENT_CHARACTER == CharacterType.BOSS){
+            if(chosenCharacterType == CharacterType.BOSS){
                 gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
             this.damage = 0
             this.startX = transform.position.x - 1f
@@ -96,9 +93,6 @@ class BossInputSystem(
         })
             }
         }
-
-
-
         boss.isAttacking = playerIsAttacking
     }
 

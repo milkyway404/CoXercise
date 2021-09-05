@@ -13,6 +13,7 @@ import com.p4pProject.gameTutorial.ecs.asset.SoundAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAsset
 import com.p4pProject.gameTutorial.ecs.asset.TextureAtlasAsset
 import com.p4pProject.gameTutorial.ui.SkinLabel
+import io.socket.client.Socket
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.actors.plus
@@ -21,8 +22,11 @@ import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
 import ktx.scene2d.*
 
-
-class LoadingScreen(game: MyGameTutorial) : GameBaseScreen(game){
+class LoadingScreen(
+    game: MyGameTutorial,
+    private val socket: Socket,
+    private val lobbyID: String,
+    private val chosenCharacterType: CharacterType) : GameBaseScreen(game){
 
     private lateinit var progressBar : Image
     private lateinit var touchToBeginLabel: Label
@@ -92,7 +96,7 @@ class LoadingScreen(game: MyGameTutorial) : GameBaseScreen(game){
     }
 
     override fun render(delta: Float) {
-        if(assets.progress.isFinished && Gdx.input.justTouched() && game.containsScreen<GameScreen>()){
+        if(assets.progress.isFinished && game.containsScreen<GameScreen>()){
             game.removeScreen<LoadingScreen>()
             dispose()
             game.setScreen<GameScreen>()
@@ -105,7 +109,7 @@ class LoadingScreen(game: MyGameTutorial) : GameBaseScreen(game){
         }
     }
     private fun assetsLoaded() {
-        game.addScreen(GameScreen(game))
+        game.addScreen(GameScreen(game, socket = socket, lobbyID = lobbyID, chosenCharacterType = chosenCharacterType))
         touchToBeginLabel += Actions.forever(sequence(Actions.fadeIn(0.5f) + fadeOut(0.5f)))
     }
 }
