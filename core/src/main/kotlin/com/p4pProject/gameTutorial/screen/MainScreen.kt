@@ -52,12 +52,42 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                 row()
                 textButton("Singleplayer Mode", SkinTextButton.DEFAULT.name) {
                     onClick {
-                        // TODO: Allow user to pick character type in single-player mode
-                        chosenCharacterType = CharacterType.WARRIOR
-                        game.addScreen(LoadingScreen(game, socket, "", CharacterType.WARRIOR))
-                        game.removeScreen<MainScreen>()
-                        dispose()
-                        game.setScreen<LoadingScreen>()
+                        stage.actors {
+                            dialog("choose character", SkinWindow.DEFAULT.name) {
+                                table {
+                                    textButton(
+                                        CharacterType.WARRIOR.name,
+                                        SkinTextButton.DEFAULT.name
+                                    ) {
+                                        onClick {
+                                            chosenCharacterType = CharacterType.WARRIOR
+                                            startSinglePlayerGame();
+                                        }
+                                    }
+                                    row()
+                                    textButton(
+                                        CharacterType.ARCHER.name,
+                                        SkinTextButton.DEFAULT.name
+                                    ) {
+                                        onClick {
+                                            chosenCharacterType = CharacterType.ARCHER
+                                            startSinglePlayerGame();
+                                        }
+                                    }
+                                    row()
+                                    textButton(
+                                        CharacterType.PRIEST.name,
+                                        SkinTextButton.DEFAULT.name
+                                    ) {
+                                        onClick {
+                                            chosenCharacterType = CharacterType.PRIEST
+                                            startSinglePlayerGame();
+                                        }
+                                    }
+                                    row()
+                                }
+                            }
+                        }
                     }
                 }
                 row()
@@ -150,6 +180,13 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
         }
 
         return false;
+    }
+
+    private fun startSinglePlayerGame() {
+        game.addScreen(LoadingScreen(game, socket, "", chosenCharacterType))
+        game.removeScreen<MainScreen>()
+        dispose()
+        game.setScreen<LoadingScreen>()
     }
 
     private fun connectAndSetupSocket() {

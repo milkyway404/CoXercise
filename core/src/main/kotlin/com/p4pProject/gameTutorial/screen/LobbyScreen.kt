@@ -74,7 +74,7 @@ class LobbyScreen (
     private fun setupUI() {
         stage.actors {
             table {
-                label("Lobby", SkinLabel.LARGE.name) {
+                label(lobbyID, SkinLabel.LARGE.name) {
                     setAlignment(Align.center)
                 }
                 row();
