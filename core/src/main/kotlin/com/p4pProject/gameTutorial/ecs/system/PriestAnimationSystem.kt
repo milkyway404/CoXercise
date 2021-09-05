@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
-import com.p4pProject.gameTutorial.screen.CURRENT_CHARACTER
+import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
 import ktx.ashley.get
@@ -38,7 +38,7 @@ class PriestAnimationSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        when (CURRENT_CHARACTER) {
+        when (chosenCharacterType) {
             CharacterType.WARRIOR -> {
                 if (entity[WarriorAnimationComponent.mapper] == null) {
                     return

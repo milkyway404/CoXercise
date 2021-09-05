@@ -18,12 +18,13 @@ import ktx.actors.onClick
 import ktx.scene2d.*
 import org.json.JSONObject
 
+lateinit var chosenCharacterType: CharacterType;
+
 class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
     private lateinit var invalidLobbyLabel: Label
     private lateinit var socket: Socket
     private var lobbyID: String = ""
-    private var chosenCharacterType: CharacterType? = null
 
     init {
         connectAndSetupSocket()
@@ -51,7 +52,8 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                 row()
                 textButton("Singleplayer Mode", SkinTextButton.DEFAULT.name) {
                     onClick {
-                        game.addScreen(LoadingScreen(game))
+                        // TODO: Allow user to pick character type in single-player mode
+                        game.addScreen(LoadingScreen(game, socket, "", CharacterType.WARRIOR))
                         game.removeScreen<MainScreen>()
                         dispose()
                         game.setScreen<LoadingScreen>()
@@ -126,7 +128,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
     override fun render(delta: Float) {
         if (assets.progress.isFinished && game.containsScreen<LobbyScreen>() &&
-                chosenCharacterType != null && isValidLobbyID()) {
+                ::chosenCharacterType.isInitialized && isValidLobbyID()) {
             changeToLobbyScreen()
         }
 
@@ -176,7 +178,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
             return
         }
         Gdx.app.log("Lobby", "adding screen with lobbyID$this.lobbyID")
-        game.addScreen(LobbyScreen(game, this.lobbyID, socket))
+        game.addScreen(LobbyScreen(game, this.lobbyID, socket, chosenCharacterType))
         Gdx.app.log("Lobby", "" + game.containsScreen<LobbyScreen>())
     }
 

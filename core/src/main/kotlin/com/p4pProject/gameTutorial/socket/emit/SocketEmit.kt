@@ -17,5 +17,17 @@ class SocketEmit() {
         fun getLobbyPlayers(socket: Socket, lobbyID: String) {
             socket.emit("get lobby players", lobbyID)
         }
+
+        fun playerMove(socket: Socket, lobbyID: String, x: Float, y: Float) {
+            val data = JSONObject();
+            data.put("lobbyID", lobbyID);
+            data.put("x", x);
+            data.put("y", y);
+            socket.emit("player move", data)
+        }
+
+        fun startGame(socket: Socket, lobbyID: String) {
+            socket.emit("start game", lobbyID)
+        }
     }
 }
