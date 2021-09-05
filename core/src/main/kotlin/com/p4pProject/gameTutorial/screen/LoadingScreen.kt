@@ -96,7 +96,7 @@ class LoadingScreen(
     }
 
     override fun render(delta: Float) {
-        if(assets.progress.isFinished && Gdx.input.justTouched() && game.containsScreen<GameScreen>()){
+        if(assets.progress.isFinished && game.containsScreen<GameScreen>()){
             game.removeScreen<LoadingScreen>()
             dispose()
             game.setScreen<GameScreen>()
