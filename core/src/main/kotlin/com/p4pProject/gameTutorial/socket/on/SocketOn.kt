@@ -91,6 +91,26 @@ class SocketOn(private val socket: Socket) {
                 callback();
             }
         }
+
+        fun playerAttack(socket: Socket, callback: ((String) -> Unit)){
+
+            socket.on("player attack"){ args ->
+                val info = args[0] as JSONObject
+                val characterType = info.getString("characterType")
+                callback(characterType)
+
+            }
+        }
+
+        fun playerSpecialAttack(socket: Socket, callback: ((String) -> Unit)){
+
+            socket.on("player special attack"){ args ->
+                val info = args[0] as JSONObject
+                val characterType = info.getString("characterType")
+                callback(characterType)
+
+            }
+        }
     }
 
 

@@ -130,13 +130,6 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                                         }
                                     }
                                     row()
-                                    textButton(CharacterType.BOSS.name, SkinTextButton.DEFAULT.name) {
-                                        onClick {
-                                            chosenCharacterType = CharacterType.BOSS
-                                        }
-                                    }
-                                    row()
-
                                     textField("lobby id", SkinTextField.DEFAULT.name) {
                                         onChange {
                                             lobbyID = text

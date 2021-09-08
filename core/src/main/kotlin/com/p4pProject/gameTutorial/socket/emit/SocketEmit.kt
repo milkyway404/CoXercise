@@ -1,5 +1,6 @@
 package com.p4pProject.gameTutorial.socket.emit
 
+import com.badlogic.gdx.Gdx
 import io.socket.client.Socket
 import org.json.JSONObject
 
@@ -28,6 +29,20 @@ class SocketEmit() {
 
         fun startGame(socket: Socket, lobbyID: String) {
             socket.emit("start game", lobbyID)
+        }
+
+        fun playerAttack(socket: Socket, lobbyID: String, characterType: String){
+            val data = JSONObject()
+            data.put("lobbyID", lobbyID);
+            data.put("characterType", characterType)
+            socket.emit("player attack", data)
+        }
+
+        fun playerSpecialAttack(socket: Socket, lobbyID: String, characterType: String){
+            val data = JSONObject()
+            data.put("lobbyID", lobbyID);
+            data.put("characterType", characterType)
+            socket.emit("player special attack", data)
         }
     }
 }

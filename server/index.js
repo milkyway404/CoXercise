@@ -96,6 +96,16 @@ io.on("connection", function (socket) {
     socket.to(data).emit("start game");
   });
 
+  socket.on("player attack", function (data) {
+    const lobbyID = data.lobbyID;
+    socket.to(lobbyID).emit("player attack", data);
+  })
+
+  socket.on("player special attack", function (data) {
+      const lobbyID = data.lobbyID;
+      socket.to(lobbyID).emit("player special attack", data);
+    })
+
   function characterAlreadyExists(lobbyID, characterType) {
     console.log("checking character...");
     const players = lobbies[lobbyID];

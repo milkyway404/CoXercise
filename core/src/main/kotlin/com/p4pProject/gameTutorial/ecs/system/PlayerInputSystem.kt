@@ -36,6 +36,8 @@ class PlayerInputSystem(
     private var priestIsAttacking : Boolean = false
     private var priestIsSpecialAttacking : Boolean = false
 
+    var typeSelected = PlayerType.WARRIOR
+
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
@@ -73,19 +75,13 @@ class PlayerInputSystem(
 
         when (chosenCharacterType) {
             CharacterType.WARRIOR -> {
-                if (entity[WarriorAnimationComponent.mapper] == null) {
-                    return
-                }
+                typeSelected = PlayerType.WARRIOR
             }
             CharacterType.ARCHER -> {
-                if (entity[ArcherAnimationComponent.mapper] == null) {
-                    return
-                }
+                typeSelected = PlayerType.ARCHER
             }
             CharacterType.PRIEST -> {
-                if (entity[PriestAnimationComponent.mapper] == null) {
-                    return
-                }
+                typeSelected = PlayerType.PRIEST
             }
             CharacterType.BOSS -> {
                     return
@@ -109,21 +105,21 @@ class PlayerInputSystem(
 
         //facing.direction = getFacingDirection()
 
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+        if(Gdx.input.isKeyPressed(Input.Keys.W) && typeSelected == player.characterType){
             facing.direction = FacingDirection.NORTH
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+        if(Gdx.input.isKeyPressed(Input.Keys.A) && typeSelected == player.characterType){
             facing.direction = FacingDirection.WEST
 
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.S)){
+        if(Gdx.input.isKeyPressed(Input.Keys.S) && typeSelected == player.characterType){
             facing.direction = FacingDirection.SOUTH
 
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+        if(Gdx.input.isKeyPressed(Input.Keys.D) && typeSelected == player.characterType){
             facing.direction = FacingDirection.EAST
 
         }
