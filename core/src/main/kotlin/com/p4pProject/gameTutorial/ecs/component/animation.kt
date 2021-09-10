@@ -29,6 +29,15 @@ enum class AnimationType (
     BOSS_DOWN("SkeletonWithSwordDownIdle"),
     BOSS_LEFT("SkeletonWithSwordLeftIdle"),
     BOSS_RIGHT("SkeletonWithSwordRightIdle"),
+    BOSS_ATTACK_UP("SkeletonWithSwordUpAttack"),
+    BOSS_ATTACK_DOWN("SkeletonWithSwordDownAttack"),
+    BOSS_ATTACK_LEFT("SkeletonWithSwordLeftAttack"),
+    BOSS_ATTACK_RIGHT("SkeletonWithSwordRightAttack"),
+    BOSS_HURT_UP("SkeletonWithSwordUpHurt"),
+    BOSS_HURT_DOWN("SkeletonWithSwordDownHurt"),
+    BOSS_HURT_LEFT("SkeletonWithSwordLeftHurt"),
+    BOSS_HURT_RIGHT("SkeletonWithSwordRightHurt"),
+    BOSS_DEATH("SkeletonWithSwordDownDeath"),
 
     WARRIOR_UP("WarriorUpIdle"),
     WARRIOR_DOWN("WarriorDownIdle"),
@@ -200,6 +209,15 @@ class BossAnimationComponent : Component, Pool.Poolable {
     var typeDown = AnimationType.BOSS_DOWN
     var typeLeft = AnimationType.BOSS_LEFT
     var typeRight = AnimationType.BOSS_RIGHT
+    var typeAttackRight = AnimationType.BOSS_ATTACK_LEFT
+    var typeAttackLeft = AnimationType.BOSS_ATTACK_RIGHT
+    var typeAttackUp = AnimationType.BOSS_ATTACK_UP
+    var typeAttackDown = AnimationType.BOSS_ATTACK_DOWN
+    var typeHurtRight = AnimationType.BOSS_HURT_RIGHT
+    var typeHurtLeft = AnimationType.BOSS_HURT_LEFT
+    var typeHurtUp = AnimationType.BOSS_HURT_UP
+    var typeHurtDown = AnimationType.BOSS_HURT_DOWN
+    var typeDeath = AnimationType.BOSS_DEATH
     var stateTime = 0f
 
     lateinit var animation : Animation2D

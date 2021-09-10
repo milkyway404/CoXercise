@@ -16,6 +16,7 @@ class BossComponent : Component, Pool.Poolable {
     var distance = 0f
     var isAttacking = false
     var isStunned = false
+    var isHurt = false
 
     override fun reset() {
         hp = BOSS_MAX_HP
@@ -24,6 +25,8 @@ class BossComponent : Component, Pool.Poolable {
         //maxShield = MAX_SHIElD
         distance = 0f
         isAttacking = false
+        isStunned = false
+        isHurt = false
     }
 
     companion object{

@@ -37,8 +37,13 @@ sealed class GameEvent{
         lateinit var boss : Entity
         var hp = 0
         var maxHp = 0
+        var isStun = false
 
         override fun toString() = "PlayerHit(player = $boss, hp=$hp, maxHp=$maxHp)"
+    }
+
+    object BossHitFinished : GameEvent(){
+
     }
 
     object WarriorAttackEvent : GameEvent (){
@@ -126,17 +131,16 @@ sealed class GameEvent{
 
 
     object BossAttack: GameEvent () {
+    }
+
+    object BossAttackFinised: GameEvent () {
         var damage = 0
         var startX = 0F
         var endX = 0F
         var startY = 0F
         var endY = 0F
-        var startTime: LocalDateTime = LocalDateTime.now()
-        var duration = 0L
-
         override fun toString() = "BossAttack(damage=$damage, startX=$startX, " +
-                "endX=$endX, startY=$startY, endY=$endY, startTime=$startTime," +
-                "duration=$duration)"
+                "endX=$endX, startY=$startY, endY=$endY"
     }
 }
 

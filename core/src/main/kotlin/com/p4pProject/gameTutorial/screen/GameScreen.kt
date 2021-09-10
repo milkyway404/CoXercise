@@ -57,6 +57,7 @@ class GameScreen(
             CharacterType.WARRIOR.name -> warrior
             CharacterType.ARCHER.name -> archer
             CharacterType.PRIEST.name -> priest
+            CharacterType.BOSS.name -> boss
             else -> return
         }
 

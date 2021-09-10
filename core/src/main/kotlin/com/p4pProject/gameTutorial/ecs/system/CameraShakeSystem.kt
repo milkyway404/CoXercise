@@ -6,11 +6,16 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Pool
+import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
+import ktx.ashley.get
 import ktx.collections.GdxArray
+import ktx.log.debug
+import ktx.log.logger
 
+private val LOG = logger<CameraShake>()
 private class CameraShake : Pool.Poolable {
 
     var maxDistortion = 0f
@@ -87,6 +92,7 @@ class CameraShakeSystem (
         }
     }
     override fun onEvent(event: GameEvent) {
+
         if(activeShakes.size < 1){
             activeShakes.add(shakePool.obtain().apply {
                 duration = 0.25f

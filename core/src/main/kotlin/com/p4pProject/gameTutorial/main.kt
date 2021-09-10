@@ -94,7 +94,8 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         )
         )
         addSystem(BossAnimationSystem(
-            bossGraphicAtlas
+            bossGraphicAtlas,
+            gameEventManager
         ))
         addSystem(ArcherAnimationSystem(archerGraphicAtlas, gameEventManager))
         addSystem(AttachSystem())

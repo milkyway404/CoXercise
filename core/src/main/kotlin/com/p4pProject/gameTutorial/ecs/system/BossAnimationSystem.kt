@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
+import com.p4pProject.gameTutorial.event.GameEvent
+import com.p4pProject.gameTutorial.event.GameEventManager
 import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.log.debug
@@ -17,7 +19,7 @@ import java.util.*
 
 private val LOG = logger<WarriorAnimationSystem>()
 class BossAnimationSystem(
-    private val atlas: TextureAtlas
+    private val atlas: TextureAtlas, private val gameEventManager: GameEventManager
 ): IteratingSystem(allOf(BossComponent::class, FacingComponent::class, GraphicComponent::class, BossAnimationComponent::class).get()),
     EntityListener {
 
@@ -51,7 +53,29 @@ class BossAnimationSystem(
 //            return
 //        }
 
-        facing.lastDirection = facing.direction
+
+        if(boss.isAttacking){
+            LOG.debug { "${boss.isAttacking}" }
+            facing.lastDirection = facing.direction
+            facing.lastDirection = facing.direction
+            val region = when(facing.direction){
+                FacingDirection.WEST -> animateAttackRight(aniCmp, deltaTime, entity)
+                FacingDirection.EAST -> animateAttackLeft(aniCmp, deltaTime, entity)
+                FacingDirection.NORTH -> animateAttackUp(aniCmp, deltaTime, entity)
+                FacingDirection.SOUTH -> animateAttackDown(aniCmp, deltaTime, entity)
+            }
+            graphic.setSpriteRegion(region)
+        }else if(boss.isHurt || boss.isStunned){
+            facing.lastDirection = facing.direction
+            val region = when(facing.direction){
+                FacingDirection.WEST -> animateHurtLeft(aniCmp, deltaTime)
+                FacingDirection.EAST -> animateHurtRight(aniCmp, deltaTime)
+                FacingDirection.NORTH -> animateHurtUp(aniCmp, deltaTime)
+                FacingDirection.SOUTH -> animateHurtDown(aniCmp, deltaTime)
+            }
+            graphic.setSpriteRegion(region)
+        }else{
+            facing.lastDirection = facing.direction
             val region = when(facing.direction){
                 FacingDirection.WEST -> animateIdleLeft(aniCmp, deltaTime)
                 FacingDirection.EAST -> animateIdleRight(aniCmp, deltaTime)
@@ -59,6 +83,9 @@ class BossAnimationSystem(
                 FacingDirection.SOUTH -> animateIdleDown(aniCmp, deltaTime)
             }
             graphic.setSpriteRegion(region)
+        }
+
+
 
         /*val region = when(facing.direction){
                 FacingDirection.WEST -> animateLeft(aniCmp, deltaTime)
@@ -132,6 +159,164 @@ class BossAnimationSystem(
     }
 
 
+    private fun animateAttackUp(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+        val transform = entity[TransformComponent.mapper]
+        require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
+        if (aniCmp.typeAttackUp == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackUp)
+        }
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
+                this.damage = 0
+                this.startX = transform.position.x - 1f
+                this.endX = transform.position.x + 1f
+                this.startY = transform.position.y - 1f
+                this.endY = transform.position.y + 1f
+            })
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateAttackDown(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+        val transform = entity[TransformComponent.mapper]
+        require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
+        if (aniCmp.typeAttackDown == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackDown)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
+                this.damage = 0
+                this.startX = transform.position.x - 1f
+                this.endX = transform.position.x + 1f
+                this.startY = transform.position.y - 1f
+                this.endY = transform.position.y + 1f
+            })
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateAttackLeft(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+        val transform = entity[TransformComponent.mapper]
+        require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
+        if (aniCmp.typeAttackLeft == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackLeft)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
+                this.damage = 0
+                this.startX = transform.position.x - 1f
+                this.endX = transform.position.x + 1f
+                this.startY = transform.position.y - 1f
+                this.endY = transform.position.y + 1f
+            })
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateAttackRight(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+        val transform = entity[TransformComponent.mapper]
+        require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
+        if (aniCmp.typeAttackRight == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeAttackRight)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
+                this.damage = 0
+                this.startX = transform.position.x - 1f
+                this.endX = transform.position.x + 1f
+                this.startY = transform.position.y - 1f
+                this.endY = transform.position.y + 1f
+            })
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+
+    private fun animateHurtUp(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+        if (aniCmp.typeHurtUp == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeHurtUp)
+        }
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossHitFinished)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateHurtDown(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+        if (aniCmp.typeHurtDown == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeHurtDown)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossHitFinished)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateHurtLeft(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+        if (aniCmp.typeHurtLeft == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeHurtLeft)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossHitFinished)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
+
+    private fun animateHurtRight(aniCmp: BossAnimationComponent, deltaTime: Float): TextureRegion {
+        if (aniCmp.typeHurtRight == aniCmp.animation.type){
+            // animation is correctly set -> update it
+            aniCmp.stateTime += deltaTime
+        }else{
+            //change animation
+            aniCmp.stateTime = 0f
+            aniCmp.animation = getAttackAnimation(aniCmp.typeHurtRight)
+        }
+
+        if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
+            gameEventManager.dispatchEvent(GameEvent.BossHitFinished)
+        }
+        return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
+    }
 
     private fun getAnimation(type : AnimationType) : Animation2D {
         var animation = animationCache[type]

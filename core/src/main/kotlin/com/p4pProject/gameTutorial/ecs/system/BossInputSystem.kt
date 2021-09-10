@@ -28,14 +28,25 @@ class BossInputSystem(
 ) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent::class, FacingComponent::class).get()) {
     private val tmpVec = Vector2()
 
-    private var playerIsAttacking : Boolean = false
+    private var bossIsAttacking : Boolean = false
+    private var bossIsHurt : Boolean = false
+    private var bossIsStunned : Boolean = false
+    private var stunnedTime : LocalDateTime = LocalDateTime.now()
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
+        gameEventManager.addListener(GameEvent.BossAttack::class, this)
+        gameEventManager.addListener(GameEvent.BossAttackFinised::class, this)
+        gameEventManager.addListener(GameEvent.BossHit::class, this)
+        gameEventManager.addListener(GameEvent.BossHitFinished::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
+        gameEventManager.removeListener(GameEvent.BossAttack::class, this)
+        gameEventManager.removeListener(GameEvent.BossAttackFinised::class, this)
+        gameEventManager.removeListener(GameEvent.BossHit::class, this)
+        gameEventManager.removeListener(GameEvent.BossHitFinished::class, this)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
@@ -82,18 +93,16 @@ class BossInputSystem(
 
         if(Gdx.input.isKeyPressed(Input.Keys.J)){
             if(chosenCharacterType == CharacterType.BOSS){
-                gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
-            this.damage = 0
-            this.startX = transform.position.x - 1f
-            this.endX = transform.position.x + 1f
-            this.startY = transform.position.y - 1f
-            this.endY = transform.position.y + 1f
-            this.startTime = LocalDateTime.now()
-            this.duration = 0.1.toLong()
-        })
+                gameEventManager.dispatchEvent(GameEvent.BossAttack)
             }
         }
-        boss.isAttacking = playerIsAttacking
+        boss.isAttacking = bossIsAttacking
+        boss.isHurt = bossIsHurt
+        boss.isStunned = bossIsStunned
+
+        if(LocalDateTime.now().minusSeconds(4).isAfter(stunnedTime)){
+            bossIsStunned = false
+        }
     }
 
     private fun getFacingDirection(): FacingDirection {
@@ -112,6 +121,28 @@ class BossInputSystem(
     }
 
     override fun onEvent(event: GameEvent) {
-        TODO("Not yet implemented")
+        when(event){
+            is GameEvent.BossAttack -> {
+                bossIsAttacking = true
+            }
+
+            is GameEvent.BossAttackFinised -> {
+                bossIsAttacking = false
+            }
+
+            is GameEvent.BossHit -> {
+                bossIsHurt = true
+                if(event.isStun){
+                    bossIsStunned = true
+                    stunnedTime  = LocalDateTime.now()
+                }
+            }
+
+            is GameEvent.BossHitFinished -> {
+                bossIsHurt = false
+            }
+
+
+        }
     }
 }

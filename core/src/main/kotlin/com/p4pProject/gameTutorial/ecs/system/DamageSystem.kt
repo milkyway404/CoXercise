@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Game
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
+import com.p4pProject.gameTutorial.ecs.component.PlayerType
 import com.p4pProject.gameTutorial.ecs.component.RemoveComponent
 import com.p4pProject.gameTutorial.ecs.component.TransformComponent
 import com.p4pProject.gameTutorial.event.GameEvent
@@ -31,9 +32,13 @@ private val LOG = logger<PlayerInputSystem>()
 class DamageSystem (
     private val gameEventManager: GameEventManager
         ) : GameEventListener, IteratingSystem(allOf(PlayerComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
+
     private var bossAttackAreas = BossAttackArea(0, 0F,
-       0F, 0F, 0F, LocalDateTime.now(),
-        0)
+       0F, 0F, 0F)
+
+    var warriorCheck = false;
+    var archerCheck = false;
+    var priestCheck = false;
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
@@ -41,59 +46,75 @@ class DamageSystem (
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-            if (transform.position.x >= bossAttackAreas.startX &&
-                    transform.position.x <= bossAttackAreas.endX &&
-                    transform.position.y >= bossAttackAreas.startY &&
-                    transform.position.y <= bossAttackAreas.endY) {
-                //ouch
-                player.hp -= bossAttackAreas.damage
-                LOG.debug { "PlayerDamaged: ${player.characterType}" }
+        if(!warriorCheck && player.characterType == PlayerType.WARRIOR){
+            warriorCheck = true;
+            checkDmg(entity);
+        }else if(!archerCheck && player.characterType == PlayerType.ARCHER){
+            archerCheck = true;
+            checkDmg(entity);
+        }else if(!priestCheck && player.characterType == PlayerType.PRIEST){
+            priestCheck = true;
+            checkDmg(entity);
+        }
 
-                gameEventManager.dispatchEvent(GameEvent.PlayerHit.apply {
-                    this.player = entity
-                    hp = player.hp
-                    maxHp = player.maxHp
-                })
+        if(warriorCheck && archerCheck && priestCheck){
+            bossAttackAreas = BossAttackArea(0, 0F,
+                0F, 0F, 0F)
+            warriorCheck = false;
+            archerCheck = false;
+            priestCheck = false;
+        }
 
-                if(player.hp <= 0f){
-                    entity.addComponent<RemoveComponent>(engine){
-                        delay = DEATH_EXPLOSION_DURATION
-                    }
+    }
+
+    fun checkDmg(entity: Entity){
+        val transform = entity[TransformComponent.mapper]
+        require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
+        val player = entity[PlayerComponent.mapper]
+        require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
+        if (transform.position.x >= bossAttackAreas.startX &&
+            transform.position.x <= bossAttackAreas.endX &&
+            transform.position.y >= bossAttackAreas.startY &&
+            transform.position.y <= bossAttackAreas.endY) {
+            //ouch
+            player.hp -= bossAttackAreas.damage
+            LOG.debug { "PlayerDamaged: ${player.characterType}" }
+
+            gameEventManager.dispatchEvent(GameEvent.PlayerHit.apply {
+                this.player = entity
+                hp = player.hp
+                maxHp = player.maxHp
+            })
+
+            if(player.hp <= 0f){
+                entity.addComponent<RemoveComponent>(engine){
+                    delay = DEATH_EXPLOSION_DURATION
                 }
             }
-            removeExpiredBossAttacks(bossAttackAreas);
-
+        }
     }
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-        gameEventManager.addListener(GameEvent.BossAttack::class, this)
+        gameEventManager.addListener(GameEvent.BossAttackFinised::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-        gameEventManager.removeListener(GameEvent.BossAttack::class, this)
+        gameEventManager.removeListener(GameEvent.BossAttackFinised::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
         // boss is attacking lol
         when (event) {
-            is GameEvent.BossAttack -> {
+            is GameEvent.BossAttackFinised -> {
                 bossAttackAreas = BossAttackArea(event.damage, event.startX,
-                    event.endX, event.startY, event.endY, event.startTime,
-                    event.duration)
+                    event.endX, event.startY, event.endY)
             }
         }
     }
 
-    private fun removeExpiredBossAttacks(bossAttack: BossAttackArea) {
-            if (LocalDateTime.now().minusSeconds(bossAttack.duration).isAfter(bossAttack.startTime)) {
-                bossAttackAreas = BossAttackArea(0, 0F,
-                    0F, 0F, 0F, LocalDateTime.now(),
-                    0)
-            }
-    }
 
     private class BossAttackArea(val damage: Int, val startX: Float, val endX: Float, val startY: Float,
-                                 val endY: Float, val startTime: LocalDateTime, val duration: Long)
+                                 val endY: Float)
 }

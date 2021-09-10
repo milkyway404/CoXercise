@@ -12,7 +12,6 @@ import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import com.p4pProject.gameTutorial.screen.CharacterType
-import com.p4pProject.gameTutorial.socket.emit.SocketEmit
 import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.log.debug

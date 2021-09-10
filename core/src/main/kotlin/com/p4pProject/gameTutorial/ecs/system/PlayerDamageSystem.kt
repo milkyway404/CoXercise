@@ -28,7 +28,7 @@ class PlayerDamageSystem (
 ) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
 
     private var attackArea : AttackArea = AttackArea(0, 0f,
-        0f, 0f, 0f)
+        0f, 0f, 0f, false)
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
@@ -43,11 +43,22 @@ class PlayerDamageSystem (
                 //ouch
                 boss.hp -= attackArea.damage
 
-                gameEventManager.dispatchEvent(GameEvent.BossHit.apply {
-                    this.boss = entity
-                    hp = boss.hp
-                    maxHp = boss.maxHp
-                })
+                if(attackArea.isStun){
+                    gameEventManager.dispatchEvent(GameEvent.BossHit.apply {
+                        this.boss = entity
+                        hp = boss.hp
+                        maxHp = boss.maxHp
+                        isStun = true
+                    })
+                }else{
+                    gameEventManager.dispatchEvent(GameEvent.BossHit.apply {
+                        this.boss = entity
+                        hp = boss.hp
+                        maxHp = boss.maxHp
+                        isStun = false
+                    })
+                }
+
 //                if(boss.hp <= 0f){
 //                    gameEventManager.dispatchEvent(GameEvent.PlayerDeath.apply {
 //                        //not necessary as from dark matter
@@ -59,7 +70,7 @@ class PlayerDamageSystem (
 //                }
             }
         attackArea = AttackArea(0, 0f,
-            0f, 0f, 0f)
+            0f, 0f, 0f, false)
     }
 
     override fun addedToEngine(engine: Engine?) {
@@ -94,8 +105,7 @@ class PlayerDamageSystem (
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
                 attackArea = AttackArea(event.damage, (transform.position.x -1f),
-                        (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f))
-                AttackArea(0, 0f, 0f, 0f, 0f)
+                        (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f), false)
 
             }
 
@@ -108,7 +118,7 @@ class PlayerDamageSystem (
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
                 attackArea = AttackArea(event.damage, (transform.position.x -1f),
-                        (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f))
+                        (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f), true)
             }
 
             is GameEvent.ArcherAttackFinishEvent -> {
@@ -123,16 +133,16 @@ class PlayerDamageSystem (
                 //TEMPORARY SOLUTION
                 attackArea = if(event.facing==FacingDirection.NORTH){
                         AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f))
+                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f), false)
                     }else if(event.facing==FacingDirection.SOUTH){
                         AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y))
+                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y), false)
                     }else if(event.facing==FacingDirection.EAST){
                         AttackArea(event.damage, (transform.position.x),
-                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
                     }else{
                         AttackArea(event.damage, (transform.position.x -124f),
-                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
                     }
 
             }
@@ -147,16 +157,16 @@ class PlayerDamageSystem (
                 //TEMPORARY SOLUTION
                 attackArea = if(event.facing==FacingDirection.NORTH){
                         AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f))
+                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f), false)
                     }else if(event.facing==FacingDirection.SOUTH){
                         AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y))
+                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y), false)
                     }else if(event.facing==FacingDirection.EAST){
                         AttackArea(event.damage, (transform.position.x),
-                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
                     }else{
                         AttackArea(event.damage, (transform.position.x -124f),
-                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f))
+                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
                     }
 
             }
@@ -172,12 +182,12 @@ class PlayerDamageSystem (
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
                 attackArea = AttackArea(event.damage, (transform.position.x -32f),
-                        (transform.position.x +32f), (transform.position.y -32f), (transform.position.y +32f))
+                        (transform.position.x +32f), (transform.position.y -32f), (transform.position.y +32f), false)
             }
 
         }
     }
 
     private class AttackArea(val damage: Int, val startX: Float, val endX: Float, val startY: Float,
-                                   val endY: Float)
+                                   val endY: Float, val isStun : Boolean)
 }
