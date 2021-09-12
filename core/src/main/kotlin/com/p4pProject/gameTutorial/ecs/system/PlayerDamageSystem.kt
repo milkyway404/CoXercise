@@ -36,10 +36,12 @@ class PlayerDamageSystem (
         val boss = entity[BossComponent.mapper]
         require(boss != null ){"Entity |entity| must have a BossComponent. entity=$entity"}
 
-            if (transform.position.x >= attackArea.startX &&
-                transform.position.x <= attackArea.endX &&
-                transform.position.y >= attackArea.startY &&
-                transform.position.y <= attackArea.endY) {
+        LOG.debug { "character: boss size: ${transform.size}" }
+
+            if (transform.position.x + BOSS_OFFSET >= attackArea.startX &&
+                transform.position.x + BOSS_OFFSET <= attackArea.endX &&
+                transform.position.y + BOSS_OFFSET >= attackArea.startY &&
+                transform.position.y + BOSS_OFFSET <= attackArea.endY) {
                 //ouch
                 boss.hp -= attackArea.damage
 

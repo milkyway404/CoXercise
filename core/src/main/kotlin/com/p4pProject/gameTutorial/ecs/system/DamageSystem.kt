@@ -4,10 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Game
-import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
-import com.p4pProject.gameTutorial.ecs.component.PlayerType
-import com.p4pProject.gameTutorial.ecs.component.RemoveComponent
-import com.p4pProject.gameTutorial.ecs.component.TransformComponent
+import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
@@ -46,6 +43,8 @@ class DamageSystem (
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
+        LOG.debug { "character: ${player.characterType} size: ${transform.size}" }
+
         if(!warriorCheck && player.characterType == PlayerType.WARRIOR){
             warriorCheck = true;
             checkDmg(entity);
@@ -72,10 +71,10 @@ class DamageSystem (
         require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
-        if (transform.position.x >= bossAttackAreas.startX &&
-            transform.position.x <= bossAttackAreas.endX &&
-            transform.position.y >= bossAttackAreas.startY &&
-            transform.position.y <= bossAttackAreas.endY) {
+        if (transform.position.x + PLAYER_OFFSET >= bossAttackAreas.startX &&
+            transform.position.x + PLAYER_OFFSET <= bossAttackAreas.endX &&
+            transform.position.y + PLAYER_OFFSET >= bossAttackAreas.startY &&
+            transform.position.y + PLAYER_OFFSET <= bossAttackAreas.endY) {
             //ouch
             player.hp -= bossAttackAreas.damage
             LOG.debug { "PlayerDamaged: ${player.characterType}" }
