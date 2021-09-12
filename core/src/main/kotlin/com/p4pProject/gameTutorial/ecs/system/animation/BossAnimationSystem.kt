@@ -1,4 +1,4 @@
-package com.p4pProject.gameTutorial.ecs.system
+package com.p4pProject.gameTutorial.ecs.system.animation
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
@@ -16,6 +16,8 @@ import ktx.log.debug
 import ktx.log.error
 import ktx.log.logger
 import java.util.*
+
+const val BOSS_NORMAL_ATTACK_DAMAGE = 5
 
 private val LOG = logger<WarriorAnimationSystem>()
 class BossAnimationSystem(
@@ -58,11 +60,12 @@ class BossAnimationSystem(
             LOG.debug { "${boss.isAttacking}" }
             facing.lastDirection = facing.direction
             facing.lastDirection = facing.direction
+
             val region = when(facing.direction){
-                FacingDirection.WEST -> animateAttackRight(aniCmp, deltaTime, entity)
-                FacingDirection.EAST -> animateAttackLeft(aniCmp, deltaTime, entity)
-                FacingDirection.NORTH -> animateAttackUp(aniCmp, deltaTime, entity)
-                FacingDirection.SOUTH -> animateAttackDown(aniCmp, deltaTime, entity)
+                FacingDirection.WEST -> animateAttackRight(aniCmp, deltaTime, entity, boss.attackDamage)
+                FacingDirection.EAST -> animateAttackLeft(aniCmp, deltaTime, entity, boss.attackDamage)
+                FacingDirection.NORTH -> animateAttackUp(aniCmp, deltaTime, entity, boss.attackDamage)
+                FacingDirection.SOUTH -> animateAttackDown(aniCmp, deltaTime, entity, boss.attackDamage)
             }
             graphic.setSpriteRegion(region)
         }else if(boss.isHurt || boss.isStunned){
@@ -159,7 +162,7 @@ class BossAnimationSystem(
     }
 
 
-    private fun animateAttackUp(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+    private fun animateAttackUp(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity, bossAttackDamage: Int): TextureRegion {
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
         if (aniCmp.typeAttackUp == aniCmp.animation.type){
@@ -171,8 +174,8 @@ class BossAnimationSystem(
             aniCmp.animation = getAttackAnimation(aniCmp.typeAttackUp)
         }
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
-                this.damage = 0
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
+                this.damage = bossAttackDamage
                 this.startX = transform.position.x - 1f
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f
@@ -182,7 +185,7 @@ class BossAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateAttackDown(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+    private fun animateAttackDown(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity, bossAttackDamage: Int): TextureRegion {
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
         if (aniCmp.typeAttackDown == aniCmp.animation.type){
@@ -195,8 +198,8 @@ class BossAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
-                this.damage = 0
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
+                this.damage = bossAttackDamage
                 this.startX = transform.position.x - 1f
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f
@@ -206,7 +209,7 @@ class BossAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateAttackLeft(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+    private fun animateAttackLeft(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity, bossAttackDamage: Int): TextureRegion {
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
         if (aniCmp.typeAttackLeft == aniCmp.animation.type){
@@ -219,8 +222,8 @@ class BossAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
-                this.damage = 0
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
+                this.damage = bossAttackDamage
                 this.startX = transform.position.x - 1f
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f
@@ -230,7 +233,7 @@ class BossAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateAttackRight(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity): TextureRegion {
+    private fun animateAttackRight(aniCmp: BossAnimationComponent, deltaTime: Float, entity: Entity, bossAttackDamage: Int): TextureRegion {
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
         if (aniCmp.typeAttackRight == aniCmp.animation.type){
@@ -243,8 +246,8 @@ class BossAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinised.apply {
-                this.damage = 0
+            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
+                this.damage = bossAttackDamage
                 this.startX = transform.position.x - 1f
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f

@@ -84,17 +84,6 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                                             startSinglePlayerGame();
                                         }
                                     }
-                                    row()
-                                    textButton(
-                                        CharacterType.BOSS.name,
-                                        SkinTextButton.DEFAULT.name
-                                    ) {
-                                        onClick {
-                                            chosenCharacterType = CharacterType.BOSS
-                                            startSinglePlayerGame();
-                                        }
-                                    }
-                                    row()
                                 }
                             }
                         }
@@ -127,15 +116,6 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                                     textButton(CharacterType.PRIEST.name, SkinTextButton.DEFAULT.name) {
                                         onClick {
                                             chosenCharacterType = CharacterType.PRIEST
-                                        }
-                                    }
-                                    row()
-                                    textButton(
-                                        CharacterType.BOSS.name,
-                                        SkinTextButton.DEFAULT.name
-                                    ) {
-                                        onClick {
-                                            chosenCharacterType = CharacterType.BOSS
                                         }
                                     }
                                     row()

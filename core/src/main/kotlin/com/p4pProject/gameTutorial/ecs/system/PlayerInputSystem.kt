@@ -73,18 +73,15 @@ class PlayerInputSystem(
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
 
-        when (chosenCharacterType) {
+        typeSelected = when (chosenCharacterType) {
             CharacterType.WARRIOR -> {
-                typeSelected = PlayerType.WARRIOR
+                PlayerType.WARRIOR
             }
             CharacterType.ARCHER -> {
-                typeSelected = PlayerType.ARCHER
+                PlayerType.ARCHER
             }
             CharacterType.PRIEST -> {
-                typeSelected = PlayerType.PRIEST
-            }
-            CharacterType.BOSS -> {
-                    return
+                PlayerType.PRIEST
             }
         }
 

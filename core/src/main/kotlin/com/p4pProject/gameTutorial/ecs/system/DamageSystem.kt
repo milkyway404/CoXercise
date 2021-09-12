@@ -3,7 +3,7 @@ package com.p4pProject.gameTutorial.ecs.system
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
-import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.PlayerType
 import com.p4pProject.gameTutorial.ecs.component.RemoveComponent
@@ -17,10 +17,6 @@ import ktx.ashley.exclude
 import ktx.ashley.get
 import ktx.log.debug
 import ktx.log.logger
-import ktx.preferences.flush
-import ktx.preferences.set
-import java.time.LocalDateTime
-import kotlin.math.max
 
 
 // DO NOT LEAVE LIKE THIS
@@ -67,7 +63,7 @@ class DamageSystem (
 
     }
 
-    fun checkDmg(entity: Entity){
+    private fun checkDmg(entity: Entity){
         val transform = entity[TransformComponent.mapper]
         require(transform != null ){"Entity |entity| must have a TransformComponent. entity=$entity"}
         val player = entity[PlayerComponent.mapper]
@@ -96,21 +92,18 @@ class DamageSystem (
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
-        gameEventManager.addListener(GameEvent.BossAttackFinised::class, this)
+        gameEventManager.addListener(GameEvent.BossAttackFinished::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-        gameEventManager.removeListener(GameEvent.BossAttackFinised::class, this)
+        gameEventManager.removeListener(GameEvent.BossAttackFinished::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
-        // boss is attacking lol
-        when (event) {
-            is GameEvent.BossAttackFinised -> {
-                bossAttackAreas = BossAttackArea(event.damage, event.startX,
-                    event.endX, event.startY, event.endY)
-            }
+        if (event is GameEvent.BossAttackFinished) {
+            bossAttackAreas = BossAttackArea(event.damage, event.startX,
+                event.endX, event.startY, event.endY)
         }
     }
 

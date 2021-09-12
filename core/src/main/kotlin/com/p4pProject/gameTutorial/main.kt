@@ -17,12 +17,9 @@ import com.p4pProject.gameTutorial.ecs.asset.TextureAtlasAsset
 import com.p4pProject.gameTutorial.ecs.system.*
 import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.GameBaseScreen
-import com.p4pProject.gameTutorial.screen.LoadingScreen
 import com.p4pProject.gameTutorial.screen.MainScreen
 import com.p4pProject.gameTutorial.ui.createSkin
-import io.socket.client.IO
-import io.socket.client.Socket
-import io.socket.emitter.Emitter
+import com.p4pProject.gameTutorial.ecs.system.animation.*
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.app.KtxGame
@@ -31,7 +28,6 @@ import ktx.async.KtxAsync
 import ktx.collections.gdxArrayOf
 import ktx.log.debug
 import ktx.log.logger
-import org.json.JSONObject
 import java.util.*
 
 private val LOG = logger<MyGameTutorial>()
@@ -76,7 +72,7 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
         val bossGraphicAtlas = assets[TextureAtlasAsset.BOSS_GRAPHICS.descriptor]
 
         addSystem(PlayerInputSystem(gameViewport, gameEventManager))
-        addSystem(BossInputSystem(gameViewport, gameEventManager))
+        addSystem(BossAutomationSystem(gameViewport, gameEventManager))
         addSystem(MoveSystem(gameEventManager))
         addSystem(PowerUpSystem(gameEventManager, audioService))
         addSystem(DamageSystem(gameEventManager))

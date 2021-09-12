@@ -77,11 +77,6 @@ class MoveSystem(
                     return
                 }
             }
-            CharacterType.BOSS -> {
-                if (entity[BossAnimationComponent.mapper] == null) {
-                    return
-                }
-            }
         }
 
         val transform = entity[TransformComponent.mapper]

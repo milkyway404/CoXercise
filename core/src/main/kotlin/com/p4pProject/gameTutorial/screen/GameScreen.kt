@@ -2,6 +2,8 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntityListener
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.TextField
@@ -28,7 +30,18 @@ import ktx.scene2d.*
 import kotlin.math.min
 
 enum class CharacterType {
-    WARRIOR, ARCHER, PRIEST, BOSS
+    WARRIOR {
+        override val normalDamage: Int
+            get() = 1
+    }, ARCHER {
+        override val normalDamage: Int
+            get() = 2
+    }, PRIEST {
+        override val normalDamage: Int
+            get() = 1
+    };
+
+    abstract val normalDamage: Int
 }
 
 private val LOG = logger<MyGameTutorial>()
@@ -51,13 +64,19 @@ class GameScreen(
     private lateinit var hpText: TextField
     private lateinit var mpBar: Image
     private lateinit var mpText: TextField
+    private lateinit var bossHpBar: Image
+
+    private var playerDead = false
+    private var warriorDead = false
+    private var archerDead = false
+    private var priestDead = false
+    private var gameOver = false
 
     private fun movePlayer(characterType: String, x: Float, y: Float) {
         val playerToMove = when (characterType) {
             CharacterType.WARRIOR.name -> warrior
             CharacterType.ARCHER.name -> archer
             CharacterType.PRIEST.name -> priest
-            CharacterType.BOSS.name -> boss
             else -> return
         }
 
@@ -118,23 +137,30 @@ class GameScreen(
             CharacterType.WARRIOR -> warrior
             CharacterType.ARCHER -> archer
             CharacterType.PRIEST -> priest
-            CharacterType.BOSS -> boss
         }
     }
 
+    private fun updateHp(hp: Float, maxHp: Float) {
+        hpBar.scaleX = MathUtils.clamp(hp / maxHp, 0f, 1f)
+        hpText.text = hp.toInt().toString()
+    }
+
+    private fun updateMp(mp: Float, maxMp: Float) {
+        mpBar.scaleX = MathUtils.clamp(mp / maxMp, 0f, 1f)
+        mpText.text = mp.toInt().toString()
+    }
+
     private fun updatePlayerHpMp() {
+        val playerComp = currentPlayer[PlayerComponent.mapper]!!
+        updateHp(playerComp.hp.toFloat(), playerComp.maxHp.toFloat())
+        updateMp(playerComp.mp.toFloat(), playerComp.maxMp.toFloat())
+    }
 
-        if(chosenCharacterType != CharacterType.BOSS){
-            val playerComp = currentPlayer[PlayerComponent.mapper]!!
-            updateHp(playerComp.hp.toFloat(), playerComp.maxHp.toFloat())
-            updateMp(playerComp.mp.toFloat(), playerComp.maxMp.toFloat())
-        }else{
-            val bossComp = boss[BossComponent.mapper]!!
-            updateHp(bossComp.hp.toFloat(), bossComp.maxHp.toFloat())
-            updateMp(0.toFloat(), 0.toFloat())
-        }
-
-
+    private fun updateBossHp() {
+        val bossComp = boss[BossComponent.mapper]!!
+        val bossTrans = boss[TransformComponent.mapper]!!
+        bossHpBar.scaleX = MathUtils.clamp(bossComp.hp.toFloat() / bossComp.maxHp.toFloat(), 0f, 1f)
+        bossHpBar.setPosition(bossTrans.position.x, bossTrans.position.y)
     }
 
     private fun spawnBoss(){
@@ -148,6 +174,9 @@ class GameScreen(
             with<GraphicComponent>()
             with<BossComponent>()
             with<FacingComponent>()
+            with<PlayerInfoComponent>{
+                setPlayerInfo(warrior, archer, priest)
+            }
         }
     }
 
@@ -159,9 +188,27 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
         gameEventManager.addListener(GameEvent.UpdateMp::class, this)
+        engine.addEntityListener(object: EntityListener {
+            override fun entityAdded(entity: Entity?) {
+                // nothing
+            }
+
+            override fun entityRemoved(entity: Entity?) {
+                if (entity == currentPlayer) {
+                    playerDead = true
+                }
+
+                when (entity) {
+                    warrior -> warriorDead = true
+                    archer -> archerDead = true
+                    priest -> priestDead = true
+                }
+            }
+
+        })
         //audioService.play(MusicAsset.GAME)
-        spawnBoss()
         spawnPlayers ()
+        spawnBoss()
 
         val background = engine.entity{
             with<TransformComponent>()
@@ -175,51 +222,59 @@ class GameScreen(
 
     private fun setupSockets() {
         SocketOn.updatePlayersMove(socket,
-                callback = { characterType, x, y -> movePlayer(characterType, x, y)});
+                callback = { characterType, x, y -> movePlayer(characterType, x, y)})
         SocketOn.playerAttack(socket,
             callback = {characterType ->
-                if (characterType == CharacterType.WARRIOR.name){
-                gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
-                    this.damage = 0
-                    this.player = warrior
-                })
-            }else if (characterType == CharacterType.ARCHER.name){
-                val facing = archer[FacingComponent.mapper]
-                    require(facing != null);
-                    gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
-                        this.damage = 0
-                        this.player = archer
-                        this.facing = facing.direction
-                    })
-                }else if (characterType == CharacterType.PRIEST.name){
-                    gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
-                        this.damage = 0
-                        this.player = priest
-                    })
+                when (characterType) {
+                    CharacterType.WARRIOR.name -> {
+                        gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
+                            this.damage = CharacterType.WARRIOR.normalDamage
+                            this.player = warrior
+                        })
+                    }
+                    CharacterType.ARCHER.name -> {
+                        val facing = archer[FacingComponent.mapper]
+                        require(facing != null)
+                        gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
+                            this.damage = CharacterType.ARCHER.normalDamage
+                            this.player = archer
+                            this.facing = facing.direction
+                        })
+                    }
+                    CharacterType.PRIEST.name -> {
+                        gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
+                            this.damage = CharacterType.PRIEST.normalDamage
+                            this.player = priest
+                        })
+                    }
                 }
 
             })
 
         SocketOn.playerSpecialAttack(socket,
             callback = {characterType ->
-                if (characterType == CharacterType.WARRIOR.name){
-                    gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
-                        this.damage = 0
-                        this.player = warrior
-                    })
-                }else if (characterType == CharacterType.ARCHER.name){
-                    val facing = archer[FacingComponent.mapper]
-                    require(facing != null);
-                    gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
-                        this.damage = 0
-                        this.player = archer
-                        this.facing = facing.direction
-                    })
-                }else if (characterType == CharacterType.PRIEST.name){
-                    gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
-                        this.healing = 0
-                        this.player = priest
-                    })
+                when (characterType) {
+                    CharacterType.WARRIOR.name -> {
+                        gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
+                            this.damage = 0
+                            this.player = warrior
+                        })
+                    }
+                    CharacterType.ARCHER.name -> {
+                        val facing = archer[FacingComponent.mapper]
+                        require(facing != null)
+                        gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
+                            this.damage = 0
+                            this.player = archer
+                            this.facing = facing.direction
+                        })
+                    }
+                    CharacterType.PRIEST.name -> {
+                        gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
+                            this.healing = 0
+                            this.player = priest
+                        })
+                    }
                 }
 
             })
@@ -232,7 +287,7 @@ class GameScreen(
 
 
     override fun render(delta: Float) {
-        updatePlayerHpMp()
+        updateBossHp()
         engine.update(min(MAX_DELTA_TIME, delta))
         audioService.update()
         stage.run {
@@ -241,18 +296,26 @@ class GameScreen(
             draw()
         }
 
-        val transform = currentPlayer[TransformComponent.mapper]
-        require(transform != null)
+        if (!playerDead) {
+            updatePlayerHpMp()
+            val transform = currentPlayer[TransformComponent.mapper]
+            require(transform != null)
 
-        if (lobbyID.isNotEmpty()) {
-            SocketEmit.playerMove(socket, lobbyID, transform.position.x, transform.position.y)
+            if (lobbyID.isNotEmpty()) {
+                SocketEmit.playerMove(socket, lobbyID, transform.position.x, transform.position.y)
+            }
         }
     }
 
     private fun setupUI() {
         stage.actors {
+            bossHpBar = image(SkinImage.HP_BAR.atlasKey) {
+                color.a = 0.8f
+                width = 100f
+            }
+
             table {
-                left().top();
+                left().top()
                 pad(3f)
                 columnDefaults(0).width(50f)
                 columnDefaults(0).height(8f)
@@ -269,7 +332,7 @@ class GameScreen(
                     color.a = 0.8f
                 }
 
-                mpText = textField("1",SkinTextField.DEFAULT.name)
+                mpText = textField("1", SkinTextField.DEFAULT.name)
 
                 setFillParent(true)
                 pack()
@@ -278,85 +341,99 @@ class GameScreen(
             table {
                 right().bottom()
                 pad(10f)
-                if (chosenCharacterType == CharacterType.WARRIOR) {
-                    imageButton(SkinImageButton.WARRIOR_SPECIAL.name) {
-                        color.a = 1.0f
-                        onClick {
-                            //TODO need to add mp logic here as event does not work correctly
-                            SocketEmit.playerSpecialAttack(socket, lobbyID, CharacterType.WARRIOR.name)
-                            gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
-                                this.damage = 0
-                                this.player = currentPlayer
-                            })
+                when (chosenCharacterType) {
+                    CharacterType.WARRIOR -> {
+                        imageButton(SkinImageButton.WARRIOR_SPECIAL.name) {
+                            color.a = 1.0f
+                            onClick {
+                                //TODO need to add mp logic here as event does not work correctly
+                                SocketEmit.playerSpecialAttack(
+                                    socket,
+                                    lobbyID,
+                                    CharacterType.WARRIOR.name
+                                )
+                                gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
+                                    this.damage = 0
+                                    this.player = currentPlayer
+                                })
+                            }
+                        }
+                        row()
+                        imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
+                            color.a = 1.0f
+                            onClick {
+                                SocketEmit.playerAttack(socket, lobbyID, CharacterType.WARRIOR.name)
+                                gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
+                                    this.damage = CharacterType.WARRIOR.normalDamage
+                                    this.player = currentPlayer
+                                })
+                            }
                         }
                     }
-                    row()
-                    imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
-                        color.a = 1.0f
-                        onClick {
-                            SocketEmit.playerAttack(socket, lobbyID, CharacterType.WARRIOR.name)
-                            gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
-                                this.damage = 0
-                                this.player = currentPlayer
-                            })
-                        }
-                    }
-                } else if (chosenCharacterType == CharacterType.ARCHER) {
-                    //TODO: add column default and big good image here for the buttons
-                    imageButton(SkinImageButton.ARCHER_ATTACK.name) {
-                        color.a = 1.0f
-                        onClick {
-                            SocketEmit.playerSpecialAttack(socket, lobbyID, CharacterType.ARCHER.name)
-                            gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
-                                val facing = currentPlayer[FacingComponent.mapper]
-                                require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                    CharacterType.ARCHER -> {
+                        //TODO: add column default and big good image here for the buttons
+                        imageButton(SkinImageButton.ARCHER_ATTACK.name) {
+                            color.a = 1.0f
+                            onClick {
+                                SocketEmit.playerSpecialAttack(
+                                    socket,
+                                    lobbyID,
+                                    CharacterType.ARCHER.name
+                                )
+                                gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
+                                    val facing = currentPlayer[FacingComponent.mapper]
+                                    require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
 
-                                this.facing = facing.direction
-                                this.damage = 0
-                                this.player = currentPlayer
-                            })
+                                    this.facing = facing.direction
+                                    this.damage = 0
+                                    this.player = currentPlayer
+                                })
+                            }
+                        }
+                        row()
+                        imageButton(SkinImageButton.ARCHER_ATTACK.name) {
+                            color.a = 1.0f
+                            onClick {
+                                SocketEmit.playerAttack(socket, lobbyID, CharacterType.ARCHER.name)
+                                gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
+                                    val facing = currentPlayer[FacingComponent.mapper]
+                                    require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                    this.facing = facing.direction
+                                    this.damage = CharacterType.ARCHER.normalDamage
+                                    this.player = currentPlayer
+                                })
+                            }
                         }
                     }
-                    row()
-                    imageButton(SkinImageButton.ARCHER_ATTACK.name) {
-                        color.a = 1.0f
-                        onClick {
-                            SocketEmit.playerAttack(socket, lobbyID, CharacterType.ARCHER.name)
-                            gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
-                                val facing = currentPlayer[FacingComponent.mapper]
-                                require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                this.facing = facing.direction
-                                this.damage = 0
-                                this.player = currentPlayer
-                            })
+                    CharacterType.PRIEST -> {
+                        imageButton(SkinImageButton.PRIEST_SPECIAL.name) {
+                            color.a = 1.0f
+                            onClick {
+                                SocketEmit.playerSpecialAttack(
+                                    socket,
+                                    lobbyID,
+                                    CharacterType.PRIEST.name
+                                )
+                                gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
+                                    val facing = currentPlayer[FacingComponent.mapper]
+                                    require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                    this.healing = 25
+                                    this.player = currentPlayer
+                                })
+                            }
                         }
-                    }
-                }
-
-                else if (chosenCharacterType == CharacterType.PRIEST) {
-                    imageButton(SkinImageButton.PRIEST_SPECIAL.name) {
-                        color.a = 1.0f
-                        onClick {
-                            SocketEmit.playerSpecialAttack(socket, lobbyID, CharacterType.PRIEST.name)
-                            gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
-                                val facing = currentPlayer[FacingComponent.mapper]
-                                require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                this.healing = 25
-                                this.player = currentPlayer
-                            })
-                        }
-                    }
-                    row()
-                    imageButton(SkinImageButton.PRIEST_ATTACK.name) {
-                        color.a = 1.0f
-                        onClick {
-                            SocketEmit.playerAttack(socket, lobbyID, CharacterType.PRIEST.name)
-                            gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
-                                val facing = currentPlayer[FacingComponent.mapper]
-                                require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                this.damage = 0
-                                this.player = currentPlayer
-                            })
+                        row()
+                        imageButton(SkinImageButton.PRIEST_ATTACK.name) {
+                            color.a = 1.0f
+                            onClick {
+                                SocketEmit.playerAttack(socket, lobbyID, CharacterType.PRIEST.name)
+                                gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
+                                    val facing = currentPlayer[FacingComponent.mapper]
+                                    require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                    this.damage = CharacterType.PRIEST.normalDamage
+                                    this.player = currentPlayer
+                                })
+                            }
                         }
                     }
                 }
@@ -381,46 +458,34 @@ class GameScreen(
 //        })
     }
 
-    private fun updateHp(hp: Float, maxHp: Float) {
-        hpBar.scaleX = MathUtils.clamp(hp / maxHp, 0f, 1f)
-        hpText.text = hp.toInt().toString()
-    }
-
-    private fun updateMp(mp: Float, maxMp: Float) {
-        mpBar.scaleX = MathUtils.clamp(mp / maxMp, 0f, 1f)
-        mpText.text = mp.toInt().toString()
-    }
-
     override fun onEvent(event: GameEvent) {
-        when (event){
-            is GameEvent.PlayerDeath -> {
-                LOG.debug { "Player died with a distance of ${event.distance}" }
-                preferences.flush {
-                    this["highscore"] = event.distance
-                }
-                spawnPlayers()
+        if (event is GameEvent.PlayerDeath) {
+            LOG.debug { "Player died with a distance of ${event.distance}" }
+            preferences.flush {
+                this["highscore"] = event.distance
             }
-            is GameEvent.PlayerHit -> {
-                updateHp(event.hp.toFloat(), event.maxHp.toFloat())
-            }
-            is GameEvent.CollectPowerUp -> {
-                val mp = event.player[PlayerComponent.mapper]?.mp?.toFloat()
-                val maxMp = event.player[PlayerComponent.mapper]?.maxMp?.toFloat()
-                LOG.debug{ "Collected powerup, mp=$mp, maxMP=$maxMp" }
-                if (mp != null && maxMp != null) {
-                    updateMp(mp, maxMp)
-                }
-            }
-            is GameEvent.UpdateMp ->{
-                val mp = event.player.mp.toFloat()
-                val maxMp = event.player.maxMp.toFloat()
+            spawnPlayers()
+        }
+        else if (event is GameEvent.PlayerHit) {
+            updateHp(event.hp.toFloat(), event.maxHp.toFloat())
+        }
+        else if (event is GameEvent.CollectPowerUp) {
+            val mp = event.player[PlayerComponent.mapper]?.mp?.toFloat()
+            val maxMp = event.player[PlayerComponent.mapper]?.maxMp?.toFloat()
+            LOG.debug{ "Collected powerup, mp=$mp, maxMP=$maxMp" }
+            if (mp != null && maxMp != null) {
                 updateMp(mp, maxMp)
             }
-            is GameEvent.PlayerStep -> {
-                val mp = event.player.mp.toFloat()
-                val maxMp = event.player.maxMp.toFloat()
-                updateMp(mp, maxMp)
-            }
+        }
+        else if (event is GameEvent.UpdateMp) {
+            val mp = event.player.mp.toFloat()
+            val maxMp = event.player.maxMp.toFloat()
+            updateMp(mp, maxMp)
+        }
+        else if (event is GameEvent.PlayerStep) {
+            val mp = event.player.mp.toFloat()
+            val maxMp = event.player.maxMp.toFloat()
+            updateMp(mp, maxMp)
         }
     }
 }

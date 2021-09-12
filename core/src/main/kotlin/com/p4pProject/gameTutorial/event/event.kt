@@ -133,7 +133,7 @@ sealed class GameEvent{
     object BossAttack: GameEvent () {
     }
 
-    object BossAttackFinised: GameEvent () {
+    object BossAttackFinished: GameEvent () {
         var damage = 0
         var startX = 0F
         var endX = 0F
