@@ -6,6 +6,9 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
+const val PLAYER_OFFSET = 0.625f
+const val BOSS_OFFSET = 0.78125f
+
 class TransformComponent: Component, Pool.Poolable, Comparable<TransformComponent> {
     val position = Vector3()
     val prevPosition = Vector3()

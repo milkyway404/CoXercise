@@ -169,22 +169,22 @@ class MoveSystem(
 
         when (facing) {
             FacingDirection.NORTH -> transform.position.y = MathUtils.clamp(
-                transform.position.y + 1,
+                transform.position.y + 0.25f,
                 0f,
-                V_WIDTH - transform.size.y
+                V_HEIGHT - transform.size.y
             )
             FacingDirection.SOUTH -> transform.position.y = MathUtils.clamp(
-                transform.position.y - 1,
+                transform.position.y - 0.25f,
                 0f,
-                V_WIDTH - transform.size.y
+                V_HEIGHT - transform.size.y
             )
             FacingDirection.EAST -> transform.position.x = MathUtils.clamp(
-                transform.position.x + 1,
+                transform.position.x + 0.25f,
                 0f,
                 V_WIDTH - transform.size.x
             )
             FacingDirection.WEST -> transform.position.x = MathUtils.clamp(
-                transform.position.x - 1,
+                transform.position.x - 0.25f,
                 0f,
                 V_WIDTH - transform.size.x
             )
