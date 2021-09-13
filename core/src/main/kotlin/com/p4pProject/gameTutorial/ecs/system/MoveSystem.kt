@@ -20,7 +20,7 @@ import kotlin.math.*
 
 
 private const val UPDATE_RATE = 1/25f
-private const val SENSOR_SENSITIVITY_THRESHOLD = 4
+private const val SENSOR_SENSITIVITY_THRESHOLD = 3
 private const val STEP_DISTANCE = 1f
 
 private val LOG = logger<MoveSystem>()
@@ -107,6 +107,7 @@ class MoveSystem(
                     movePlayer(transform, FacingDirection.EAST)
                 }
             }
+
             val magnitude = sqrt((Gdx.input.accelerometerX.pow(2) + Gdx.input.accelerometerY.pow(2)
                     + Gdx.input.accelerometerZ.pow(2)).toDouble())
             val magnitudeDelta = magnitude - magnitudePrevious
@@ -175,22 +176,22 @@ class MoveSystem(
         Gdx.app.log("direction", facing.toString())
         when (facing) {
             FacingDirection.NORTH -> transform.position.y = MathUtils.clamp(
-                transform.position.y + 0.25f,
+                transform.position.y + 0.4f,
                 0f,
                 V_HEIGHT - transform.size.y
             )
             FacingDirection.SOUTH -> transform.position.y = MathUtils.clamp(
-                transform.position.y - 0.25f,
+                transform.position.y - 0.4f,
                 0f,
                 V_HEIGHT - transform.size.y
             )
             FacingDirection.EAST -> transform.position.x = MathUtils.clamp(
-                transform.position.x + 0.25f,
+                transform.position.x + 0.4f,
                 0f,
                 V_WIDTH - transform.size.x
             )
             FacingDirection.WEST -> transform.position.x = MathUtils.clamp(
-                transform.position.x - 0.25f,
+                transform.position.x - 0.4f,
                 0f,
                 V_WIDTH - transform.size.x
             )

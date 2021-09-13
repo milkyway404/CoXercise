@@ -43,8 +43,6 @@ class DamageSystem (
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-        LOG.debug { "character: ${player.characterType} size: ${transform.size}" }
-
         if(!warriorCheck && player.characterType == PlayerType.WARRIOR){
             warriorCheck = true;
             checkDmg(entity);

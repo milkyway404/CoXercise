@@ -103,7 +103,9 @@ class PlayerInputSystem(
         gameViewport.unproject(tmpVec)
         val diffX = tmpVec.x - transform.position.x - transform.size.x * 0.5f
 
-        //facing.direction = getFacingDirection()
+        if(typeSelected == player.characterType){
+            facing.direction = getFacingDirection(facing.direction)
+        }
 
         if(Gdx.input.isKeyPressed(Input.Keys.W) && typeSelected == player.characterType){
             facing.direction = FacingDirection.NORTH
@@ -140,18 +142,20 @@ class PlayerInputSystem(
 
     }
 
-    private fun getFacingDirection(): FacingDirection {
+    private fun getFacingDirection(prevFacing : FacingDirection): FacingDirection {
         val angle = Gdx.input.azimuth.toDouble().roundToInt()
-        return if (angle in -45..45) {
+        //increase the gap between the anlges to not get cookt turning
+        //value on left is plus 10, value on right is minus 10
+        return if (angle in -5..5) {
             FacingDirection.NORTH
-        } else if (angle in 46..135) {
+        } else if (angle in 85..95) {
             FacingDirection.EAST
-        } else if (angle in 136..180 || angle in -180..-135) {
+        } else if (angle in 175..180 || angle in -180..-175) {
             FacingDirection.SOUTH
-        } else if (angle in -134..-46) {
+        } else if (angle in -95..-85) {
             FacingDirection.WEST
         } else {
-            FacingDirection.NORTH
+            prevFacing
         }
     }
 

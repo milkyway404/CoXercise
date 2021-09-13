@@ -36,8 +36,6 @@ class PlayerDamageSystem (
         val boss = entity[BossComponent.mapper]
         require(boss != null ){"Entity |entity| must have a BossComponent. entity=$entity"}
 
-        LOG.debug { "character: boss size: ${transform.size}" }
-
             if (transform.position.x + BOSS_OFFSET >= attackArea.startX &&
                 transform.position.x + BOSS_OFFSET <= attackArea.endX &&
                 transform.position.y + BOSS_OFFSET >= attackArea.startY &&
@@ -134,17 +132,17 @@ class PlayerDamageSystem (
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
                 attackArea = if(event.facing==FacingDirection.NORTH){
-                        AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f), false)
+                        AttackArea(event.damage, (transform.position.x - PLAYER_OFFSET -0.5f),
+                            (transform.position.x - PLAYER_OFFSET +0.5f), (transform.position.y), (transform.position.y +124f), false)
                     }else if(event.facing==FacingDirection.SOUTH){
-                        AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y), false)
+                        AttackArea(event.damage, (transform.position.x - PLAYER_OFFSET -0.5f),
+                            (transform.position.x - PLAYER_OFFSET +0.5f), (transform.position.y -32f), (transform.position.y), false)
                     }else if(event.facing==FacingDirection.EAST){
                         AttackArea(event.damage, (transform.position.x),
-                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
+                            (transform.position.x +124f), (transform.position.y + PLAYER_OFFSET -0.5f), (transform.position.y + PLAYER_OFFSET  +0.5f), false)
                     }else{
                         AttackArea(event.damage, (transform.position.x -124f),
-                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
+                            (transform.position.x), (transform.position.y + PLAYER_OFFSET -0.5f), (transform.position.y + PLAYER_OFFSET +0.5f), false)
                     }
 
             }
@@ -158,17 +156,17 @@ class PlayerDamageSystem (
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
                 attackArea = if(event.facing==FacingDirection.NORTH){
-                        AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f), false)
+                        AttackArea(event.damage, (transform.position.x - PLAYER_OFFSET -0.5f),
+                            (transform.position.x - PLAYER_OFFSET +0.5f), (transform.position.y), (transform.position.y +124f), false)
                     }else if(event.facing==FacingDirection.SOUTH){
-                        AttackArea(event.damage, (transform.position.x -0.5f),
-                            (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y), false)
+                        AttackArea(event.damage, (transform.position.x - PLAYER_OFFSET -0.5f),
+                            (transform.position.x - PLAYER_OFFSET +0.5f), (transform.position.y -32f), (transform.position.y), false)
                     }else if(event.facing==FacingDirection.EAST){
                         AttackArea(event.damage, (transform.position.x),
-                            (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
+                            (transform.position.x +124f), (transform.position.y + PLAYER_OFFSET -0.5f), (transform.position.y + PLAYER_OFFSET +0.5f), false)
                     }else{
                         AttackArea(event.damage, (transform.position.x -124f),
-                            (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
+                            (transform.position.x), (transform.position.y + PLAYER_OFFSET -0.5f), (transform.position.y + PLAYER_OFFSET +0.5f), false)
                     }
 
             }
