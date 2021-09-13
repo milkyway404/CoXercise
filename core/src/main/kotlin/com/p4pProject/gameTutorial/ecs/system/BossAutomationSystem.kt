@@ -4,29 +4,35 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.p4pProject.gameTutorial.V_HEIGHT
+import com.p4pProject.gameTutorial.V_WIDTH
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
+import ktx.ashley.exclude
 import ktx.ashley.get
 import ktx.log.logger
 import java.time.LocalDateTime
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private const val TOUCH_TOLERANCE_DISTANCE = 0.3f
 private const val HIGH_HEALTH_THRESHOLD = 200
 private const val MEDIUM_HEALTH_THRESHOLD = 100
+const val BOSS_ATTACK_RANGE = 0.5f
 
 private val LOG = logger<BossAutomationSystem>()
 class BossAutomationSystem(
     private val gameViewport: Viewport,
     private val gameEventManager: GameEventManager
-) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent::class, FacingComponent::class, PlayerInfoComponent::class).get()) {
+) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent::class, FacingComponent::class, PlayerInfoComponent::class).exclude(RemoveComponent::class).get()) {
     private val tmpVec = Vector2()
 
     private var bossIsReadyToAttack : Boolean = false
@@ -116,7 +122,7 @@ class BossAutomationSystem(
     private fun findClosestCharacter(boss: Entity): Entity {
         val playerInfo = boss[PlayerInfoComponent.mapper]!!
         val bossPos = boss[TransformComponent.mapper]!!
-        return playerInfo.getClosestCharacter(bossPos.position);
+        return playerInfo.getClosestCharacter(bossPos.position)
     }
 
     private fun findLowestHpCharacter(boss: Entity): Entity {
@@ -132,39 +138,64 @@ class BossAutomationSystem(
 
         Gdx.app.log("Walk or Attack", "meow")
 
+        val facing = boss[FacingComponent.mapper]!!
+
+        facing.direction = getDirectionCharacterAt(characterToAttack, boss)
+
         if (isCharacterInAttackRange(characterToAttack, boss)) {
             // attack
             bossIsReadyToAttack = true
             Gdx.app.log("Attack", characterToAttack[PlayerComponent.mapper]!!.characterType.toString())
-            boss[PlayerInfoComponent.mapper]!!.printPlayerHps()
+            //boss[PlayerInfoComponent.mapper]!!.printPlayerHps()
         } else {
             // walk
-            walkToCharacter(boss, characterToAttack)
-            Gdx.app.log("Walk", characterToAttack[PlayerComponent.mapper]!!.characterType.toString())
+            walkToCharacter(boss, facing.direction)
+            Gdx.app.log("Walk " + facing.direction, characterToAttack[PlayerComponent.mapper]!!.characterType.toString() )
         }
     }
 
-    private fun walkToCharacter(boss: Entity, character: Entity) {
+    private fun getDirectionCharacterAt(character: Entity, boss: Entity): FacingDirection {
         val bossPos = boss[TransformComponent.mapper]!!.position
         val characterPos = character[TransformComponent.mapper]!!.position
-        val facing = boss[FacingComponent.mapper]!!
 
-        when {
-            bossPos.x + 1f < characterPos.x -> {
-                facing.direction = FacingDirection.EAST
-                bossPos.x += 1f * movementSpeed
+        // go in the direction of the longest distance
+        val disX = abs(bossPos.x - characterPos.x)
+        val disY = abs(bossPos.y - characterPos.y)
+
+        Gdx.app.log("Boss Position", "x: " + bossPos.x.toString() + ", y: " + bossPos.y.toString())
+        Gdx.app.log("Character Position", "x: " + characterPos.x + ",y: " + characterPos.y)
+
+        return if (disX > disY) {
+            if (bossPos.x > characterPos.x) {
+                FacingDirection.WEST
+            } else {
+                FacingDirection.EAST
             }
-            bossPos.x - 1f > characterPos.x -> {
-                facing.direction = FacingDirection.WEST
-                bossPos.x -= 1f * movementSpeed
+        } else {
+            if (bossPos.y > characterPos.y) {
+                FacingDirection.SOUTH
+            } else {
+                FacingDirection.NORTH
             }
-            bossPos.y + 1f < characterPos.y -> {
-                facing.direction = FacingDirection.SOUTH
-                bossPos.y += 1f * movementSpeed
+        }
+
+    }
+
+    private fun walkToCharacter(boss: Entity, facingDirection: FacingDirection) {
+        val bossPos = boss[TransformComponent.mapper]!!.position
+        val bossSize = boss[TransformComponent.mapper]!!.size
+        when (facingDirection) {
+            FacingDirection.NORTH -> {
+                bossPos.y = MathUtils.clamp(bossPos.y + movementSpeed, bossSize.y, V_HEIGHT.toFloat())
             }
-            bossPos.y - 1f > characterPos.y -> {
-                facing.direction = FacingDirection.NORTH
-                bossPos.y -= 1f * movementSpeed
+            FacingDirection.SOUTH -> {
+                bossPos.y = MathUtils.clamp(bossPos.y - movementSpeed, bossSize.y, V_HEIGHT.toFloat())
+            }
+            FacingDirection.EAST -> {
+                bossPos.x = MathUtils.clamp(bossPos.x + movementSpeed, 0f, V_WIDTH - bossSize.x)
+            }
+            FacingDirection.WEST -> {
+                bossPos.x = MathUtils.clamp(bossPos.x - movementSpeed, 0f, V_WIDTH - bossSize.x)
             }
         }
     }
@@ -175,21 +206,21 @@ class BossAutomationSystem(
 
         val characterBoundingRect = Rectangle().set(
             characterTrans.position.x,
-            characterTrans.position.y,
+            characterTrans.position.y - characterTrans.size.y,
             characterTrans.size.x,
             characterTrans.size.y
         )
 
-        val bossBoundingRect = Rectangle().set(
-            bossTrans.position.x - 0.5f,
-            bossTrans.position.y - 0.5f,
-            bossTrans.size.x + 0.5f,
-            bossTrans.size.y + 0.5f
+        val bossAttackBoundingRect = Rectangle().set(
+            bossTrans.position.x - BOSS_ATTACK_RANGE,
+            bossTrans.position.y - bossTrans.size.y - BOSS_ATTACK_RANGE,
+            bossTrans.size.x + (2 * BOSS_ATTACK_RANGE),
+            bossTrans.size.y + (2 * BOSS_ATTACK_RANGE)
         )
 
-        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
-        Gdx.app.log("Character Rect", characterBoundingRect.toString());
-        Gdx.app.log("Boss Rect", bossBoundingRect.toString());
-        return (characterBoundingRect.overlaps(bossBoundingRect))
+//        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
+//        Gdx.app.log("Character Rect", characterBoundingRect.toString());
+//        Gdx.app.log("Boss Rect", bossAttackBoundingRect.toString());
+        return (characterBoundingRect.overlaps(bossAttackBoundingRect))
     }
 }

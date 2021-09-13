@@ -188,24 +188,6 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
         gameEventManager.addListener(GameEvent.UpdateMp::class, this)
-        engine.addEntityListener(object: EntityListener {
-            override fun entityAdded(entity: Entity?) {
-                // nothing
-            }
-
-            override fun entityRemoved(entity: Entity?) {
-                if (entity == currentPlayer) {
-                    playerDead = true
-                }
-
-                when (entity) {
-                    warrior -> warriorDead = true
-                    archer -> archerDead = true
-                    priest -> priestDead = true
-                }
-            }
-
-        })
         //audioService.play(MusicAsset.GAME)
         spawnPlayers ()
         spawnBoss()
@@ -445,26 +427,24 @@ class GameScreen(
         updatePlayerHpMp()
         // allows you to see the borders of components on screen
         stage.isDebugAll = true
-
-        // TODO implement actual boss logic
-//        gameEventManager.dispatchEvent(GameEvent.BossAttack.apply {
-//            this.damage = 1
-//            this.startX = 0
-//            this.endX = 5
-//            this.startY = 0
-//            this.endY = 5
-//            this.startTime = LocalDateTime.now()
-//            this.duration = 2000
-//        })
     }
 
     override fun onEvent(event: GameEvent) {
         if (event is GameEvent.PlayerDeath) {
-            LOG.debug { "Player died with a distance of ${event.distance}" }
-            preferences.flush {
-                this["highscore"] = event.distance
+            when (event.characterType) {
+                CharacterType.WARRIOR -> {
+                    if (currentPlayer == warrior) playerDead = true
+                    warriorDead = true
+                }
+                CharacterType.ARCHER -> {
+                    if (currentPlayer == archer) playerDead = true
+                    archerDead = true
+                }
+                CharacterType.PRIEST -> {
+                    if (currentPlayer == priest) playerDead = true
+                    priestDead = true
+                }
             }
-            spawnPlayers()
         }
         else if (event is GameEvent.PlayerHit) {
             updateHp(event.hp.toFloat(), event.maxHp.toFloat())

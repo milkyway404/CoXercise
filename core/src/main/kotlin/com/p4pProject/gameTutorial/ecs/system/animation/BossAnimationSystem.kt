@@ -7,8 +7,10 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
+import com.p4pProject.gameTutorial.ecs.system.BOSS_ATTACK_RANGE
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
 import ktx.ashley.allOf
@@ -174,10 +176,10 @@ class BossAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
                 this.damage = bossAttackDamage
-                this.startX = transform.position.x - 1f
-                this.endX = transform.position.x + 1f
-                this.startY = transform.position.y - 1f
-                this.endY = transform.position.y + 1f
+                this.startX = transform.position.x - BOSS_ATTACK_RANGE
+                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
+                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
+                this.endY = transform.position.y + BOSS_ATTACK_RANGE
                 Gdx.app.log("Boss Attack", toString())
             })
         }
@@ -199,10 +201,10 @@ class BossAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
                 this.damage = bossAttackDamage
-                this.startX = transform.position.x - 1f
-                this.endX = transform.position.x + 1f
-                this.startY = transform.position.y - 1f
-                this.endY = transform.position.y + 1f
+                this.startX = transform.position.x - BOSS_ATTACK_RANGE
+                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
+                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
+                this.endY = transform.position.y + BOSS_ATTACK_RANGE
                 Gdx.app.log("Boss Attack", toString())
             })
         }
@@ -224,10 +226,10 @@ class BossAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
                 this.damage = bossAttackDamage
-                this.startX = transform.position.x - 1f
-                this.endX = transform.position.x + 1f
-                this.startY = transform.position.y - 1f
-                this.endY = transform.position.y + 1f
+                this.startX = transform.position.x - BOSS_ATTACK_RANGE
+                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
+                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
+                this.endY = transform.position.y + BOSS_ATTACK_RANGE
                 Gdx.app.log("Boss Attack", toString())
             })
         }
@@ -249,10 +251,10 @@ class BossAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
                 this.damage = bossAttackDamage
-                this.startX = transform.position.x - 1f
-                this.endX = transform.position.x + 1f
-                this.startY = transform.position.y - 1f
-                this.endY = transform.position.y + 1f
+                this.startX = transform.position.x - BOSS_ATTACK_RANGE
+                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
+                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
+                this.endY = transform.position.y + BOSS_ATTACK_RANGE
                 Gdx.app.log("Boss Attack", toString())
             })
         }

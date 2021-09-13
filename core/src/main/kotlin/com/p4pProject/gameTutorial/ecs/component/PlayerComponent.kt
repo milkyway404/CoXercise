@@ -2,6 +2,7 @@ package com.p4pProject.gameTutorial.ecs.component
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.utils.Pool
+import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.mapperFor
 
 const val WARRIOR_MAX_HP = 200
@@ -15,18 +16,18 @@ const val PRIEST_MAX_MP = 200
 
 class PlayerComponent : Component, Pool.Poolable {
 
-    open var hp = WARRIOR_MAX_HP
-    open var maxHp = WARRIOR_MAX_HP
-    open var mp = 0
-    open var maxMp = WARRIOR_MAX_MP
+    var hp = WARRIOR_MAX_HP
+    var maxHp = WARRIOR_MAX_HP
+    var mp = 0
+    var maxMp = WARRIOR_MAX_MP
     var distance = 0f
     var isAttacking = false
     var isSpecialAttacking = false
-    var characterType = PlayerType.WARRIOR
+    var characterType = CharacterType.WARRIOR
 
 
     fun setAsWarrior(){
-        characterType = PlayerType.WARRIOR
+        characterType = CharacterType.WARRIOR
         hp = WARRIOR_MAX_HP
         mp = WARRIOR_MAX_MP
         maxHp = WARRIOR_MAX_HP
@@ -34,7 +35,7 @@ class PlayerComponent : Component, Pool.Poolable {
     }
 
     fun setAsArcher(){
-        characterType = PlayerType.ARCHER
+        characterType = CharacterType.ARCHER
         hp = ARCHER_MAX_HP
         mp = ARCHER_MAX_HP
         maxHp = ARCHER_MAX_HP
@@ -42,7 +43,7 @@ class PlayerComponent : Component, Pool.Poolable {
     }
 
     fun setAsPriest(){
-        characterType = PlayerType.PRIEST
+        characterType = CharacterType.PRIEST
         hp = PRIEST_MAX_HP
         mp = PRIEST_MAX_MP
         maxHp = PRIEST_MAX_HP
@@ -52,13 +53,13 @@ class PlayerComponent : Component, Pool.Poolable {
 
     override fun reset() {
         hp = when(characterType){
-            PlayerType.WARRIOR -> {
+            CharacterType.WARRIOR -> {
                 WARRIOR_MAX_HP
             }
-            PlayerType.ARCHER -> {
+            CharacterType.ARCHER -> {
                 ARCHER_MAX_HP
             }
-            PlayerType.PRIEST -> {
+            CharacterType.PRIEST -> {
                 PRIEST_MAX_HP
             }
         }
@@ -70,8 +71,4 @@ class PlayerComponent : Component, Pool.Poolable {
     companion object{
         val mapper = mapperFor<PlayerComponent>()
     }
-}
-
-enum class PlayerType{
-    WARRIOR, ARCHER, PRIEST
 }

@@ -6,6 +6,7 @@ import com.p4pProject.gameTutorial.ecs.component.FacingComponent
 import com.p4pProject.gameTutorial.ecs.component.FacingDirection
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.PowerUpType
+import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.collections.GdxSet
 import java.time.LocalDateTime
 import java.util.*
@@ -14,9 +15,9 @@ import kotlin.reflect.KClass
 
 sealed class GameEvent{
     object PlayerDeath : GameEvent (){
-        var distance = 0f
+        lateinit var characterType: CharacterType
 
-        override fun toString() = "PlayerDeath(distance = ${distance})"
+        override fun toString() = "PlayerDeath(characterType=$characterType)"
     }
     object CollectPowerUp : GameEvent(){
         lateinit var  player:Entity

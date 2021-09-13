@@ -110,21 +110,8 @@ class PowerUpSystem (
     }
 
     private fun collectPowerUp(player: Entity, powerUp: Entity) {
-        if(chosenCharacterType == CharacterType.WARRIOR){
-            if(player[PlayerComponent.mapper]?.characterType != PlayerType.WARRIOR){
-                return
-            }
-        }
-        if(chosenCharacterType == CharacterType.ARCHER){
-            if(player[PlayerComponent.mapper]?.characterType != PlayerType.ARCHER){
-                return
-            }
-        }
-        if(chosenCharacterType == CharacterType.PRIEST){
-            if(player[PlayerComponent.mapper]?.characterType != PlayerType.PRIEST){
-                return
-            }
-        }
+        if(chosenCharacterType != player[PlayerComponent.mapper]?.characterType) return
+
         val powerUpCmp = powerUp[PowerUpComponent.mapper]
         require(powerUpCmp != null ){"Entity |entity| must have a PowerUpComponent. entity=$powerUp"}
 

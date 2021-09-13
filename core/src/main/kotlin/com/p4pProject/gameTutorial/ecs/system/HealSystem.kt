@@ -8,6 +8,7 @@ import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
+import com.p4pProject.gameTutorial.screen.CharacterType
 import com.p4pProject.gameTutorial.screen.GameScreen
 import ktx.ashley.addComponent
 import ktx.ashley.allOf
@@ -35,7 +36,7 @@ class HealSystem (
 
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a BossComponent. entity=$entity"}
-        if(player.characterType == PlayerType.WARRIOR && !warriorHealed){
+        if(player.characterType == CharacterType.WARRIOR && !warriorHealed){
             player.hp = minOf(player.hp + 25, player.maxHp)
             LOG.debug { "warrior hp: ${player.hp}" }
             warriorHealed = true;
@@ -44,7 +45,7 @@ class HealSystem (
             })
         }
 
-        else if(player.characterType == PlayerType.ARCHER && !archerHealed){
+        else if(player.characterType == CharacterType.ARCHER && !archerHealed){
             player.hp = minOf(player.hp + 25, player.maxHp)
             LOG.debug { "archer hp: ${player.hp}" }
             archerHealed = true
@@ -53,7 +54,7 @@ class HealSystem (
             })
         }
 
-        else if(player.characterType == PlayerType.PRIEST && !priestHealed){
+        else if(player.characterType == CharacterType.PRIEST && !priestHealed){
             player.hp = minOf(player.hp + 25, player.maxHp)
             LOG.debug { "priest hp: ${player.hp}" }
             priestHealed = true

@@ -61,9 +61,18 @@ class PlayerInfoComponent: Component, Pool.Poolable {
         }
 
         return when {
-            warriorDistance <= archerDistance && warriorDistance <= priestDistance -> warrior
-            archerDistance <= warriorDistance && archerDistance <= priestDistance -> archer
-            else -> priest
+            warriorDistance <= archerDistance && warriorDistance <= priestDistance -> {
+                Gdx.app.log("ClosestCharacter", "warrior")
+                warrior
+            }
+            archerDistance <= warriorDistance && archerDistance <= priestDistance -> {
+                Gdx.app.log("ClosestCharacter", "archer")
+                archer
+            }
+            else -> {
+                Gdx.app.log("ClosestCharacter", "priest")
+                priest
+            }
         }
     }
 

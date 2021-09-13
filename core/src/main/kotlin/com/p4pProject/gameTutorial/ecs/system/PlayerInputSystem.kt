@@ -36,7 +36,7 @@ class PlayerInputSystem(
     private var priestIsAttacking : Boolean = false
     private var priestIsSpecialAttacking : Boolean = false
 
-    var typeSelected = PlayerType.WARRIOR
+    var typeSelected = CharacterType.WARRIOR
 
 
     override fun addedToEngine(engine: Engine?) {
@@ -72,18 +72,6 @@ class PlayerInputSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-
-        typeSelected = when (chosenCharacterType) {
-            CharacterType.WARRIOR -> {
-                PlayerType.WARRIOR
-            }
-            CharacterType.ARCHER -> {
-                PlayerType.ARCHER
-            }
-            CharacterType.PRIEST -> {
-                PlayerType.PRIEST
-            }
-        }
 
         val facing = entity[FacingComponent.mapper]
         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$entity" }
@@ -121,20 +109,20 @@ class PlayerInputSystem(
 
         }
 
-        if(player.characterType == PlayerType.WARRIOR){
-            player.isAttacking = warriorIsAttacking
-            player.isSpecialAttacking = warriorIsSpecialAttacking
+        when (player.characterType) {
+            CharacterType.WARRIOR -> {
+                player.isAttacking = warriorIsAttacking
+                player.isSpecialAttacking = warriorIsSpecialAttacking
+            }
+            CharacterType.ARCHER -> {
+                player.isAttacking = archerIsAttacking
+                player.isSpecialAttacking = archerIsSpecialAttacking
+            }
+            CharacterType.PRIEST -> {
+                player.isAttacking = priestIsAttacking
+                player.isSpecialAttacking = priestIsSpecialAttacking
+            }
         }
-
-        if(player.characterType == PlayerType.ARCHER){
-            player.isAttacking = archerIsAttacking
-            player.isSpecialAttacking = archerIsSpecialAttacking
-        }
-        if(player.characterType == PlayerType.PRIEST){
-            player.isAttacking = priestIsAttacking
-            player.isSpecialAttacking = priestIsSpecialAttacking
-        }
-
     }
 
     private fun getFacingDirection(): FacingDirection {
