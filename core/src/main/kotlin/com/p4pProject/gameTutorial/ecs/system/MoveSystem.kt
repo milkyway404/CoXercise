@@ -120,7 +120,7 @@ class MoveSystem(
             }
 
             movePlayerIfLocationChanged(transform);
-        }else if(boss != null && !boss.isAttacking) {
+        }else if(boss != null && boss.isAttackReady) {
 
             when {
                 Gdx.input.isKeyPressed(Input.Keys.W) -> {
@@ -167,7 +167,6 @@ class MoveSystem(
         transform:TransformComponent,
         facing:FacingDirection){
 
-        Gdx.app.log("direction", facing.toString())
         when (facing) {
             FacingDirection.NORTH -> transform.position.y = MathUtils.clamp(
                 transform.position.y + 1,
@@ -190,7 +189,6 @@ class MoveSystem(
                 V_WIDTH - transform.size.x
             )
         }
-        Gdx.app.log("POSITION", "x: " + transform.position.x + ", y: " + transform.position.y)
         previousX = transform.position.x;
         previousY = transform.position.y;
     }

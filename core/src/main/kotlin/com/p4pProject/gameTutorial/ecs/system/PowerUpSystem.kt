@@ -62,7 +62,6 @@ class PowerUpSystem (
         engine.entity{
             with<TransformComponent>{
                 setInitialPosition(x,y,0f)
-                LOG.debug { "Spawn power of type $powerUpType at $position" }
             }
             with<PowerUpComponent> { type = powerUpType; duration = getRandomDuration() }
             with<AnimationComponent> { type = powerUpType.animationType }

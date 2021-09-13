@@ -29,7 +29,8 @@ class BossAutomationSystem(
 ) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent::class, FacingComponent::class, PlayerInfoComponent::class).get()) {
     private val tmpVec = Vector2()
 
-    private var bossIsAttacking : Boolean = false
+    private var bossIsReadyToAttack : Boolean = false
+    private var bossIsAttacking :Boolean = false
     private var bossIsHurt : Boolean = false
     private var bossIsStunned : Boolean = false
     private var stunnedTime : LocalDateTime = LocalDateTime.now()
@@ -85,39 +86,8 @@ class BossAutomationSystem(
         //This part is the part that is the control
         tmpVec.x = Gdx.input.x.toFloat()
         gameViewport.unproject(tmpVec)
-        val diffX = tmpVec.x - transform.position.x - transform.size.x * 0.5f
 
-        //facing.direction = getFacingDirection()
-
-//        if(Gdx.input.isKeyPressed(Input.Keys.W)){
-//            if(chosenCharacterType == CharacterType.BOSS){
-//                facing.direction = FacingDirection.NORTH
-//            }
-//        }
-
-//        if(Gdx.input.isKeyPressed(Input.Keys.A)){
-//            if(chosenCharacterType == CharacterType.BOSS){
-//                facing.direction = FacingDirection.WEST
-//            }
-//        }
-//
-//        if(Gdx.input.isKeyPressed(Input.Keys.S)){
-//            if(chosenCharacterType == CharacterType.BOSS){
-//                facing.direction = FacingDirection.SOUTH
-//            }
-//        }
-//
-//        if(Gdx.input.isKeyPressed(Input.Keys.D)){
-//            if(chosenCharacterType == CharacterType.BOSS){
-//                facing.direction = FacingDirection.EAST
-//            }
-//        }
-//
-//        if(Gdx.input.isKeyPressed(Input.Keys.J)){
-//            if(chosenCharacterType == CharacterType.BOSS){
-//                gameEventManager.dispatchEvent(GameEvent.BossAttack)
-//            }
-//        }
+        boss.isAttackReady = bossIsReadyToAttack
         boss.isAttacking = bossIsAttacking
         boss.isHurt = bossIsHurt
         boss.isStunned = bossIsStunned
@@ -128,20 +98,17 @@ class BossAutomationSystem(
     }
 
     override fun onEvent(event: GameEvent) {
-        if (event is GameEvent.BossAttack) {
-            bossIsAttacking = true
-        }
-        else if (event is GameEvent.BossAttackFinished) {
+        if (event is GameEvent.BossAttackFinished) {
+            Gdx.app.log("Boss Attack", "Finished")
+            bossIsReadyToAttack = false
             bossIsAttacking = false
-        }
-        else if (event is GameEvent.BossHit) {
+        } else if (event is GameEvent.BossHit) {
             bossIsHurt = true
             if(event.isStun){
                 bossIsStunned = true
                 stunnedTime  = LocalDateTime.now()
             }
-        }
-        else if (event is GameEvent.BossHitFinished) {
+        } else if (event is GameEvent.BossHitFinished) {
             bossIsHurt = false
         }
     }
@@ -158,26 +125,22 @@ class BossAutomationSystem(
     }
 
     private fun walkToAndAttackCharacter(boss: Entity, characterToAttack: Entity) {
-        val characterType = when {
-            characterToAttack[WarriorAnimationComponent.mapper] != null -> CharacterType.WARRIOR
-            characterToAttack[ArcherAnimationComponent.mapper] != null -> CharacterType.ARCHER
-            characterToAttack[PriestAnimationComponent.mapper] != null -> CharacterType.PRIEST
-            else -> CharacterType.WARRIOR
+        if (bossIsReadyToAttack || boss[BossComponent.mapper]!!.isAttacking || bossIsHurt || bossIsStunned) {
+            //Gdx.app.log("Checks", bossIsReadyToAttack.toString() + boss[BossComponent.mapper]!!.isAttacking.toString())
+            return;
         }
+
+        Gdx.app.log("Walk or Attack", "meow")
 
         if (isCharacterInAttackRange(characterToAttack, boss)) {
             // attack
-            if (!bossIsAttacking && !bossIsStunned && !bossIsHurt) {
-                gameEventManager.dispatchEvent(GameEvent.BossAttack)
-                Gdx.app.log("Attack", characterType.name)
-                bossIsAttacking = true
-            }
+            bossIsReadyToAttack = true
+            Gdx.app.log("Attack", characterToAttack[PlayerComponent.mapper]!!.characterType.toString())
+            boss[PlayerInfoComponent.mapper]!!.printPlayerHps()
         } else {
             // walk
-            if (!bossIsAttacking && !bossIsStunned && !bossIsHurt) {
-                walkToCharacter(boss, characterToAttack)
-                Gdx.app.log("Walk", characterType.name)
-            }
+            walkToCharacter(boss, characterToAttack)
+            Gdx.app.log("Walk", characterToAttack[PlayerComponent.mapper]!!.characterType.toString())
         }
     }
 
@@ -196,11 +159,11 @@ class BossAutomationSystem(
                 bossPos.x -= 1f * movementSpeed
             }
             bossPos.y + 1f < characterPos.y -> {
-                facing.direction = FacingDirection.NORTH
+                facing.direction = FacingDirection.SOUTH
                 bossPos.y += 1f * movementSpeed
             }
             bossPos.y - 1f > characterPos.y -> {
-                facing.direction = FacingDirection.SOUTH
+                facing.direction = FacingDirection.NORTH
                 bossPos.y -= 1f * movementSpeed
             }
         }
@@ -218,12 +181,15 @@ class BossAutomationSystem(
         )
 
         val bossBoundingRect = Rectangle().set(
-            bossTrans.position.x,
-            bossTrans.position.y,
-            bossTrans.size.x,
-            bossTrans.size.y
+            bossTrans.position.x - 0.5f,
+            bossTrans.position.y - 0.5f,
+            bossTrans.size.x + 0.5f,
+            bossTrans.size.y + 0.5f
         )
 
+        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
+        Gdx.app.log("Character Rect", characterBoundingRect.toString());
+        Gdx.app.log("Boss Rect", bossBoundingRect.toString());
         return (characterBoundingRect.overlaps(bossBoundingRect))
     }
 }

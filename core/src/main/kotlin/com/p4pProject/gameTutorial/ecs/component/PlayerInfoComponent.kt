@@ -2,6 +2,7 @@ package com.p4pProject.gameTutorial.ecs.component
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Pool
 import com.p4pProject.gameTutorial.screen.CharacterType
@@ -66,6 +67,26 @@ class PlayerInfoComponent: Component, Pool.Poolable {
         }
     }
 
+    fun printPlayerHps() {
+        if (warrior[PlayerComponent.mapper] == null) {
+            Gdx.app.log("Warrior", "Dead")
+        } else {
+            Gdx.app.log("Warrior HP", warrior[PlayerComponent.mapper]!!.hp.toString())
+        }
+
+        if (archer[PlayerComponent.mapper] == null) {
+            Gdx.app.log("Archer", "Dead")
+        } else {
+            Gdx.app.log("Archer HP", archer[PlayerComponent.mapper]!!.hp.toString())
+        }
+
+        if (priest[PlayerComponent.mapper] == null) {
+            Gdx.app.log("Priest", "Dead")
+        } else {
+            Gdx.app.log("Priest HP", priest[PlayerComponent.mapper]!!.hp.toString())
+        }
+    }
+
     private fun calculateDistance(position1: Vector3, position2: Vector3): Float {
         return position1.dst(position2)
     }
@@ -73,4 +94,6 @@ class PlayerInfoComponent: Component, Pool.Poolable {
     companion object{
         val mapper = mapperFor<PlayerInfoComponent>()
     }
+
+
 }

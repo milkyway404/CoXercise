@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.GdxRuntimeException
@@ -17,9 +18,7 @@ import ktx.log.error
 import ktx.log.logger
 import java.util.*
 
-const val BOSS_NORMAL_ATTACK_DAMAGE = 5
-
-private val LOG = logger<WarriorAnimationSystem>()
+private val LOG = logger<BossAnimationSystem>()
 class BossAnimationSystem(
     private val atlas: TextureAtlas, private val gameEventManager: GameEventManager
 ): IteratingSystem(allOf(BossComponent::class, FacingComponent::class, GraphicComponent::class, BossAnimationComponent::class).get()),
@@ -54,11 +53,9 @@ class BossAnimationSystem(
 //            LOG.debug { "lol gotcha" }
 //            return
 //        }
-
-
-        if(boss.isAttacking){
-            LOG.debug { "${boss.isAttacking}" }
-            facing.lastDirection = facing.direction
+        if(boss.isAttackReady){
+            //Gdx.app.log("Boss Animation", "attacking...")
+            boss.isAttacking = true
             facing.lastDirection = facing.direction
 
             val region = when(facing.direction){
@@ -68,6 +65,7 @@ class BossAnimationSystem(
                 FacingDirection.SOUTH -> animateAttackDown(aniCmp, deltaTime, entity, boss.attackDamage)
             }
             graphic.setSpriteRegion(region)
+            //Gdx.app.log("Boss Animation", "done...")
         }else if(boss.isHurt || boss.isStunned){
             facing.lastDirection = facing.direction
             val region = when(facing.direction){
@@ -180,6 +178,7 @@ class BossAnimationSystem(
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f
                 this.endY = transform.position.y + 1f
+                Gdx.app.log("Boss Attack", toString())
             })
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -204,6 +203,7 @@ class BossAnimationSystem(
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f
                 this.endY = transform.position.y + 1f
+                Gdx.app.log("Boss Attack", toString())
             })
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -228,6 +228,7 @@ class BossAnimationSystem(
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f
                 this.endY = transform.position.y + 1f
+                Gdx.app.log("Boss Attack", toString())
             })
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -252,6 +253,7 @@ class BossAnimationSystem(
                 this.endX = transform.position.x + 1f
                 this.startY = transform.position.y - 1f
                 this.endY = transform.position.y + 1f
+                Gdx.app.log("Boss Attack", toString())
             })
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -329,8 +331,6 @@ class BossAnimationSystem(
                 LOG.error { "No regions found for ${type.atlasKey}" }
                 regions = atlas.findRegions("error")
                 if (regions == null) throw GdxRuntimeException("There is no error region in the atlas")
-            }else{
-                LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
             }
             animation = Animation2D(type, regions, type.playModeLoop, type.speedRate)
             animationCache[type] = animation

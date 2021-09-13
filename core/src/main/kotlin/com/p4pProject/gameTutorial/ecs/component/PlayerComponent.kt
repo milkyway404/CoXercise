@@ -27,21 +27,24 @@ class PlayerComponent : Component, Pool.Poolable {
 
     fun setAsWarrior(){
         characterType = PlayerType.WARRIOR
-        hp = 1
+        hp = WARRIOR_MAX_HP
+        mp = WARRIOR_MAX_MP
         maxHp = WARRIOR_MAX_HP
         maxMp = WARRIOR_MAX_MP
     }
 
     fun setAsArcher(){
         characterType = PlayerType.ARCHER
-        hp = 1
+        hp = ARCHER_MAX_HP
+        mp = ARCHER_MAX_HP
         maxHp = ARCHER_MAX_HP
         maxMp = ARCHER_MAX_MP
     }
 
     fun setAsPriest(){
         characterType = PlayerType.PRIEST
-        hp = 1
+        hp = PRIEST_MAX_HP
+        mp = PRIEST_MAX_MP
         maxHp = PRIEST_MAX_HP
         maxMp = PRIEST_MAX_MP
     }
