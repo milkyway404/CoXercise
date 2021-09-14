@@ -206,7 +206,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     }
 
     private fun connectAndSetupSocket() {
-        socket = IO.socket("http://localhost:9999")
+        socket = IO.socket("http://coxercise.herokuapp.com")
         socket.connect()
         SocketOn.lobbyCreated(socket, callback = { lobbyID -> addLobbyScreen(lobbyID) });
         SocketOn.invalidLobbyID(socket, invalidLobbyID = { invalidLobbyID() });
@@ -220,7 +220,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
             return;
         }
         gameMode = GameMode.MULTIPLAYER
-        SocketEmit.createLobby(socket, chosenCharacterType!!.name);
+        SocketEmit.createLobby(socket, chosenCharacterType.name);
 
     }
 
