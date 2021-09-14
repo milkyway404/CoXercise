@@ -2,6 +2,7 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
 import com.p4pProject.gameTutorial.MyGameTutorial
@@ -18,13 +19,20 @@ import ktx.actors.onClick
 import ktx.scene2d.*
 import org.json.JSONObject
 
+enum class GameMode {
+    SINGLEPLAYER, MULTIPLAYER
+}
+
 lateinit var chosenCharacterType: CharacterType;
+var gameMode = GameMode.SINGLEPLAYER
 
 class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
     private lateinit var invalidLobbyLabel: Label
     private lateinit var socket: Socket
     private var lobbyID: String = ""
+    private lateinit var singleplayerDialog: Dialog
+    private lateinit var multiplayerDialog: Dialog
 
     init {
         connectAndSetupSocket()
@@ -53,8 +61,12 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                 textButton("Singleplayer Mode", SkinTextButton.DEFAULT.name) {
                     onClick {
                         stage.actors {
-                            dialog("choose character", SkinWindow.DEFAULT.name) {
+                            singleplayerDialog = dialog("choose character singleplayer", SkinWindow.DEFAULT.name) {
                                 table {
+                                    textButton( "cancel", SkinTextButton.DEFAULT.name) {
+                                        onClick { singleplayerDialog.hide() }
+                                    }
+                                    row()
                                     textButton(
                                         CharacterType.WARRIOR.name,
                                         SkinTextButton.DEFAULT.name
@@ -93,8 +105,12 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                 textButton("Multiplayer Mode", SkinTextButton.DEFAULT.name) {
                     onClick {
                         stage.actors {
-                            dialog("Lobby ID", SkinWindow.DEFAULT.name) {
+                            multiplayerDialog = dialog("multiplayer choose character", SkinWindow.DEFAULT.name) {
                                 table {
+                                    textButton( "cancel", SkinTextButton.DEFAULT.name) {
+                                        onClick { multiplayerDialog.hide() }
+                                    }
+                                    row()
                                     textButton("Create Lobby", SkinTextButton.DEFAULT.name) {
                                         onClick {
                                             createLobby()
@@ -181,6 +197,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     }
 
     private fun startSinglePlayerGame() {
+        gameMode = GameMode.SINGLEPLAYER
         game.addScreen(LoadingScreen(game, socket, "", chosenCharacterType))
         game.removeScreen<MainScreen>()
         dispose()
@@ -198,9 +215,10 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     }
 
     private fun createLobby() {
-        if (chosenCharacterType == null) {
+        if (!::chosenCharacterType.isInitialized) {
             return;
         }
+        gameMode = GameMode.MULTIPLAYER
         SocketEmit.createLobby(socket, chosenCharacterType!!.name);
 
     }
@@ -225,11 +243,17 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
     }
 
     private fun joinLobbyIfValid() {
-        Gdx.app.log("Socket", "attempting to join lobby " + lobbyID + " with character " + chosenCharacterType?.name)
+        if (!::chosenCharacterType.isInitialized) {
+            return;
+        }
+
+        Gdx.app.log("Socket", "attempting to join lobby " + lobbyID + " with character " + chosenCharacterType.name)
         val data = JSONObject();
         data.put("lobbyID", lobbyID);
-        data.put("chosenCharacter", chosenCharacterType?.name);
+        data.put("chosenCharacter", chosenCharacterType.name);
         Gdx.app.log("Data", data.toString());
+
+        gameMode = GameMode.MULTIPLAYER
         SocketEmit.joinLobby(socket, data);
     }
 

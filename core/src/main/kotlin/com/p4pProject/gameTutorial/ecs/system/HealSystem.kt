@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
@@ -70,18 +71,20 @@ class HealSystem (
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
 
-        gameEventManager.addListener(GameEvent.PriestSpecialAttackEvent::class, this)
+        gameEventManager.addListener(GameEvent.PriestSpecialAttackFinishEvent::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
         super.removedFromEngine(engine)
-        gameEventManager.removeListener(GameEvent.PriestSpecialAttackEvent::class, this)
+        gameEventManager.removeListener(GameEvent.PriestSpecialAttackFinishEvent::class, this)
     }
 
     override fun onEvent(event: GameEvent) {
-            warriorHealed = false;
-            archerHealed = false;
-            priestHealed = false;
-
+        if (event is GameEvent.PriestSpecialAttackFinishEvent) {
+            Gdx.app.log("Priest", "Special Attack")
+            warriorHealed = false
+            priestHealed = false
+            archerHealed = false
+        }
     }
 }

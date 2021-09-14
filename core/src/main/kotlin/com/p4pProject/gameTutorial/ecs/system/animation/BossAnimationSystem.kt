@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
-import com.p4pProject.gameTutorial.ecs.system.BOSS_ATTACK_RANGE
+import com.p4pProject.gameTutorial.ecs.system.automation.BOSS_ATTACK_RANGE
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
 import ktx.ashley.allOf

@@ -1,4 +1,4 @@
-package com.p4pProject.gameTutorial.ecs.system
+package com.p4pProject.gameTutorial.ecs.system.automation
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
@@ -105,7 +105,7 @@ class BossAutomationSystem(
 
     override fun onEvent(event: GameEvent) {
         if (event is GameEvent.BossAttackFinished) {
-            Gdx.app.log("Boss Attack", "Finished")
+//            Gdx.app.log("Boss Attack", "Finished")
             bossIsReadyToAttack = false
             bossIsAttacking = false
         } else if (event is GameEvent.BossHit) {
@@ -136,20 +136,18 @@ class BossAutomationSystem(
             return;
         }
 
-        Gdx.app.log("Walk or Attack", "meow")
-
         val facing = boss[FacingComponent.mapper]!!
 
         facing.direction = getDirectionCharacterAt(characterToAttack, boss)
 
         if (isCharacterInAttackRange(characterToAttack, boss)) {
             // attack
-            Gdx.app.log("Attack", "meow")
+//            Gdx.app.log("Attack", "meow")
             bossIsReadyToAttack = true
             //boss[PlayerInfoComponent.mapper]!!.printPlayerHps()
         } else {
             // walk
-            Gdx.app.log("Walk", "meow")
+//            Gdx.app.log("Walk", "meow")
             walkToCharacter(boss, facing.direction)
         }
     }
@@ -162,8 +160,8 @@ class BossAutomationSystem(
         val disX = abs(bossPos.x - characterPos.x)
         val disY = abs(bossPos.y - characterPos.y)
 
-        Gdx.app.log("Boss Position", "x: " + bossPos.x.toString() + ", y: " + bossPos.y.toString())
-        Gdx.app.log("Character Position", "x: " + characterPos.x + ",y: " + characterPos.y)
+//        Gdx.app.log("Boss Position", "x: " + bossPos.x.toString() + ", y: " + bossPos.y.toString())
+//        Gdx.app.log("Character Position", "x: " + characterPos.x + ",y: " + characterPos.y)
 
         return if (disX > disY) {
             if (bossPos.x > characterPos.x) {
@@ -183,7 +181,7 @@ class BossAutomationSystem(
 
     private fun walkToCharacter(boss: Entity, facingDirection: FacingDirection) {
         val bossPos = boss[TransformComponent.mapper]!!.position
-        val bossSize = boss[TransformComponent.mapper]!!.size
+
         when (facingDirection) {
             FacingDirection.NORTH -> {
                 bossPos.y = MathUtils.clamp(bossPos.y + movementSpeed, 0f, V_HEIGHT.toFloat())
@@ -204,9 +202,9 @@ class BossAutomationSystem(
         val bossTrans = boss[TransformComponent.mapper]!!
         val characterTrans = character[TransformComponent.mapper]!!
 
-        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
-        Gdx.app.log("Character Pos", characterTrans.position.x.toString() + ", " + characterTrans.position.y.toString())
-        Gdx.app.log("Boss Pos", bossTrans.position.x.toString() + ", " + bossTrans.position.y.toString())
+//        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
+//        Gdx.app.log("Character Pos", characterTrans.position.x.toString() + ", " + characterTrans.position.y.toString())
+//        Gdx.app.log("Boss Pos", bossTrans.position.x.toString() + ", " + bossTrans.position.y.toString())
         return (characterTrans.overlaps(bossTrans))
     }
 }

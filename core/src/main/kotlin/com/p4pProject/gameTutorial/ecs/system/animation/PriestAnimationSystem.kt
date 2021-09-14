@@ -164,7 +164,6 @@ class PriestAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.PriestAttackFinishEvent.apply {
                 this.player = entity
-                this.damage = 0;
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -183,7 +182,6 @@ class PriestAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.PriestAttackFinishEvent.apply {
                 this.player = entity
-                this.damage = 0;
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -201,7 +199,6 @@ class PriestAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.PriestAttackFinishEvent.apply {
                 this.player = entity
-                this.damage = 0;
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -219,7 +216,6 @@ class PriestAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.PriestAttackFinishEvent.apply {
                 this.player = entity
-                this.damage = 0;
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)

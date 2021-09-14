@@ -7,6 +7,7 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.p4pProject.gameTutorial.ecs.component.*
+import com.p4pProject.gameTutorial.ecs.system.automation.ARCHER_ATTACK_RANGE
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
@@ -110,8 +111,8 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = AttackArea(event.damage, (transform.position.x -1f),
-                    (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f), false)
+                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x),
+                    (transform.position.x + transform.size.x), (transform.position.y), (transform.size.y), false)
 
             }
 
@@ -123,8 +124,9 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = AttackArea(event.damage, (transform.position.x -1f),
-                    (transform.position.x +1f), (transform.position.y -1f), (transform.position.y +1f), true)
+                Gdx.app.log("Warrior", "Special Attack")
+                attackArea = AttackArea(player.specialAttackDamageOrHeal, (transform.position.x),
+                    (transform.position.x + transform.size.x), (transform.position.y), (transform.position.y + transform.size.y), true)
             }
 
             is GameEvent.ArcherAttackFinishEvent -> {
@@ -132,24 +134,13 @@ class PlayerDamageSystem (
                 require(transform != null ){"Entity |entity| must have a TransformComponent. entity=${event.player}"}
                 val player = event.player[PlayerComponent.mapper]
                 require(player != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
-
-                LOG.debug { "${player.isAttacking}" }
+                val facing = event.player[FacingComponent.mapper]
+                require(facing != null ){"Entity |entity| must have a PlayerComponent. entity=${event.player}"}
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = if(event.facing==FacingDirection.NORTH){
-                    AttackArea(event.damage, (transform.position.x -0.5f),
-                        (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f), false)
-                }else if(event.facing==FacingDirection.SOUTH){
-                    AttackArea(event.damage, (transform.position.x -0.5f),
-                        (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y), false)
-                }else if(event.facing==FacingDirection.EAST){
-                    AttackArea(event.damage, (transform.position.x),
-                        (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
-                }else{
-                    AttackArea(event.damage, (transform.position.x -124f),
-                        (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
-                }
+                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x - ARCHER_ATTACK_RANGE),
+                        (transform.position.x + ARCHER_ATTACK_RANGE), (transform.position.y - ARCHER_ATTACK_RANGE), (transform.position.y + ARCHER_ATTACK_RANGE), false)
 
             }
 
@@ -161,20 +152,9 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = if(event.facing==FacingDirection.NORTH){
-                    AttackArea(event.damage, (transform.position.x -0.5f),
-                        (transform.position.x +0.5f), (transform.position.y), (transform.position.y +124f), false)
-                }else if(event.facing==FacingDirection.SOUTH){
-                    AttackArea(event.damage, (transform.position.x -0.5f),
-                        (transform.position.x +0.5f), (transform.position.y -32f), (transform.position.y), false)
-                }else if(event.facing==FacingDirection.EAST){
-                    AttackArea(event.damage, (transform.position.x),
-                        (transform.position.x +124f), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
-                }else{
-                    AttackArea(event.damage, (transform.position.x -124f),
-                        (transform.position.x), (transform.position.y -0.5f), (transform.position.y +0.5f), false)
-                }
-
+                Gdx.app.log("Archer", "Special Attack")
+                attackArea = AttackArea(player.specialAttackDamageOrHeal, (transform.position.x - ARCHER_ATTACK_RANGE),
+                        (transform.position.x + ARCHER_ATTACK_RANGE), (transform.position.y - ARCHER_ATTACK_RANGE), (transform.position.y + ARCHER_ATTACK_RANGE), false)
             }
 
             is GameEvent.PriestAttackFinishEvent -> {
@@ -187,8 +167,8 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = AttackArea(event.damage, (transform.position.x -32f),
-                    (transform.position.x +32f), (transform.position.y -32f), (transform.position.y +32f), false)
+                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x - PRIEST_NORMAL_ATTACK_DAMAGE),
+                    (transform.position.x + PRIEST_NORMAL_ATTACK_DAMAGE), (transform.position.y - PRIEST_NORMAL_ATTACK_DAMAGE), (transform.position.y + PRIEST_NORMAL_ATTACK_DAMAGE), false)
             }
 
         }

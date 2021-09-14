@@ -10,8 +10,6 @@ import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
-import com.p4pProject.gameTutorial.screen.chosenCharacterType
-import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.log.debug
@@ -56,19 +54,19 @@ class ArcherAnimationSystem(
 
         if(player.isAttacking){
             val region =  when(facing.direction){
-                FacingDirection.WEST -> animateLeftAttack(aniCmp, deltaTime, entity, facing)
-                FacingDirection.EAST -> animateRightAttack(aniCmp, deltaTime, entity, facing)
-                FacingDirection.NORTH -> animateUpAttack(aniCmp, deltaTime, entity, facing)
-                FacingDirection.SOUTH -> animateDownAttack(aniCmp, deltaTime, entity, facing)
+                FacingDirection.WEST -> animateLeftAttack(aniCmp, deltaTime, entity)
+                FacingDirection.EAST -> animateRightAttack(aniCmp, deltaTime, entity)
+                FacingDirection.NORTH -> animateUpAttack(aniCmp, deltaTime, entity)
+                FacingDirection.SOUTH -> animateDownAttack(aniCmp, deltaTime, entity)
             }
             graphic.setSpriteRegion(region)
 
         }else if(player.isSpecialAttacking){
             val region =  when(facing.direction){
-                FacingDirection.WEST -> animateLeftSpecialAttack(aniCmp, deltaTime, entity, facing)
-                FacingDirection.EAST -> animateRightSpecialAttack(aniCmp, deltaTime, entity, facing)
-                FacingDirection.NORTH -> animateUpSpecialAttack(aniCmp, deltaTime, entity, facing)
-                FacingDirection.SOUTH -> animateDownSpecialAttack(aniCmp, deltaTime, entity, facing)
+                FacingDirection.WEST -> animateLeftSpecialAttack(aniCmp, deltaTime, entity)
+                FacingDirection.EAST -> animateRightSpecialAttack(aniCmp, deltaTime, entity)
+                FacingDirection.NORTH -> animateUpSpecialAttack(aniCmp, deltaTime, entity)
+                FacingDirection.SOUTH -> animateDownSpecialAttack(aniCmp, deltaTime, entity)
             }
             graphic.setSpriteRegion(region)
         }
@@ -152,7 +150,7 @@ class ArcherAnimationSystem(
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateRightAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateRightAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeAttackRight == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -166,14 +164,12 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent.apply {
                 this.player = player
-                this.facing = facing.direction
-
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateLeftAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateLeftAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeAttackLeft == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -186,13 +182,12 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent.apply {
                 this.player = player
-                this.facing = facing.direction
 
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
-    private fun animateUpAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateUpAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeAttackUp == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -205,13 +200,11 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent.apply {
                 this.player = player
-                this.facing = facing.direction
-
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
-    private fun animateDownAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateDownAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeAttackDown == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -224,14 +217,12 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherAttackFinishEvent.apply {
                 this.player = player
-                this.facing = facing.direction
-
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateRightSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateRightSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackRight == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -245,14 +236,12 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherSpecialAttackFinishedEvent.apply {
                 this.player = player
-                this.facing = facing.direction
-
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateLeftSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateLeftSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackLeft == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -265,13 +254,11 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherSpecialAttackFinishedEvent.apply {
                 this.player = player
-                this.facing = facing.direction
-
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
-    private fun animateUpSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateUpSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackUp == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -284,14 +271,12 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherSpecialAttackFinishedEvent.apply {
                 this.player = player
-                this.facing = facing.direction
-
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
 
-    private fun animateDownSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity, facing: FacingComponent): TextureRegion {
+    private fun animateDownSpecialAttack(aniCmp: ArcherAnimationComponent, deltaTime: Float, player: Entity): TextureRegion {
 
         if (aniCmp.typeSpecialAttackDown == aniCmp.animation.type){
             // animation is correctly set -> update it
@@ -304,7 +289,6 @@ class ArcherAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.ArcherSpecialAttackFinishedEvent.apply {
                 this.player = player
-                this.facing = facing.direction
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)

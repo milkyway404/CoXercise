@@ -20,6 +20,10 @@ import com.p4pProject.gameTutorial.screen.GameBaseScreen
 import com.p4pProject.gameTutorial.screen.MainScreen
 import com.p4pProject.gameTutorial.ui.createSkin
 import com.p4pProject.gameTutorial.ecs.system.animation.*
+import com.p4pProject.gameTutorial.ecs.system.automation.ArcherAutomationSystem
+import com.p4pProject.gameTutorial.ecs.system.automation.BossAutomationSystem
+import com.p4pProject.gameTutorial.ecs.system.automation.PriestAutomationSystem
+import com.p4pProject.gameTutorial.ecs.system.automation.WarriorAutomationSystem
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ktx.app.KtxGame
@@ -73,6 +77,9 @@ class MyGameTutorial : KtxGame<GameBaseScreen>() {
 
         addSystem(PlayerInputSystem(gameViewport, gameEventManager))
         addSystem(BossAutomationSystem(gameViewport, gameEventManager))
+        addSystem(WarriorAutomationSystem(gameEventManager))
+        addSystem(ArcherAutomationSystem(gameEventManager))
+        addSystem(PriestAutomationSystem(gameEventManager))
         addSystem(MoveSystem(gameEventManager))
         addSystem(PowerUpSystem(gameEventManager, audioService))
         addSystem(DamageSystem(gameEventManager))

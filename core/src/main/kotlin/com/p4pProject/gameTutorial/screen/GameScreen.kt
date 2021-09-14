@@ -18,6 +18,7 @@ import com.p4pProject.gameTutorial.ui.SkinImageButton
 import com.p4pProject.gameTutorial.ui.SkinTextField
 import io.socket.client.Socket
 import ktx.actors.onClick
+import ktx.ashley.addComponent
 import ktx.ashley.entity
 import ktx.ashley.get
 import ktx.ashley.with
@@ -30,18 +31,7 @@ import ktx.scene2d.*
 import kotlin.math.min
 
 enum class CharacterType {
-    WARRIOR {
-        override val normalDamage: Int
-            get() = 1
-    }, ARCHER {
-        override val normalDamage: Int
-            get() = 2
-    }, PRIEST {
-        override val normalDamage: Int
-            get() = 1
-    };
-
-    abstract val normalDamage: Int
+    WARRIOR, ARCHER, PRIEST
 }
 
 private val LOG = logger<MyGameTutorial>()
@@ -189,8 +179,9 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
         gameEventManager.addListener(GameEvent.UpdateMp::class, this)
         //audioService.play(MusicAsset.GAME)
-        spawnPlayers ()
+        spawnPlayers()
         spawnBoss()
+        addBossInfoToPlayers()
 
         val background = engine.entity{
             with<TransformComponent>()
@@ -210,7 +201,6 @@ class GameScreen(
                 when (characterType) {
                     CharacterType.WARRIOR.name -> {
                         gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
-                            this.damage = CharacterType.WARRIOR.normalDamage
                             this.player = warrior
                         })
                     }
@@ -218,14 +208,11 @@ class GameScreen(
                         val facing = archer[FacingComponent.mapper]
                         require(facing != null)
                         gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
-                            this.damage = CharacterType.ARCHER.normalDamage
                             this.player = archer
-                            this.facing = facing.direction
                         })
                     }
                     CharacterType.PRIEST.name -> {
                         gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
-                            this.damage = CharacterType.PRIEST.normalDamage
                             this.player = priest
                         })
                     }
@@ -238,7 +225,6 @@ class GameScreen(
                 when (characterType) {
                     CharacterType.WARRIOR.name -> {
                         gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
-                            this.damage = 0
                             this.player = warrior
                         })
                     }
@@ -246,14 +232,11 @@ class GameScreen(
                         val facing = archer[FacingComponent.mapper]
                         require(facing != null)
                         gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
-                            this.damage = 0
                             this.player = archer
-                            this.facing = facing.direction
                         })
                     }
                     CharacterType.PRIEST.name -> {
                         gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
-                            this.healing = 0
                             this.player = priest
                         })
                     }
@@ -335,7 +318,6 @@ class GameScreen(
                                     CharacterType.WARRIOR.name
                                 )
                                 gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
-                                    this.damage = 0
                                     this.player = currentPlayer
                                 })
                             }
@@ -346,7 +328,6 @@ class GameScreen(
                             onClick {
                                 SocketEmit.playerAttack(socket, lobbyID, CharacterType.WARRIOR.name)
                                 gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
-                                    this.damage = CharacterType.WARRIOR.normalDamage
                                     this.player = currentPlayer
                                 })
                             }
@@ -366,8 +347,6 @@ class GameScreen(
                                     val facing = currentPlayer[FacingComponent.mapper]
                                     require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
 
-                                    this.facing = facing.direction
-                                    this.damage = 0
                                     this.player = currentPlayer
                                 })
                             }
@@ -380,8 +359,7 @@ class GameScreen(
                                 gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
                                     val facing = currentPlayer[FacingComponent.mapper]
                                     require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                    this.facing = facing.direction
-                                    this.damage = CharacterType.ARCHER.normalDamage
+
                                     this.player = currentPlayer
                                 })
                             }
@@ -399,7 +377,6 @@ class GameScreen(
                                 gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
                                     val facing = currentPlayer[FacingComponent.mapper]
                                     require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                    this.healing = 25
                                     this.player = currentPlayer
                                 })
                             }
@@ -412,7 +389,6 @@ class GameScreen(
                                 gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
                                     val facing = currentPlayer[FacingComponent.mapper]
                                     require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                    this.damage = CharacterType.PRIEST.normalDamage
                                     this.player = currentPlayer
                                 })
                             }
@@ -466,6 +442,18 @@ class GameScreen(
             val mp = event.player.mp.toFloat()
             val maxMp = event.player.maxMp.toFloat()
             updateMp(mp, maxMp)
+        }
+    }
+
+    private fun addBossInfoToPlayers() {
+        warrior.addComponent<BossInfoComponent>(engine) {
+            boss = this@GameScreen.boss
+        }
+        archer.addComponent<BossInfoComponent>(engine) {
+            boss = this@GameScreen.boss
+        }
+        priest.addComponent<BossInfoComponent>(engine) {
+            boss = this@GameScreen.boss
         }
     }
 }

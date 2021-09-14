@@ -7,6 +7,7 @@ import com.p4pProject.gameTutorial.ecs.component.FacingDirection
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.PowerUpType
 import com.p4pProject.gameTutorial.screen.CharacterType
+import ktx.ashley.get
 import ktx.collections.GdxSet
 import java.time.LocalDateTime
 import java.util.*
@@ -49,8 +50,7 @@ sealed class GameEvent{
 
     object WarriorAttackEvent : GameEvent (){
         lateinit var player : Entity
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PlayerHit(player = $player)"
     }
 
     object WarriorAttackFinishEvent : GameEvent (){
@@ -58,64 +58,53 @@ sealed class GameEvent{
 
     object WarriorSpecialAttackEvent : GameEvent (){
         lateinit var player : Entity
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PlayerHit(player = $player)"
     }
 
     object WarriorSpecialAttackFinishEvent : GameEvent (){
         lateinit var player : Entity
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PlayerHit(player = $player)"
     }
 
 
     object ArcherAttackEvent : GameEvent (){
         lateinit var player : Entity
-        lateinit var facing : FacingDirection
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PlayerHit(player = $player)"
     }
 
     object ArcherSpecialAttackEvent : GameEvent (){
         lateinit var player : Entity
-        lateinit var facing : FacingDirection
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PlayerHit(player = $player)"
     }
 
     object ArcherSpecialAttackFinishedEvent : GameEvent (){
         lateinit var player : Entity
-        lateinit var facing : FacingDirection
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PlayerHit(player = $player)"
     }
 
     object ArcherAttackFinishEvent : GameEvent (){
         lateinit var player : Entity
-        lateinit var facing : FacingDirection
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PlayerHit(player = $player)"
     }
 
     object PriestAttackEvent : GameEvent (){
         lateinit var player : Entity
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PriestAttack(player = $player)"
     }
 
     object PriestSpecialAttackEvent : GameEvent (){
         lateinit var player : Entity
-        var healing = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$healing)"
+        override fun toString() = "PriestSpecial(player = $player)"
     }
 
     object PriestSpecialAttackFinishEvent : GameEvent (){
+        lateinit var player : Entity
+        override fun toString() = "PriestSpecial(player = $player)"
     }
 
     object PriestAttackFinishEvent : GameEvent (){
         lateinit var player : Entity
-        var damage = 0
-        override fun toString() = "PlayerHit(player = $player, damage=$damage)"
+        override fun toString() = "PriestAttackFinish(player = $player)"
     }
 
     object PlayerStep: GameEvent ()  {

@@ -44,8 +44,6 @@ class DamageSystem (
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-        Gdx.app.log("DamageSystem", player.characterType.toString())
-
         if(!warriorCheck && player.characterType == CharacterType.WARRIOR){
             warriorCheck = true;
             checkDmg(entity);

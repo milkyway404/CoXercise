@@ -129,6 +129,19 @@ class PlayerInfoComponent: Component, Pool.Poolable {
         return playerPosition?.dst(bossPosition) ?: Float.MAX_VALUE
     }
 
+    fun getCharacterToHeal(): Entity?{
+        val lowestHpCharacter = getLowestHpCharacter()
+        if (lowestHpCharacter[PlayerComponent.mapper]!!.maxHp - lowestHpCharacter[PlayerComponent.mapper]!!.hp >= 30) {
+            return lowestHpCharacter
+        } else {
+            if (!warriorDead && warrior[PlayerComponent.mapper]!!.maxHp - warrior[PlayerComponent.mapper]!!.hp >= 30) {
+                return warrior
+            }
+        }
+
+        return null
+    }
+
     companion object{
         val mapper = mapperFor<PlayerInfoComponent>()
     }

@@ -232,7 +232,6 @@ class WarriorAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
                 this.player = player
-                this.damage = 0
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -252,7 +251,6 @@ class WarriorAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
                 this.player = player
-                this.damage = 0
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -271,7 +269,6 @@ class WarriorAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
                 this.player = player
-                this.damage = 0
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
@@ -290,7 +287,6 @@ class WarriorAnimationSystem(
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
             gameEventManager.dispatchEvent((GameEvent.WarriorSpecialAttackFinishEvent.apply {
                 this.player = player
-                this.damage = 0
             }))
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
