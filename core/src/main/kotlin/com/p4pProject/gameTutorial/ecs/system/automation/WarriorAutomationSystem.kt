@@ -27,11 +27,9 @@ class WarriorAutomationSystem(
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val player = entity[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
-        Gdx.app.log("meow", "processing warrior automation system")
 
         if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.WARRIOR ||
                 chosenCharacterType == CharacterType.WARRIOR) {
-            Gdx.app.log("gameMode, character type, chosen character", gameMode.toString() + player.characterType + chosenCharacterType)
             return
         }
 
