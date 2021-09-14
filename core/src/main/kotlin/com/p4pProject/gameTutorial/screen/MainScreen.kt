@@ -63,7 +63,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                         stage.actors {
                             singleplayerDialog = dialog("choose character singleplayer", SkinWindow.DEFAULT.name) {
                                 table {
-                                    textButton( "cancel", SkinTextButton.DEFAULT.name) {
+                                    textButton( "X", SkinTextButton.DEFAULT.name) {
                                         onClick { singleplayerDialog.hide() }
                                     }
                                     row()
@@ -107,13 +107,14 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                         stage.actors {
                             multiplayerDialog = dialog("multiplayer choose character", SkinWindow.DEFAULT.name) {
                                 table {
-                                    textButton( "cancel", SkinTextButton.DEFAULT.name) {
-                                        onClick { multiplayerDialog.hide() }
-                                    }
-                                    row()
-                                    textButton("Create Lobby", SkinTextButton.DEFAULT.name) {
-                                        onClick {
-                                            createLobby()
+                                    table {
+                                        textButton("X", SkinTextButton.LABEL.name) {
+                                            onClick { multiplayerDialog.hide() }
+                                        }
+                                        textButton("Create Lobby", SkinTextButton.DEFAULT.name) {
+                                            onClick {
+                                                createLobby()
+                                            }
                                         }
                                     }
                                     row()

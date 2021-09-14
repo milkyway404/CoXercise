@@ -14,7 +14,7 @@ import io.socket.client.Socket
 import ktx.actors.onClick
 import ktx.scene2d.*
 
-const val NUM_PLAYERS = 4;
+const val NUM_PLAYERS = 3;
 
 class LobbyScreen (
     game: MyGameTutorial,
