@@ -153,31 +153,43 @@ class GameScreen(
         if (playerComp.mp >= playerComp.specialAttackMpCost) {
             when (playerComp.characterType) {
                 CharacterType.WARRIOR -> {
-                    warriorSpecialAttackBtn.color.a = 1f
-                    warriorSpecialAttackBtn.isDisabled = false
+                    if (this::warriorSpecialAttackBtn.isInitialized) {
+                        warriorSpecialAttackBtn.color.a = 1f
+                        warriorSpecialAttackBtn.isDisabled = false
+                    }
                 }
                 CharacterType.ARCHER -> {
-                    archerSpecialAttackBtn.color.a = 1f
-                    archerSpecialAttackBtn.isDisabled = false
+                    if (this::archerSpecialAttackBtn.isInitialized) {
+                        archerSpecialAttackBtn.color.a = 1f
+                        archerSpecialAttackBtn.isDisabled = false
+                    }
                 }
                 CharacterType.PRIEST -> {
-                    priestSpecialAttackBtn.color.a = 1f
-                    priestSpecialAttackBtn.isDisabled = false
+                    if (this::priestSpecialAttackBtn.isInitialized) {
+                        priestSpecialAttackBtn.color.a = 1f
+                        priestSpecialAttackBtn.isDisabled = false
+                    }
                 }
             }
         } else {
             when (playerComp.characterType) {
                 CharacterType.WARRIOR -> {
-                    warriorSpecialAttackBtn.color.a = 0.5f
-                    warriorSpecialAttackBtn.isDisabled = true
+                    if (this::warriorSpecialAttackBtn.isInitialized) {
+                        warriorSpecialAttackBtn.color.a = 0.5f
+                        warriorSpecialAttackBtn.isDisabled = true
+                    }
                 }
                 CharacterType.ARCHER -> {
-                    warriorSpecialAttackBtn.color.a = 0.5f
-                    archerSpecialAttackBtn.isDisabled = true
+                    if (this::archerSpecialAttackBtn.isInitialized) {
+                        archerSpecialAttackBtn.color.a = 0.5f
+                        archerSpecialAttackBtn.isDisabled = true
+                    }
                 }
                 CharacterType.PRIEST -> {
-                    priestSpecialAttackBtn.color.a = 0.5f
-                    priestSpecialAttackBtn.isDisabled = true
+                    if (this::priestSpecialAttackBtn.isInitialized) {
+                        priestSpecialAttackBtn.color.a = 0.5f
+                        priestSpecialAttackBtn.isDisabled = true
+                    }
                 }
             }
 
