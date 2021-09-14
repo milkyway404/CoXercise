@@ -18,11 +18,14 @@ import ktx.ashley.get
 import kotlin.math.abs
 
 const val ARCHER_MOVEMENT_SPEED = 0.25f
-const val ARCHER_ATTACK_RANGE = 10f
+const val ARCHER_ATTACK_RANGE = 5f
 
 class ArcherAutomationSystem(
     private val gameEventManager: GameEventManager): IteratingSystem(allOf(PlayerComponent::class,
     TransformComponent::class, FacingComponent::class, ArcherAnimationComponent::class).get()) {
+
+    private var prevX = -1f
+    private var prevY = -1f
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val player = entity[PlayerComponent.mapper]
@@ -38,7 +41,6 @@ class ArcherAutomationSystem(
 
     private fun walkToRunAwayAndAttackBoss(archer: Entity) {
 
-        Gdx.app.log("Walk to or run away or attack", "archer")
         val player = archer[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$archer" }
 
@@ -58,8 +60,10 @@ class ArcherAutomationSystem(
         val bossTrans = bossInfo.boss[TransformComponent.mapper]!!
         val archerTrans = archer[TransformComponent.mapper]!!
 
+        val isInSameLocation = isInSameLocation(archerTrans)
+
         when {
-            player.hp < player.maxHp * 0.5 -> {
+            player.hp < player.maxHp * 0.2 && !isInSameLocation -> {
                 facing.direction = findBossDirection(bossTrans, archerTrans, faceBoss = false)
                 move(archerTrans, facing.direction)
             }
@@ -74,6 +78,16 @@ class ArcherAutomationSystem(
         }
     }
 
+    private fun isInSameLocation(archerTrans: TransformComponent): Boolean {
+        return if (prevX == archerTrans.position.x && prevY == archerTrans.position.y) {
+            true
+        } else {
+            prevX = archerTrans.position.x
+            prevY = archerTrans.position.y
+            false
+        }
+    }
+
     private fun isBossInAttackRange(archerTrans: TransformComponent, bossTrans: TransformComponent): Boolean {
         return archerTrans.position.dst(bossTrans.position) < ARCHER_ATTACK_RANGE
     }
@@ -81,7 +95,7 @@ class ArcherAutomationSystem(
     private fun attackBoss(archer: Entity) {
         val player = archer[PlayerComponent.mapper]!!
 
-        if (player.mp > player.specialAttackMpCost) {
+        if (player.mp >= player.specialAttackMpCost) {
             player.mp -= player.specialAttackMpCost
             gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
                 this.player = archer

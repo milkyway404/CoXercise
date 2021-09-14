@@ -19,11 +19,14 @@ import kotlin.math.abs
 import kotlin.random.Random
 
 const val PRIEST_MOVEMENT_SPEED = 0.25f
-const val PRIEST_ATTACK_RANGE = 7f
+const val PRIEST_ATTACK_RANGE = 3f
 
 class PriestAutomationSystem(
     private val gameEventManager: GameEventManager): IteratingSystem(allOf(PlayerComponent::class,
     TransformComponent::class, FacingComponent::class, PriestAnimationComponent::class).get()) {
+
+    private var prevX = -1f
+    private var prevY = -1f
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val player = entity[PlayerComponent.mapper]
@@ -38,8 +41,6 @@ class PriestAutomationSystem(
     }
 
     private fun walkToRunAwayAndAttackBoss(priest: Entity) {
-
-        Gdx.app.log("Walk to or run away or attack", "priest")
 
         val player = priest[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$priest" }
@@ -60,8 +61,9 @@ class PriestAutomationSystem(
         val bossTrans = bossInfo.boss[TransformComponent.mapper]!!
         val priestTrans = priest[TransformComponent.mapper]!!
 
+        val isInSameLocation = isInSameLocation(priestTrans)
         when {
-            player.hp < player.maxHp * 0.5 -> {
+            player.hp < player.maxHp * 0.2 && !isInSameLocation -> {
                 facing.direction = findDirectionToFace(bossTrans, priestTrans, faceBoss = false)
                 move(priestTrans, facing.direction)
             }
@@ -76,10 +78,20 @@ class PriestAutomationSystem(
         }
     }
 
+    private fun isInSameLocation(priestTrans: TransformComponent): Boolean {
+        return if (prevX == priestTrans.position.x && prevY == priestTrans.position.y) {
+            true
+        } else {
+            prevX = priestTrans.position.x
+            prevY = priestTrans.position.y
+            false
+        }
+    }
+
     private fun attackBoss(priest: Entity) {
         val player = priest[PlayerComponent.mapper]!!
 
-        if (player.mp > player.specialAttackMpCost) {
+        if (player.mp >= player.specialAttackMpCost) {
             val playerToHeal = getLowestHpPlayer(priest)
             if (playerToHeal != null) {
                 player.mp -= player.specialAttackMpCost

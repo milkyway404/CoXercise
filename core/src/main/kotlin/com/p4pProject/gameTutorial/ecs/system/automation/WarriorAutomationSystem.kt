@@ -40,8 +40,6 @@ class WarriorAutomationSystem(
 
     private fun walkToAndAttackBoss(warrior: Entity) {
 
-        Gdx.app.log("Walk to or run away or attack", "warrior")
-
         val player = warrior[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$warrior" }
 
@@ -49,13 +47,11 @@ class WarriorAutomationSystem(
         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$facing" }
 
         if (player.isAttacking || player.isSpecialAttacking) {
-            Gdx.app.log("Warrior Automation is attacking", player.isAttacking.toString() + player.isSpecialAttacking)
             return
         }
 
         val bossInfo = warrior[BossInfoComponent.mapper]
         if (bossInfo == null || !bossInfo.bossIsInitialized()) {
-            Gdx.app.log("Warrior Automation boss not initialised", bossInfo.toString() + bossInfo?.bossIsInitialized())
             return
         }
 
@@ -80,7 +76,7 @@ class WarriorAutomationSystem(
     private fun attackBoss(warrior: Entity) {
         val player = warrior[PlayerComponent.mapper]!!
 
-        if (player.mp > player.specialAttackMpCost) {
+        if (player.mp >= player.specialAttackMpCost) {
             player.mp -= player.specialAttackMpCost
             gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
                 this.player = warrior

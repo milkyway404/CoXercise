@@ -94,7 +94,7 @@ class GameScreen(
 
         archer = engine.entity{
             with<TransformComponent>{
-                setInitialPosition(9f,3f,-1f)
+                setInitialPosition(6f,3f,-1f)
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
             with<MoveComponent>()
@@ -109,7 +109,7 @@ class GameScreen(
 
         priest = engine.entity{
             with<TransformComponent>{
-                setInitialPosition(9f,3f,-1f)
+                setInitialPosition(3f,3f,-1f)
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
             with<MoveComponent>()
