@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 private const val TOUCH_TOLERANCE_DISTANCE = 0.3f
 private const val HIGH_HEALTH_THRESHOLD = 200
 private const val MEDIUM_HEALTH_THRESHOLD = 100
-const val BOSS_ATTACK_RANGE = 0.5f
+const val BOSS_ATTACK_RANGE = 0f
 
 private val LOG = logger<BossAutomationSystem>()
 class BossAutomationSystem(
@@ -144,13 +144,13 @@ class BossAutomationSystem(
 
         if (isCharacterInAttackRange(characterToAttack, boss)) {
             // attack
+            Gdx.app.log("Attack", "meow")
             bossIsReadyToAttack = true
-            Gdx.app.log("Attack", characterToAttack[PlayerComponent.mapper]!!.characterType.toString())
             //boss[PlayerInfoComponent.mapper]!!.printPlayerHps()
         } else {
             // walk
+            Gdx.app.log("Walk", "meow")
             walkToCharacter(boss, facing.direction)
-            Gdx.app.log("Walk " + facing.direction, characterToAttack[PlayerComponent.mapper]!!.characterType.toString() )
         }
     }
 
@@ -186,16 +186,16 @@ class BossAutomationSystem(
         val bossSize = boss[TransformComponent.mapper]!!.size
         when (facingDirection) {
             FacingDirection.NORTH -> {
-                bossPos.y = MathUtils.clamp(bossPos.y + movementSpeed, bossSize.y, V_HEIGHT.toFloat())
+                bossPos.y = MathUtils.clamp(bossPos.y + movementSpeed, 0f, V_HEIGHT.toFloat())
             }
             FacingDirection.SOUTH -> {
-                bossPos.y = MathUtils.clamp(bossPos.y - movementSpeed, bossSize.y, V_HEIGHT.toFloat())
+                bossPos.y = MathUtils.clamp(bossPos.y - movementSpeed, 0f, V_HEIGHT.toFloat())
             }
             FacingDirection.EAST -> {
-                bossPos.x = MathUtils.clamp(bossPos.x + movementSpeed, 0f, V_WIDTH - bossSize.x)
+                bossPos.x = MathUtils.clamp(bossPos.x + movementSpeed, 0f, V_WIDTH.toFloat())
             }
             FacingDirection.WEST -> {
-                bossPos.x = MathUtils.clamp(bossPos.x - movementSpeed, 0f, V_WIDTH - bossSize.x)
+                bossPos.x = MathUtils.clamp(bossPos.x - movementSpeed, 0f, V_WIDTH.toFloat())
             }
         }
     }
@@ -204,23 +204,9 @@ class BossAutomationSystem(
         val bossTrans = boss[TransformComponent.mapper]!!
         val characterTrans = character[TransformComponent.mapper]!!
 
-        val characterBoundingRect = Rectangle().set(
-            characterTrans.position.x,
-            characterTrans.position.y - characterTrans.size.y,
-            characterTrans.size.x,
-            characterTrans.size.y
-        )
-
-        val bossAttackBoundingRect = Rectangle().set(
-            bossTrans.position.x - BOSS_ATTACK_RANGE,
-            bossTrans.position.y - bossTrans.size.y - BOSS_ATTACK_RANGE,
-            bossTrans.size.x + (2 * BOSS_ATTACK_RANGE),
-            bossTrans.size.y + (2 * BOSS_ATTACK_RANGE)
-        )
-
-//        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
-//        Gdx.app.log("Character Rect", characterBoundingRect.toString());
-//        Gdx.app.log("Boss Rect", bossAttackBoundingRect.toString());
-        return (characterBoundingRect.overlaps(bossAttackBoundingRect))
+        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
+        Gdx.app.log("Character Pos", characterTrans.position.x.toString() + ", " + characterTrans.position.y.toString())
+        Gdx.app.log("Boss Pos", bossTrans.position.x.toString() + ", " + bossTrans.position.y.toString())
+        return (characterTrans.overlaps(bossTrans))
     }
 }

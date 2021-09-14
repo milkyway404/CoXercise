@@ -22,6 +22,7 @@ import kotlin.math.*
 private const val UPDATE_RATE = 1/25f
 private const val SENSOR_SENSITIVITY_THRESHOLD = 4
 private const val STEP_DISTANCE = 1f
+private const val PLAYER_MOVEMENT_RATE = 0.25f
 
 private val LOG = logger<MoveSystem>()
 
@@ -169,22 +170,22 @@ class MoveSystem(
 
         when (facing) {
             FacingDirection.NORTH -> transform.position.y = MathUtils.clamp(
-                transform.position.y + 0.25f,
-                transform.size.y,
+                transform.position.y + PLAYER_MOVEMENT_RATE,
+                0f,
                 V_HEIGHT.toFloat()
             )
             FacingDirection.SOUTH -> transform.position.y = MathUtils.clamp(
-                transform.position.y - 0.25f,
-                transform.size.y,
+                transform.position.y - PLAYER_MOVEMENT_RATE,
+                0f,
                 V_HEIGHT.toFloat()
             )
             FacingDirection.EAST -> transform.position.x = MathUtils.clamp(
-                transform.position.x + 0.25f,
+                transform.position.x + PLAYER_MOVEMENT_RATE,
                 0f,
                 V_WIDTH - transform.size.x
             )
             FacingDirection.WEST -> transform.position.x = MathUtils.clamp(
-                transform.position.x - 0.25f,
+                transform.position.x - PLAYER_MOVEMENT_RATE,
                 0f,
                 V_WIDTH - transform.size.x
             )

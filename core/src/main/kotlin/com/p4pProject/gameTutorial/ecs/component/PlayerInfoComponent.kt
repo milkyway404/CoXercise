@@ -15,6 +15,10 @@ class PlayerInfoComponent: Component, Pool.Poolable {
     private lateinit var archer: Entity
     private lateinit var priest: Entity
 
+    private var warriorDead = false
+    private var archerDead = false
+    private var priestDead = false
+
     override fun reset() {
         TODO("Not yet implemented")
     }
@@ -26,53 +30,78 @@ class PlayerInfoComponent: Component, Pool.Poolable {
     }
 
     fun getLowestHpCharacter(): Entity {
-        val warriorHp = when (warrior[PlayerComponent.mapper]) {
-            null -> 99999
-            else -> warrior[PlayerComponent.mapper]!!.hp
+        checkDeath()
+
+        val warriorHp = if (warriorDead) {
+            Int.MAX_VALUE
+        } else {
+            warrior[PlayerComponent.mapper]!!.hp
         }
-        val archerHp = when (archer[PlayerComponent.mapper]) {
-            null -> 99999
-            else -> archer[PlayerComponent.mapper]!!.hp
+
+        val archerHp = if (archerDead) {
+            Int.MAX_VALUE
+        } else {
+            archer[PlayerComponent.mapper]!!.hp
         }
-        val priestHp = when (priest[PlayerComponent.mapper]) {
-            null -> 99999
-            else -> priest[PlayerComponent.mapper]!!.hp
+
+        val priestHp = if (priestDead) {
+            Int.MAX_VALUE
+        } else {
+            priest[PlayerComponent.mapper]!!.hp
         }
 
         return when {
-            warriorHp <= archerHp && warriorHp <= priestHp -> warrior
-            archerHp <= warriorHp && archerHp <= priestHp -> archer
+            !warriorDead && warriorHp <= archerHp && warriorHp <= priestHp -> warrior
+            !archerDead && archerHp <= warriorHp && archerHp <= priestHp -> archer
             else -> priest
         }
     }
 
     fun getClosestCharacter(bossPosition: Vector3): Entity {
-        val warriorDistance = when (warrior[TransformComponent.mapper]) {
-            null -> 99999f
-            else -> calculateDistance(warrior[TransformComponent.mapper]!!.position, bossPosition)
+        checkDeath()
+
+        val warriorDistance = if (warriorDead) {
+            Float.MAX_VALUE
+        } else {
+            calculateDistance(warrior[TransformComponent.mapper]?.position, bossPosition)
         }
-        val archerDistance = when (archer[TransformComponent.mapper]) {
-            null -> 99999f
-            else -> calculateDistance(archer[TransformComponent.mapper]!!.position, bossPosition)
+
+        val archerDistance = if (archerDead) {
+            Float.MAX_VALUE
+        } else {
+            calculateDistance(archer[TransformComponent.mapper]?.position, bossPosition)
         }
-        val priestDistance = when (priest[TransformComponent.mapper]) {
-            null -> 99999f
-            else -> calculateDistance(priest[TransformComponent.mapper]!!.position, bossPosition)
+
+        val priestDistance = if (priestDead) {
+            Float.MAX_VALUE
+        } else {
+            calculateDistance(priest[TransformComponent.mapper]?.position, bossPosition)
         }
 
         return when {
-            warriorDistance <= archerDistance && warriorDistance <= priestDistance -> {
-                Gdx.app.log("ClosestCharacter", "warrior")
+            !warriorDead && warriorDistance <= archerDistance && warriorDistance <= priestDistance -> {
                 warrior
             }
-            archerDistance <= warriorDistance && archerDistance <= priestDistance -> {
-                Gdx.app.log("ClosestCharacter", "archer")
+            !archerDead && archerDistance <= warriorDistance && archerDistance <= priestDistance -> {
                 archer
             }
             else -> {
-                Gdx.app.log("ClosestCharacter", "priest")
                 priest
             }
+        }
+    }
+
+    private fun checkDeath() {
+        if (warriorDead || warrior[PlayerComponent.mapper] == null || warrior[PlayerComponent.mapper]!!.hp <= 0) {
+            warriorDead = true
+        }
+
+        if (archerDead || archer[PlayerComponent.mapper] == null || archer[PlayerComponent.mapper]!!.hp <= 0) {
+            archerDead = true
+        }
+
+        if (priestDead || priest[PlayerComponent.mapper] == null || priest[PlayerComponent.mapper]!!.hp <= 0) {
+            priestDead = true
         }
     }
 
@@ -96,8 +125,8 @@ class PlayerInfoComponent: Component, Pool.Poolable {
         }
     }
 
-    private fun calculateDistance(position1: Vector3, position2: Vector3): Float {
-        return position1.dst(position2)
+    private fun calculateDistance(playerPosition: Vector3?, bossPosition: Vector3): Float {
+        return playerPosition?.dst(bossPosition) ?: Float.MAX_VALUE
     }
 
     companion object{

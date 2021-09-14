@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -174,14 +175,7 @@ class BossAnimationSystem(
             aniCmp.animation = getAttackAnimation(aniCmp.typeAttackUp)
         }
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
-                this.damage = bossAttackDamage
-                this.startX = transform.position.x - BOSS_ATTACK_RANGE
-                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
-                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
-                this.endY = transform.position.y + BOSS_ATTACK_RANGE
-                Gdx.app.log("Boss Attack", toString())
-            })
+            fireBossAttackFinishedEvent(transform, bossAttackDamage)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -199,14 +193,7 @@ class BossAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
-                this.damage = bossAttackDamage
-                this.startX = transform.position.x - BOSS_ATTACK_RANGE
-                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
-                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
-                this.endY = transform.position.y + BOSS_ATTACK_RANGE
-                Gdx.app.log("Boss Attack", toString())
-            })
+            fireBossAttackFinishedEvent(transform, bossAttackDamage)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -224,14 +211,7 @@ class BossAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
-                this.damage = bossAttackDamage
-                this.startX = transform.position.x - BOSS_ATTACK_RANGE
-                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
-                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
-                this.endY = transform.position.y + BOSS_ATTACK_RANGE
-                Gdx.app.log("Boss Attack", toString())
-            })
+            fireBossAttackFinishedEvent(transform, bossAttackDamage)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -249,14 +229,7 @@ class BossAnimationSystem(
         }
 
         if(aniCmp.animation.isAnimationFinished(aniCmp.stateTime)){
-            gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
-                this.damage = bossAttackDamage
-                this.startX = transform.position.x - BOSS_ATTACK_RANGE
-                this.endX = transform.position.x + transform.size.x + BOSS_ATTACK_RANGE
-                this.startY = transform.position.y - transform.size.y - BOSS_ATTACK_RANGE
-                this.endY = transform.position.y + BOSS_ATTACK_RANGE
-                Gdx.app.log("Boss Attack", toString())
-            })
+            fireBossAttackFinishedEvent(transform, bossAttackDamage)
         }
         return aniCmp.animation.getKeyFrame(aniCmp.stateTime)
     }
@@ -359,5 +332,14 @@ class BossAnimationSystem(
 
     override fun entityRemoved(entity: Entity?) = Unit
 
-
+    private fun fireBossAttackFinishedEvent(transform: TransformComponent, bossAttackDamage: Int) {
+        gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
+            this.damage = bossAttackDamage
+            this.startX = transform.position.x
+            this.endX = transform.position.x + transform.size.x
+            this.startY = transform.position.y
+            this.endY = transform.position.y + BOSS_ATTACK_RANGE
+            Gdx.app.log("Boss Attack", toString())
+        })
+    }
 }

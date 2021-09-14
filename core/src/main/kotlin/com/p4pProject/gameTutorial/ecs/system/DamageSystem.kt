@@ -72,20 +72,13 @@ class DamageSystem (
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-        val playerBoundingRect = Rectangle().set(
-            transform.position.x,
-            transform.position.y - transform.size.y,
-            transform.size.x,
-            transform.size.y
-        )
-
         val bossAttackBoundingRect = Rectangle().set(
             bossAttackAreas.startX,
             bossAttackAreas.startY,
             bossAttackAreas.endX - bossAttackAreas.startX,
             bossAttackAreas.endY - bossAttackAreas.startY
         )
-        if (playerBoundingRect.overlaps(bossAttackBoundingRect)) {
+        if (transform.overlapsRect(bossAttackBoundingRect)) {
             //ouch
             player.hp -= bossAttackAreas.damage
             LOG.debug { "PlayerDamaged: ${player.characterType}" }
@@ -104,8 +97,6 @@ class DamageSystem (
                     this.characterType = player.characterType
                 })
             }
-        } else {
-            LOG.debug{ "Player evaded:  ${player.characterType} with location ${playerBoundingRect}, boss $bossAttackBoundingRect"}
         }
     }
 

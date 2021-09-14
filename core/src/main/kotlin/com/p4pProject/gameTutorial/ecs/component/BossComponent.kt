@@ -11,7 +11,6 @@ class BossComponent : Component, Pool.Poolable {
     var hp = BOSS_MAX_HP
     var maxHp = BOSS_MAX_HP
 
-    var offset = 1.5625f
     var distance = 0f
     var isAttackReady = true
     var isAttacking = false
