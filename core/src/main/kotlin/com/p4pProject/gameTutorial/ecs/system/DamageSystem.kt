@@ -13,6 +13,7 @@ import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.CharacterType
+import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import ktx.ashley.addComponent
 import ktx.ashley.allOf
 import ktx.ashley.exclude
@@ -76,21 +77,27 @@ class DamageSystem (
             bossAttackAreas.endX - bossAttackAreas.startX,
             bossAttackAreas.endY - bossAttackAreas.startY
         )
-        if (transform.overlapsRect(bossAttackBoundingRect)) {
+        if (transform.overlapsRect(bossAttackBoundingRect) && !player.isDead) {
             //ouch
             player.hp -= bossAttackAreas.damage
+            if(player.hp <= 0f){
+                player.hp = 0
+            }
             LOG.debug { "PlayerDamaged: ${player.characterType}" }
 
-            gameEventManager.dispatchEvent(GameEvent.PlayerHit.apply {
-                this.player = entity
-                hp = player.hp
-                maxHp = player.maxHp
-            })
+            if(player.characterType == chosenCharacterType){
+                gameEventManager.dispatchEvent(GameEvent.PlayerHit.apply {
+                    this.player = entity
+                    hp = player.hp
+                    maxHp = player.maxHp
+                })
+            }
 
             if(player.hp <= 0f){
-                entity.addComponent<RemoveComponent>(engine){
-                    delay = DEATH_EXPLOSION_DURATION
-                }
+                player.isDead = true
+//                entity.addComponent<RemoveComponent>(engine){
+//                    delay = DEATH_EXPLOSION_DURATION
+//                }
                 gameEventManager.dispatchEvent(GameEvent.PlayerDeath.apply {
                     this.characterType = player.characterType
                 })

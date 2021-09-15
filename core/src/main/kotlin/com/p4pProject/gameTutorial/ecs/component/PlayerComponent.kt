@@ -36,6 +36,7 @@ class PlayerComponent : Component, Pool.Poolable {
     var characterType = CharacterType.WARRIOR
     var normalAttackDamage = 0
     var specialAttackDamageOrHeal = 0
+    var isDead = false;
 
     fun setAsWarrior(){
         characterType = CharacterType.WARRIOR

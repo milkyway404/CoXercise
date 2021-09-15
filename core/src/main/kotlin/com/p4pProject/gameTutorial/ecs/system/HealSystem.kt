@@ -39,6 +39,7 @@ class HealSystem (
         require(player != null ){"Entity |entity| must have a BossComponent. entity=$entity"}
         if(player.characterType == CharacterType.WARRIOR && !warriorHealed){
             player.hp = minOf(player.hp + 25, player.maxHp)
+            player.isDead = false
             LOG.debug { "warrior hp: ${player.hp}" }
             warriorHealed = true;
             gameEventManager.dispatchEvent(GameEvent.UpdateHp.apply {
@@ -48,6 +49,7 @@ class HealSystem (
 
         else if(player.characterType == CharacterType.ARCHER && !archerHealed){
             player.hp = minOf(player.hp + 25, player.maxHp)
+            player.isDead = false
             LOG.debug { "archer hp: ${player.hp}" }
             archerHealed = true
             gameEventManager.dispatchEvent(GameEvent.UpdateHp.apply {
@@ -57,6 +59,7 @@ class HealSystem (
 
         else if(player.characterType == CharacterType.PRIEST && !priestHealed){
             player.hp = minOf(player.hp + 25, player.maxHp)
+            player.isDead = false
             LOG.debug { "priest hp: ${player.hp}" }
             priestHealed = true
             gameEventManager.dispatchEvent(GameEvent.UpdateHp.apply {

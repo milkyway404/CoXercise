@@ -87,7 +87,7 @@ class MoveSystem(
 
         val player = entity[PlayerComponent.mapper]
         val boss = entity[BossComponent.mapper]
-        if(player != null && !player.isAttacking) {
+        if(player != null && !player.isAttacking && !player.isDead) {
 
             when {
                 Gdx.input.isKeyPressed(Input.Keys.W) -> {

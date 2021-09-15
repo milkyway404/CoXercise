@@ -61,7 +61,7 @@ class GameScreen(
     private lateinit var priestSpecialAttackBtn: ImageButton
 
 
-    private var playerDead = false
+    public var playerDead = false
     private var warriorDead = false
     private var archerDead = false
     private var priestDead = false

@@ -36,8 +36,6 @@ class PlayerInputSystem(
     private var priestIsAttacking : Boolean = false
     private var priestIsSpecialAttacking : Boolean = false
 
-    var typeSelected = CharacterType.WARRIOR
-
 
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
@@ -90,21 +88,21 @@ class PlayerInputSystem(
 
         //facing.direction = getFacingDirection()
 
-        if(Gdx.input.isKeyPressed(Input.Keys.W) && typeSelected == player.characterType){
+        if(Gdx.input.isKeyPressed(Input.Keys.W) && chosenCharacterType == player.characterType && !player.isDead){
             facing.direction = FacingDirection.NORTH
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.A) && typeSelected == player.characterType){
+        if(Gdx.input.isKeyPressed(Input.Keys.A) && chosenCharacterType == player.characterType && !player.isDead){
             facing.direction = FacingDirection.WEST
 
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.S) && typeSelected == player.characterType){
+        if(Gdx.input.isKeyPressed(Input.Keys.S) && chosenCharacterType == player.characterType && !player.isDead){
             facing.direction = FacingDirection.SOUTH
 
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.D) && typeSelected == player.characterType){
+        if(Gdx.input.isKeyPressed(Input.Keys.D) && chosenCharacterType == player.characterType && !player.isDead){
             facing.direction = FacingDirection.EAST
 
         }
