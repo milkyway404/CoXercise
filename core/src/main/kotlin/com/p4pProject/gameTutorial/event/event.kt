@@ -48,6 +48,10 @@ sealed class GameEvent{
 
     }
 
+    object BossDead : GameEvent(){
+
+    }
+
     object WarriorAttackEvent : GameEvent (){
         lateinit var player : Entity
         override fun toString() = "PlayerHit(player = $player)"

@@ -228,6 +228,7 @@ class GameScreen(
         gameEventManager.addListener(GameEvent.CollectPowerUp::class, this)
         gameEventManager.addListener(GameEvent.PlayerStep::class, this)
         gameEventManager.addListener(GameEvent.UpdateMp::class, this)
+        gameEventManager.addListener(GameEvent.BossDead::class, this)
         //audioService.play(MusicAsset.GAME)
         spawnPlayers()
         spawnBoss()
@@ -518,6 +519,12 @@ class GameScreen(
             val mp = event.player.mp.toFloat()
             val maxMp = event.player.maxMp.toFloat()
             updateMp(mp, maxMp)
+        }
+
+        else if(event is GameEvent.BossDead){
+            game.removeScreen<GameScreen>()
+            game.addScreen(PlayerWinScreen(MyGameTutorial()))
+            game.setScreen<PlayerWinScreen>()
         }
     }
 

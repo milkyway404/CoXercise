@@ -49,6 +49,10 @@ class PlayerDamageSystem (
         if (transform.overlapsRect(playerAttackBoundingRect)) {
             //ouch
             boss.hp -= attackArea.damage
+            if(boss.hp <=0){
+                gameEventManager.dispatchEvent(GameEvent.BossDead)
+            }
+
 
             if(attackArea.isStun){
                 gameEventManager.dispatchEvent(GameEvent.BossHit.apply {

@@ -100,7 +100,7 @@ class CameraShakeSystem (
                 if(activeShakes.size < 1 && characterType == chosenCharacterType){
                     activeShakes.add(shakePool.obtain().apply {
                         duration = 0.25f
-                        maxDistortion = 0.25f
+                        maxDistortion = 0.15f
                     })
                 }
             }
