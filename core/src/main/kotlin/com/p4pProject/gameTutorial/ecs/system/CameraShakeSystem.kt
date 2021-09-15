@@ -10,6 +10,7 @@ import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
+import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import ktx.ashley.get
 import ktx.collections.GdxArray
 import ktx.log.debug
@@ -74,7 +75,6 @@ class CameraShakeSystem (
     override fun addedToEngine(engine: Engine?) {
         super.addedToEngine(engine)
         gameEventManager.addListener(GameEvent.PlayerHit::class, this)
-        gameEventManager.addListener(GameEvent.BossHit::class, this)
     }
 
     override fun removedFromEngine(engine: Engine?) {
@@ -93,11 +93,18 @@ class CameraShakeSystem (
     }
     override fun onEvent(event: GameEvent) {
 
-        if(activeShakes.size < 1){
-            activeShakes.add(shakePool.obtain().apply {
-                duration = 0.25f
-                maxDistortion = 0.25f
-            })
+        when(event){
+            is GameEvent.PlayerHit ->{
+                var characterType = event.player[PlayerComponent.mapper]?.characterType
+                require(characterType != null)
+                if(activeShakes.size < 1 && characterType == chosenCharacterType){
+                    activeShakes.add(shakePool.obtain().apply {
+                        duration = 0.25f
+                        maxDistortion = 0.25f
+                    })
+                }
+            }
         }
+
     }
 }

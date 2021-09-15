@@ -361,7 +361,7 @@ class GameScreen(
                         warriorSpecialAttackBtn = imageButton(SkinImageButton.WARRIOR_SPECIAL.name) {
                             color.a = 1.0f
                             onClick {
-                                if (!isDisabled) {
+                                if (!isDisabled && !warriorDead) {
                                     val playerComp = currentPlayer[PlayerComponent.mapper]!!
                                     playerComp.mp -= playerComp.specialAttackMpCost
                                     SocketEmit.playerSpecialAttack(
@@ -369,9 +369,11 @@ class GameScreen(
                                         lobbyID,
                                         CharacterType.WARRIOR.name
                                     )
-                                    gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
-                                        this.player = currentPlayer
-                                    })
+                                    if(!warriorDead){
+                                        gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
+                                            this.player = currentPlayer
+                                        })
+                                    }
                                 }
                             }
                             isDisabled = true
@@ -380,10 +382,12 @@ class GameScreen(
                         imageButton(SkinImageButton.WARRIOR_ATTACK.name) {
                             color.a = 1.0f
                             onClick {
-                                SocketEmit.playerAttack(socket, lobbyID, CharacterType.WARRIOR.name)
-                                gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
-                                    this.player = currentPlayer
-                                })
+                                if(!warriorDead){
+                                    SocketEmit.playerAttack(socket, lobbyID, CharacterType.WARRIOR.name)
+                                    gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
+                                        this.player = currentPlayer
+                                    })
+                                }
                             }
                         }
                     }
@@ -394,17 +398,19 @@ class GameScreen(
                             val playerComp = currentPlayer[PlayerComponent.mapper]!!
                             playerComp.mp -= playerComp.specialAttackMpCost
                             onClick {
-                                if (!isDisabled) {
+                                if (!isDisabled && !archerDead) {
                                     SocketEmit.playerSpecialAttack(
                                         socket,
                                         lobbyID,
                                         CharacterType.ARCHER.name
                                     )
-                                    gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
-                                        val facing = currentPlayer[FacingComponent.mapper]
-                                        require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                        this.player = currentPlayer
-                                    })
+                                    if(!archerDead){
+                                        gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
+                                            val facing = currentPlayer[FacingComponent.mapper]
+                                            require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                            this.player = currentPlayer
+                                        })
+                                    }
                                 }
                             }
                             isDisabled = true
@@ -413,13 +419,15 @@ class GameScreen(
                         imageButton(SkinImageButton.ARCHER_ATTACK.name) {
                             color.a = 1.0f
                             onClick {
-                                SocketEmit.playerAttack(socket, lobbyID, CharacterType.ARCHER.name)
-                                gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
-                                    val facing = currentPlayer[FacingComponent.mapper]
-                                    require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                if(!archerDead){
+                                    SocketEmit.playerAttack(socket, lobbyID, CharacterType.ARCHER.name)
+                                    gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
+                                        val facing = currentPlayer[FacingComponent.mapper]
+                                        require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
 
-                                    this.player = currentPlayer
-                                })
+                                        this.player = currentPlayer
+                                    })
+                                }
                             }
                         }
                     }
@@ -427,7 +435,7 @@ class GameScreen(
                         priestSpecialAttackBtn = imageButton(SkinImageButton.PRIEST_SPECIAL.name) {
                             color.a = 1.0f
                             onClick {
-                                if (!isDisabled) {
+                                if (!isDisabled && !priestDead) {
                                     val playerComp = currentPlayer[PlayerComponent.mapper]!!
                                     playerComp.mp -= playerComp.specialAttackMpCost
 
@@ -436,11 +444,13 @@ class GameScreen(
                                         lobbyID,
                                         CharacterType.PRIEST.name
                                     )
-                                    gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
-                                        val facing = currentPlayer[FacingComponent.mapper]
-                                        require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                        this.player = currentPlayer
-                                    })
+                                    if(!priestDead){
+                                        gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
+                                            val facing = currentPlayer[FacingComponent.mapper]
+                                            require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                            this.player = currentPlayer
+                                        })
+                                    }
                                 }
                             }
                             isDisabled = true
@@ -449,12 +459,14 @@ class GameScreen(
                         imageButton(SkinImageButton.PRIEST_ATTACK.name) {
                             color.a = 1.0f
                             onClick {
-                                SocketEmit.playerAttack(socket, lobbyID, CharacterType.PRIEST.name)
-                                gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
-                                    val facing = currentPlayer[FacingComponent.mapper]
-                                    require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                    this.player = currentPlayer
-                                })
+                                if(!priestDead){
+                                    SocketEmit.playerAttack(socket, lobbyID, CharacterType.PRIEST.name)
+                                    gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
+                                        val facing = currentPlayer[FacingComponent.mapper]
+                                        require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                        this.player = currentPlayer
+                                    })
+                                }
                             }
                         }
                     }
