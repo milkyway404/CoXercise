@@ -19,7 +19,7 @@ import kotlin.math.abs
 import kotlin.random.Random
 
 const val PRIEST_MOVEMENT_SPEED = 0.25f
-const val PRIEST_ATTACK_RANGE = 3f
+const val PRIEST_ATTACK_RANGE = 1f
 
 class PriestAutomationSystem(
     private val gameEventManager: GameEventManager): IteratingSystem(allOf(PlayerComponent::class,
@@ -37,6 +37,9 @@ class PriestAutomationSystem(
             return
         }
 
+        if(player.characterType == CharacterType.PRIEST && player.isDead){
+            return
+        }
         walkToRunAwayAndAttackBoss(entity)
     }
 

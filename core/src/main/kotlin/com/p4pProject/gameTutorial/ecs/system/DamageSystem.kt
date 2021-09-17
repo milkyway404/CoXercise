@@ -123,6 +123,7 @@ class DamageSystem (
                 event.endX, event.startY, event.endY)
         }
         if (event is GameEvent.PlayerDeath) {
+            LOG.debug { "ded: ${event.characterType }"}
             when(event.characterType) {
                 CharacterType.WARRIOR -> warriorDead = true
                 CharacterType.ARCHER -> archerDead = true

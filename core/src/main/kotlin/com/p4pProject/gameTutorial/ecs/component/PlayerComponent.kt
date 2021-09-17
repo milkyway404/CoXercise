@@ -20,7 +20,7 @@ const val ARCHER_SPECIAL_ATTACK_DAMAGE = 50
 const val PRIEST_MAX_HP = 50
 const val PRIEST_MAX_MP = 200
 const val PRIEST_SPECIAL_ATTACK_MP_COST = 100
-const val PRIEST_NORMAL_ATTACK_DAMAGE = 5
+const val PRIEST_NORMAL_ATTACK_DAMAGE = 2
 const val PRIEST_SPECIAL_ATTACK_HEAL = 30
 
 class PlayerComponent : Component, Pool.Poolable {

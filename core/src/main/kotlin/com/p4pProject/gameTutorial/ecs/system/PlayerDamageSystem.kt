@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.ecs.system.automation.ARCHER_ATTACK_RANGE
+import com.p4pProject.gameTutorial.ecs.system.automation.PRIEST_ATTACK_RANGE
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
@@ -171,8 +172,8 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x - PRIEST_NORMAL_ATTACK_DAMAGE),
-                    (transform.position.x + PRIEST_NORMAL_ATTACK_DAMAGE), (transform.position.y - PRIEST_NORMAL_ATTACK_DAMAGE), (transform.position.y + PRIEST_NORMAL_ATTACK_DAMAGE), false)
+                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x - PRIEST_ATTACK_RANGE),
+                    (transform.position.x + PRIEST_ATTACK_RANGE), (transform.position.y - PRIEST_ATTACK_RANGE), (transform.position.y + PRIEST_ATTACK_RANGE), false)
             }
 
         }

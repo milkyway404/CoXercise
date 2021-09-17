@@ -36,6 +36,10 @@ class ArcherAutomationSystem(
             return
         }
 
+        if(player.characterType == CharacterType.ARCHER && player.isDead){
+            return
+        }
+
         walkToRunAwayAndAttackBoss(entity)
     }
 

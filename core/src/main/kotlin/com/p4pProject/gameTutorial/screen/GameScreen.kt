@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
@@ -24,12 +25,15 @@ import ktx.ashley.entity
 import ktx.ashley.get
 import ktx.ashley.with
 import ktx.log.debug
+import ktx.log.error
 import ktx.log.logger
 import ktx.preferences.flush
 import ktx.preferences.get
 import ktx.preferences.set
 import ktx.scene2d.*
 import kotlin.math.min
+
+
 
 enum class CharacterType {
     WARRIOR, ARCHER, PRIEST
@@ -314,7 +318,7 @@ class GameScreen(
 
         if (!playerDead) {
             updatePlayerHpMp()
-            val transform = currentPlayer[TransformComponent.mapper]
+            val transform = boss[TransformComponent.mapper]
             require(transform != null)
 
             if (lobbyID.isNotEmpty()) {

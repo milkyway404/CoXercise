@@ -33,6 +33,10 @@ class WarriorAutomationSystem(
             return
         }
 
+        if(player.characterType == CharacterType.WARRIOR && player.isDead){
+            return
+        }
+
         walkToAndAttackBoss(entity)
     }
 
