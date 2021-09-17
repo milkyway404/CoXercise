@@ -24,7 +24,7 @@ import ktx.scene2d.*
 
 class LoadingScreen(
     game: MyGameTutorial,
-    private val socket: Socket,
+    private val socket: Socket?,
     private val lobbyID: String,
     private val chosenCharacterType: CharacterType) : GameBaseScreen(game){
 

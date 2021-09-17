@@ -39,13 +39,18 @@ class TransformComponent: Component, Pool.Poolable, Comparable<TransformComponen
     }
 
     private fun makeRect(transformComponent: TransformComponent): Rectangle {
+        return makeRectWithRange(transformComponent, 0f)
+    }
+
+    private fun makeRectWithRange(transformComponent: TransformComponent, range: Float): Rectangle {
         return Rectangle().set(
-            transformComponent.position.x,
-            transformComponent.position.y,
-            transformComponent.size.x,
-            transformComponent.size.y
+            transformComponent.position.x - range,
+            transformComponent.position.y - range,
+            transformComponent.size.x + (2 * range),
+            transformComponent.size.y + (2 * range)
         )
     }
+
     fun overlapsRect(otherRect: Rectangle): Boolean {
         val thisRect = makeRect(this)
         return thisRect.overlaps(otherRect)
@@ -53,12 +58,27 @@ class TransformComponent: Component, Pool.Poolable, Comparable<TransformComponen
 
     fun overlaps(other: TransformComponent): Boolean {
         val thisBoundingRect = makeRect(this)
-
         val otherBoundingRect = makeRect(other)
-
-        Gdx.app.log("this bounding rect", thisBoundingRect.toString())
-        Gdx.app.log("other bounding rect", otherBoundingRect.toString())
         return thisBoundingRect.overlaps(otherBoundingRect);
+    }
+
+    fun overlapsWithRange(other: TransformComponent, range: Float): Boolean {
+        val thisBoundingRectangle = makeRectWithRange(this, range)
+        val otherBoundingRectangle = makeRect(other)
+        return thisBoundingRectangle.overlaps(otherBoundingRectangle)
+    }
+
+    fun getArea(): Rectangle {
+        return getAreaWithRange(0f)
+    }
+
+    fun getAreaWithRange(range: Float): Rectangle {
+        return Rectangle().set(
+            position.x - range,
+            position.y - range,
+            size.x + (2 * range),
+            size.y + (2 * range)
+        )
     }
 
     companion object {

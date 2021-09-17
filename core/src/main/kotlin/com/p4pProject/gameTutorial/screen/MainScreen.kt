@@ -29,14 +29,11 @@ var gameMode = GameMode.SINGLEPLAYER
 class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
     private lateinit var invalidLobbyLabel: Label
-    private lateinit var socket: Socket
+    private var socket: Socket? = null
     private var lobbyID: String = ""
     private lateinit var singleplayerDialog: Dialog
     private lateinit var multiplayerDialog: Dialog
 
-    init {
-        connectAndSetupSocket()
-    }
     override fun show() {
         setupUI()
     }
@@ -207,11 +204,11 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
 
     private fun connectAndSetupSocket() {
         socket = IO.socket("http://coxercise.herokuapp.com")
-        socket.connect()
-        SocketOn.lobbyCreated(socket, callback = { lobbyID -> addLobbyScreen(lobbyID) });
-        SocketOn.invalidLobbyID(socket, invalidLobbyID = { invalidLobbyID() });
-        SocketOn.characterTaken(socket, characterTaken = { characterTaken() });
-        SocketOn.joinLobbySuccessful(socket, callback = { addLobbyScreen() });
+        socket!!.connect()
+        SocketOn.lobbyCreated(socket!!, callback = { lobbyID -> addLobbyScreen(lobbyID) });
+        SocketOn.invalidLobbyID(socket!!, invalidLobbyID = { invalidLobbyID() });
+        SocketOn.characterTaken(socket!!, characterTaken = { characterTaken() });
+        SocketOn.joinLobbySuccessful(socket!!, callback = { addLobbyScreen() });
 
     }
 
@@ -219,8 +216,8 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
         if (!::chosenCharacterType.isInitialized) {
             return;
         }
-        gameMode = GameMode.MULTIPLAYER
-        SocketEmit.createLobby(socket, chosenCharacterType.name);
+        multiplayerGame()
+        SocketEmit.createLobby(socket!!, chosenCharacterType.name);
 
     }
 
@@ -233,7 +230,7 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
             return
         }
         Gdx.app.log("Lobby", "adding screen with lobbyID$this.lobbyID")
-        game.addScreen(LobbyScreen(game, this.lobbyID, socket, chosenCharacterType))
+        game.addScreen(LobbyScreen(game, this.lobbyID, socket!!, chosenCharacterType))
         Gdx.app.log("Lobby", "" + game.containsScreen<LobbyScreen>())
     }
 
@@ -254,8 +251,13 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
         data.put("chosenCharacter", chosenCharacterType.name);
         Gdx.app.log("Data", data.toString());
 
+        multiplayerGame()
+        SocketEmit.joinLobby(socket!!, data);
+    }
+
+    private fun multiplayerGame() {
         gameMode = GameMode.MULTIPLAYER
-        SocketEmit.joinLobby(socket, data);
+        connectAndSetupSocket()
     }
 
     private fun invalidLobbyID() {

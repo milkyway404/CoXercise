@@ -31,8 +31,7 @@ class PlayerDamageSystem (
     private val gameEventManager: GameEventManager
 ) : GameEventListener, IteratingSystem(allOf(BossComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
 
-    private var attackArea : AttackArea = AttackArea(0, 0f,
-        0f, 0f, 0f, false)
+    private var attackArea : AttackArea = AttackArea(0, Rectangle(), false)
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transform = entity[TransformComponent.mapper]
@@ -40,14 +39,7 @@ class PlayerDamageSystem (
         val boss = entity[BossComponent.mapper]
         require(boss != null ){"Entity |entity| must have a BossComponent. entity=$entity"}
 
-        val playerAttackBoundingRect = Rectangle().set(
-            attackArea.startX,
-            attackArea.startY,
-            attackArea.endX - attackArea.startX,
-            attackArea.endY - attackArea.startY
-        )
-
-        if (transform.overlapsRect(playerAttackBoundingRect)) {
+        if (transform.overlapsRect(attackArea.area)) {
             //ouch
             boss.hp -= attackArea.damage
             if(boss.hp <=0){
@@ -70,19 +62,8 @@ class PlayerDamageSystem (
                     isStun = false
                 })
             }
-
-//                if(boss.hp <= 0f){
-//                    gameEventManager.dispatchEvent(GameEvent.PlayerDeath.apply {
-//                        //not necessary as from dark matter
-//                        this.distance = boss.distance
-//                    })
-//                    entity.addComponent<RemoveComponent>(engine){
-//                        delay = DEATH_EXPLOSION_DURATION
-//                    }
-//                }
         }
-        attackArea = AttackArea(0, 0f,
-            0f, 0f, 0f, false)
+        attackArea = AttackArea(0, Rectangle(), false)
     }
 
     override fun addedToEngine(engine: Engine?) {
@@ -116,8 +97,7 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x),
-                    (transform.position.x + transform.size.x), (transform.position.y), (transform.size.y), false)
+                attackArea = AttackArea(player.normalAttackDamage, transform.getArea(), false)
 
             }
 
@@ -130,8 +110,7 @@ class PlayerDamageSystem (
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
                 Gdx.app.log("Warrior", "Special Attack")
-                attackArea = AttackArea(player.specialAttackDamageOrHeal, (transform.position.x),
-                    (transform.position.x + transform.size.x), (transform.position.y), (transform.position.y + transform.size.y), true)
+                attackArea = AttackArea(player.specialAttackDamageOrHeal, (transform.getArea()), true)
             }
 
             is GameEvent.ArcherAttackFinishEvent -> {
@@ -144,8 +123,8 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x - ARCHER_ATTACK_RANGE),
-                        (transform.position.x + ARCHER_ATTACK_RANGE), (transform.position.y - ARCHER_ATTACK_RANGE), (transform.position.y + ARCHER_ATTACK_RANGE), false)
+                attackArea = AttackArea(player.normalAttackDamage, transform.getAreaWithRange(
+                    ARCHER_ATTACK_RANGE), false)
 
             }
 
@@ -158,8 +137,8 @@ class PlayerDamageSystem (
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
                 Gdx.app.log("Archer", "Special Attack")
-                attackArea = AttackArea(player.specialAttackDamageOrHeal, (transform.position.x - ARCHER_ATTACK_RANGE),
-                        (transform.position.x + ARCHER_ATTACK_RANGE), (transform.position.y - ARCHER_ATTACK_RANGE), (transform.position.y + ARCHER_ATTACK_RANGE), false)
+                attackArea = AttackArea(player.specialAttackDamageOrHeal, transform.getAreaWithRange(
+                    ARCHER_ATTACK_RANGE), false)
             }
 
             is GameEvent.PriestAttackFinishEvent -> {
@@ -172,13 +151,12 @@ class PlayerDamageSystem (
 
                 //SHOULD BE FIXED!!!!!
                 //TEMPORARY SOLUTION
-                attackArea = AttackArea(player.normalAttackDamage, (transform.position.x - PRIEST_ATTACK_RANGE),
-                    (transform.position.x + PRIEST_ATTACK_RANGE), (transform.position.y - PRIEST_ATTACK_RANGE), (transform.position.y + PRIEST_ATTACK_RANGE), false)
+                attackArea = AttackArea(player.normalAttackDamage, transform.getAreaWithRange(
+                    PRIEST_ATTACK_RANGE), false)
             }
 
         }
     }
 
-    private class AttackArea(val damage: Int, val startX: Float, val endX: Float, val startY: Float,
-                             val endY: Float, val isStun : Boolean)
+    private class AttackArea(val damage: Int, val area: Rectangle, val isStun : Boolean)
 }

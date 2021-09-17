@@ -1,16 +1,13 @@
 package com.p4pProject.gameTutorial.event
 
 import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.ObjectMap
-import com.p4pProject.gameTutorial.ecs.component.FacingComponent
-import com.p4pProject.gameTutorial.ecs.component.FacingDirection
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.PowerUpType
 import com.p4pProject.gameTutorial.screen.CharacterType
-import ktx.ashley.get
 import ktx.collections.GdxSet
-import java.time.LocalDateTime
-import java.util.*
+
 import kotlin.reflect.KClass
 
 
@@ -129,12 +126,8 @@ sealed class GameEvent{
 
     object BossAttackFinished: GameEvent () {
         var damage = 0
-        var startX = 0F
-        var endX = 0F
-        var startY = 0F
-        var endY = 0F
-        override fun toString() = "BossAttack(damage=$damage, startX=$startX, " +
-                "endX=$endX, startY=$startY, endY=$endY"
+        var area = Rectangle()
+        override fun toString() = "BossAttack(damage=$damage, area=$area)"
     }
 }
 

@@ -116,7 +116,7 @@ class PriestAutomationSystem(
     }
 
     private fun isBossInAttackRange(priestTrans: TransformComponent, bossTrans: TransformComponent): Boolean {
-        return priestTrans.position.dst(bossTrans.position) < PRIEST_ATTACK_RANGE
+        return priestTrans.overlapsWithRange(bossTrans, PRIEST_ATTACK_RANGE)
     }
 
     private fun findDirectionToFace(bossTrans: TransformComponent, priestTrans: TransformComponent, faceBoss: Boolean): FacingDirection {

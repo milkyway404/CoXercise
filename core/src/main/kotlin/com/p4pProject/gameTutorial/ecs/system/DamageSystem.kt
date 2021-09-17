@@ -3,7 +3,6 @@ package com.p4pProject.gameTutorial.ecs.system
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.RemoveComponent
@@ -28,8 +27,7 @@ class DamageSystem (
     private val gameEventManager: GameEventManager
         ) : GameEventListener, IteratingSystem(allOf(PlayerComponent::class, TransformComponent:: class).exclude(RemoveComponent::class).get()) {
 
-    private var bossAttackAreas = BossAttackArea(0, 0F,
-       0F, 0F, 0F)
+    private var bossAttackArea = BossAttackArea(0, Rectangle())
 
     var warriorCheck = false;
     var archerCheck = false;
@@ -57,8 +55,7 @@ class DamageSystem (
         }
 
         if((warriorCheck || warriorDead) && (archerCheck || archerDead) && (priestCheck || priestDead)){
-            bossAttackAreas = BossAttackArea(0, 0F,
-                0F, 0F, 0F)
+            bossAttackArea = BossAttackArea(0, Rectangle())
             warriorCheck = false;
             archerCheck = false;
             priestCheck = false;
@@ -71,15 +68,10 @@ class DamageSystem (
         val player = entity[PlayerComponent.mapper]
         require(player != null ){"Entity |entity| must have a PlayerComponent. entity=$entity"}
 
-        val bossAttackBoundingRect = Rectangle().set(
-            bossAttackAreas.startX,
-            bossAttackAreas.startY,
-            bossAttackAreas.endX - bossAttackAreas.startX,
-            bossAttackAreas.endY - bossAttackAreas.startY
-        )
-        if (transform.overlapsRect(bossAttackBoundingRect) && !player.isDead) {
+
+        if (transform.overlapsRect(bossAttackArea.area) && !player.isDead) {
             //ouch
-            player.hp -= bossAttackAreas.damage
+            player.hp -= bossAttackArea.damage
             if(player.hp <= 0f){
                 player.hp = 0
             }
@@ -119,8 +111,7 @@ class DamageSystem (
 
     override fun onEvent(event: GameEvent) {
         if (event is GameEvent.BossAttackFinished) {
-            bossAttackAreas = BossAttackArea(event.damage, event.startX,
-                event.endX, event.startY, event.endY)
+            bossAttackArea = BossAttackArea(event.damage, event.area)
         }
         if (event is GameEvent.PlayerDeath) {
             LOG.debug { "ded: ${event.characterType }"}
@@ -133,6 +124,5 @@ class DamageSystem (
     }
 
 
-    private class BossAttackArea(val damage: Int, val startX: Float, val endX: Float, val startY: Float,
-                                 val endY: Float)
+    private data class BossAttackArea(val damage: Int, val area: Rectangle)
 }

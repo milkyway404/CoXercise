@@ -93,7 +93,7 @@ class ArcherAutomationSystem(
     }
 
     private fun isBossInAttackRange(archerTrans: TransformComponent, bossTrans: TransformComponent): Boolean {
-        return archerTrans.position.dst(bossTrans.position) < ARCHER_ATTACK_RANGE
+        return archerTrans.overlapsWithRange(bossTrans, ARCHER_ATTACK_RANGE)
     }
 
     private fun attackBoss(archer: Entity) {

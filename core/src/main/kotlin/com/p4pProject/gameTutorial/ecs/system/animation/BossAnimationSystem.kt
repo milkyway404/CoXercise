@@ -335,10 +335,7 @@ class BossAnimationSystem(
     private fun fireBossAttackFinishedEvent(transform: TransformComponent, bossAttackDamage: Int) {
         gameEventManager.dispatchEvent(GameEvent.BossAttackFinished.apply {
             this.damage = bossAttackDamage
-            this.startX = transform.position.x
-            this.endX = transform.position.x + transform.size.x
-            this.startY = transform.position.y
-            this.endY = transform.position.y + BOSS_ATTACK_RANGE
+            this.area = transform.getArea()
             Gdx.app.log("Boss Attack", toString())
         })
     }

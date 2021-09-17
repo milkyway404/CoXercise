@@ -2,8 +2,7 @@ package com.p4pProject.gameTutorial.screen
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.core.EntityListener
-import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -25,11 +24,8 @@ import ktx.ashley.entity
 import ktx.ashley.get
 import ktx.ashley.with
 import ktx.log.debug
-import ktx.log.error
 import ktx.log.logger
-import ktx.preferences.flush
 import ktx.preferences.get
-import ktx.preferences.set
 import ktx.scene2d.*
 import kotlin.math.min
 
@@ -45,7 +41,7 @@ private const val MAX_DELTA_TIME = 1/20f
 class GameScreen(
     game: MyGameTutorial,
     private val engine: Engine = game.engine,
-    private val socket: Socket,
+    private val socket: Socket?,
     private val lobbyID: String,
     val chosenCharacterType: CharacterType,
 ): GameBaseScreen(game), GameEventListener {
@@ -63,6 +59,8 @@ class GameScreen(
     private lateinit var warriorSpecialAttackBtn: ImageButton
     private lateinit var archerSpecialAttackBtn: ImageButton
     private lateinit var priestSpecialAttackBtn: ImageButton
+    private lateinit var shapeRenderer: ShapeRenderer
+
 
 
     public var playerDead = false
@@ -202,9 +200,8 @@ class GameScreen(
 
     private fun updateBossHp() {
         val bossComp = boss[BossComponent.mapper]!!
-        val bossTrans = boss[TransformComponent.mapper]!!
+        bossHpBar.rotation = 180f
         bossHpBar.scaleX = MathUtils.clamp(bossComp.hp.toFloat() / bossComp.maxHp.toFloat(), 0f, 1f)
-        bossHpBar.setPosition(bossTrans.position.x, bossTrans.position.y)
     }
 
     private fun spawnBoss(){
@@ -246,9 +243,15 @@ class GameScreen(
         }
         setupUI()
         setupSockets()
+
+        shapeRenderer = ShapeRenderer();
     }
 
     private fun setupSockets() {
+        if (socket == null) {
+            return
+        }
+
         SocketOn.updatePlayersMove(socket,
                 callback = { characterType, x, y -> movePlayer(characterType, x, y)})
         SocketOn.playerAttack(socket,
@@ -321,18 +324,67 @@ class GameScreen(
             val transform = boss[TransformComponent.mapper]
             require(transform != null)
 
-            if (lobbyID.isNotEmpty()) {
+            if (lobbyID.isNotEmpty() && socket != null) {
                 SocketEmit.playerMove(socket, lobbyID, transform.position.x, transform.position.y)
             }
         }
+
+        renderPlayersAndBoss()
+    }
+
+    private fun renderPlayersAndBoss() {
+        shapeRenderer.projectionMatrix = gameViewport.camera.combined
+
+        if (!warriorDead) {
+            val warriorTrans = warrior[TransformComponent.mapper]!!
+            shapeRenderer.color = Color.RED
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+            shapeRenderer.rect(warriorTrans.position.x, warriorTrans.position.y, warriorTrans.size.x, warriorTrans.size.y)
+            shapeRenderer.end()
+        }
+
+        if (!archerDead) {
+            val archerTrans = archer[TransformComponent.mapper]!!
+            shapeRenderer.color = Color.BLUE
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+            shapeRenderer.rect(archerTrans.position.x, archerTrans.position.y, archerTrans.size.x, archerTrans.size.y)
+            shapeRenderer.end()
+        }
+
+        if (!priestDead) {
+            val priestTrans = priest[TransformComponent.mapper]!!
+            shapeRenderer.color = Color.LIME
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+            shapeRenderer.rect(priestTrans.position.x, priestTrans.position.y, priestTrans.size.x, priestTrans.size.y)
+            shapeRenderer.end()
+        }
+
+        val bossTrans = boss[TransformComponent.mapper]!!
+        shapeRenderer.color = Color.BLACK
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+        shapeRenderer.rect(bossTrans.position.x, bossTrans.position.y, bossTrans.size.x, bossTrans.size.y)
+        shapeRenderer.end()
     }
 
     private fun setupUI() {
         stage.actors {
-            bossHpBar = image(SkinImage.HP_BAR.atlasKey) {
-                color.a = 0.8f
-                width = 100f
+
+            table {
+                right().top()
+                padRight(-97f)
+                padTop(-5f)
+                columnDefaults(0).width(100f)
+                columnDefaults(0).height(8f)
+
+                bossHpBar = image(SkinImage.HP_BAR.atlasKey) {
+                    color.a = 0.8f
+                    rotation = 180f
+                }
+
+                setFillParent(true)
+                pack()
             }
+
 
             table {
                 left().top()
@@ -369,11 +421,7 @@ class GameScreen(
                                 if (!isDisabled && !warriorDead) {
                                     val playerComp = currentPlayer[PlayerComponent.mapper]!!
                                     playerComp.mp -= playerComp.specialAttackMpCost
-                                    SocketEmit.playerSpecialAttack(
-                                        socket,
-                                        lobbyID,
-                                        CharacterType.WARRIOR.name
-                                    )
+                                    emitPlayerSpecialAttack(CharacterType.WARRIOR)
                                     if(!warriorDead){
                                         gameEventManager.dispatchEvent(GameEvent.WarriorSpecialAttackEvent.apply {
                                             this.player = currentPlayer
@@ -388,7 +436,7 @@ class GameScreen(
                             color.a = 1.0f
                             onClick {
                                 if(!warriorDead){
-                                    SocketEmit.playerAttack(socket, lobbyID, CharacterType.WARRIOR.name)
+                                    emitPlayerAttack(CharacterType.WARRIOR)
                                     gameEventManager.dispatchEvent(GameEvent.WarriorAttackEvent.apply {
                                         this.player = currentPlayer
                                     })
@@ -404,18 +452,12 @@ class GameScreen(
                             playerComp.mp -= playerComp.specialAttackMpCost
                             onClick {
                                 if (!isDisabled && !archerDead) {
-                                    SocketEmit.playerSpecialAttack(
-                                        socket,
-                                        lobbyID,
-                                        CharacterType.ARCHER.name
-                                    )
-                                    if(!archerDead){
-                                        gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
-                                            val facing = currentPlayer[FacingComponent.mapper]
-                                            require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
-                                            this.player = currentPlayer
-                                        })
-                                    }
+                                    emitPlayerSpecialAttack(CharacterType.ARCHER)
+                                    gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
+                                        val facing = currentPlayer[FacingComponent.mapper]
+                                        require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
+                                        this.player = currentPlayer
+                                    })
                                 }
                             }
                             isDisabled = true
@@ -425,7 +467,7 @@ class GameScreen(
                             color.a = 1.0f
                             onClick {
                                 if(!archerDead){
-                                    SocketEmit.playerAttack(socket, lobbyID, CharacterType.ARCHER.name)
+                                    emitPlayerAttack(CharacterType.ARCHER)
                                     gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
                                         val facing = currentPlayer[FacingComponent.mapper]
                                         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
@@ -443,12 +485,8 @@ class GameScreen(
                                 if (!isDisabled && !priestDead) {
                                     val playerComp = currentPlayer[PlayerComponent.mapper]!!
                                     playerComp.mp -= playerComp.specialAttackMpCost
+                                    emitPlayerSpecialAttack(CharacterType.PRIEST)
 
-                                    SocketEmit.playerSpecialAttack(
-                                        socket,
-                                        lobbyID,
-                                        CharacterType.PRIEST.name
-                                    )
                                     if(!priestDead){
                                         gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
                                             val facing = currentPlayer[FacingComponent.mapper]
@@ -465,7 +503,7 @@ class GameScreen(
                             color.a = 1.0f
                             onClick {
                                 if(!priestDead){
-                                    SocketEmit.playerAttack(socket, lobbyID, CharacterType.PRIEST.name)
+                                    emitPlayerAttack(CharacterType.PRIEST)
                                     gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
                                         val facing = currentPlayer[FacingComponent.mapper]
                                         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
@@ -529,6 +567,18 @@ class GameScreen(
             game.removeScreen<GameScreen>()
             game.addScreen(PlayerWinScreen(MyGameTutorial()))
             game.setScreen<PlayerWinScreen>()
+        }
+    }
+
+    private fun emitPlayerAttack(characterType: CharacterType) {
+        if (socket != null) {
+            SocketEmit.playerAttack(socket, lobbyID, characterType.name)
+        }
+    }
+
+    private fun emitPlayerSpecialAttack(characterType: CharacterType) {
+        if (socket != null) {
+            SocketEmit.playerSpecialAttack(socket, lobbyID, characterType.name)
         }
     }
 

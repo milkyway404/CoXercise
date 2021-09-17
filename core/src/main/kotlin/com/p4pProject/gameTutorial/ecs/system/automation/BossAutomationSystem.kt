@@ -202,9 +202,6 @@ class BossAutomationSystem(
         val bossTrans = boss[TransformComponent.mapper]!!
         val characterTrans = character[TransformComponent.mapper]!!
 
-//        Gdx.app.log("Character To Attack", character[PlayerComponent.mapper]!!.characterType.toString())
-//        Gdx.app.log("Character Pos", characterTrans.position.x.toString() + ", " + characterTrans.position.y.toString())
-//        Gdx.app.log("Boss Pos", bossTrans.position.x.toString() + ", " + bossTrans.position.y.toString())
         return (characterTrans.overlaps(bossTrans))
     }
 }
