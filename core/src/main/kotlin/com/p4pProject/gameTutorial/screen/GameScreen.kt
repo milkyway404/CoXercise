@@ -63,11 +63,10 @@ class GameScreen(
 
 
 
-    public var playerDead = false
+    var playerDead = false
     private var warriorDead = false
     private var archerDead = false
     private var priestDead = false
-    private var gameOver = false
 
     private fun movePlayer(characterType: String, x: Float, y: Float) {
         val playerToMove = when (characterType) {
@@ -539,6 +538,11 @@ class GameScreen(
                     if (currentPlayer == priest) playerDead = true
                     priestDead = true
                 }
+            }
+            if(warriorDead && archerDead && priestDead){
+                game.removeScreen<GameScreen>()
+                game.addScreen(PlayerLoseScreen(MyGameTutorial()))
+                game.setScreen<PlayerLoseScreen>()
             }
         }
         else if (event is GameEvent.PlayerHit) {
