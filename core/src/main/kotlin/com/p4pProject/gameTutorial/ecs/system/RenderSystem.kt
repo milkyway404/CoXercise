@@ -39,8 +39,6 @@ class RenderSystem(
         setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat)
     })
 
-    private val backgroundScrollSpeed = Vector2(0.03f, -0.25f)
-
     private val textureSizeLocation = outlineShader.getUniformLocation("u_textureSize")
     private val outlineColorLoc = outlineShader.getUniformLocation("u_outlineColor")
     private val outlineColor = Color(0f, 113f/255f, 214/255f, 1f)
@@ -109,6 +107,8 @@ class RenderSystem(
         val graphic = entity[GraphicComponent.mapper]
         require(graphic != null){"Entity |entity| must have a GraphicComponent. entity=$entity"}
 
+        val player = entity[PlayerComponent.mapper]
+
         if(graphic.isBackground){
             return
         }
@@ -121,6 +121,13 @@ class RenderSystem(
         graphic.sprite.run {
             rotation = transform.rotationDeg
             setBounds(transform.interpolatedPosition.x, transform.interpolatedPosition.y, transform.size.x, transform.size.y)
+            if(player!= null){
+                if(player.isDead){
+                    setColor(1F,1F,1F,0.5F)
+                }else{
+                    setColor(1F,1F,1F,1F)
+                }
+            }
             draw(batch)
         }
     }
