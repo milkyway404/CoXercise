@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.GdxRuntimeException
 import com.p4pProject.gameTutorial.ecs.component.*
-import com.p4pProject.gameTutorial.ecs.system.automation.BOSS_ATTACK_RANGE
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventManager
 import ktx.ashley.allOf
@@ -324,7 +323,7 @@ class BossAnimationSystem(
             }else{
                 LOG.debug{"Adding animation of type $type with ${regions.size} regions"}
             }
-            animation = Animation2D(type, regions, type.playModeNormal, type.speedRate)
+            animation = Animation2D(type, regions, type.playModeNormal, type.speedRate / 3f)
             animationCache[type] = animation
         }
         return animation

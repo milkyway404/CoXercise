@@ -23,10 +23,8 @@ import java.time.LocalDateTime
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-private const val TOUCH_TOLERANCE_DISTANCE = 0.3f
-private const val HIGH_HEALTH_THRESHOLD = 200
-private const val MEDIUM_HEALTH_THRESHOLD = 100
-const val BOSS_ATTACK_RANGE = 0f
+private const val HIGH_HEALTH_THRESHOLD = 1000
+private const val MEDIUM_HEALTH_THRESHOLD = 500
 
 private val LOG = logger<BossAutomationSystem>()
 class BossAutomationSystem(
@@ -71,17 +69,17 @@ class BossAutomationSystem(
 
         val characterToAttack = when (boss.hp){
             in HIGH_HEALTH_THRESHOLD..Int.MAX_VALUE -> {
-                movementSpeed = 0.08f
+                movementSpeed = 0.04f
                 boss.attackDamage = 5
                 findClosestCharacter(entity)
             }
             in MEDIUM_HEALTH_THRESHOLD..HIGH_HEALTH_THRESHOLD -> {
-                movementSpeed = 0.1f
+                movementSpeed = 0.05f
                 boss.attackDamage = 10
                 findClosestCharacter(entity)
             }
             else -> {
-                movementSpeed = 0.12f
+                movementSpeed = 0.06f
                 boss.attackDamage = 20
                 findLowestHpCharacter(entity)
             }

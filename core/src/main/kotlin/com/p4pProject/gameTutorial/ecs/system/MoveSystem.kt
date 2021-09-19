@@ -20,7 +20,7 @@ import kotlin.math.*
 
 
 private const val UPDATE_RATE = 1/25f
-private const val SENSOR_SENSITIVITY_THRESHOLD = 4
+private const val SENSOR_SENSITIVITY_THRESHOLD = 2.0
 private const val STEP_DISTANCE = 1f
 private const val PLAYER_MOVEMENT_RATE = 0.25f
 
