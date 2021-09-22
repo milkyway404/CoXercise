@@ -2,7 +2,6 @@ package com.p4pProject.gameTutorial.ecs.system.automation
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.p4pProject.gameTutorial.V_HEIGHT
 import com.p4pProject.gameTutorial.V_WIDTH
@@ -16,7 +15,6 @@ import com.p4pProject.gameTutorial.screen.gameMode
 import ktx.ashley.allOf
 import ktx.ashley.get
 import kotlin.math.abs
-import kotlin.random.Random
 
 const val PRIEST_MOVEMENT_SPEED = 0.25f
 const val PRIEST_ATTACK_RANGE = 1f
@@ -32,12 +30,12 @@ class PriestAutomationSystem(
         val player = entity[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
 
-        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.PRIEST ||
-            chosenCharacterType == CharacterType.PRIEST) {
+        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.NECROMANCER ||
+            chosenCharacterType == CharacterType.NECROMANCER) {
             return
         }
 
-        if(player.characterType == CharacterType.PRIEST && player.isDead){
+        if(player.characterType == CharacterType.NECROMANCER && player.isDead){
             return
         }
         walkToRunAwayAndAttackBoss(entity)

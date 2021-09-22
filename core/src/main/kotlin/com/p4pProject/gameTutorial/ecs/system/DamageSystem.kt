@@ -7,13 +7,11 @@ import com.badlogic.gdx.math.Rectangle
 import com.p4pProject.gameTutorial.ecs.component.PlayerComponent
 import com.p4pProject.gameTutorial.ecs.component.RemoveComponent
 import com.p4pProject.gameTutorial.ecs.component.TransformComponent
-import com.p4pProject.gameTutorial.ecs.component.*
 import com.p4pProject.gameTutorial.event.GameEvent
 import com.p4pProject.gameTutorial.event.GameEventListener
 import com.p4pProject.gameTutorial.event.GameEventManager
 import com.p4pProject.gameTutorial.screen.CharacterType
 import com.p4pProject.gameTutorial.screen.chosenCharacterType
-import ktx.ashley.addComponent
 import ktx.ashley.allOf
 import ktx.ashley.exclude
 import ktx.ashley.get
@@ -46,10 +44,10 @@ class DamageSystem (
         if(!warriorCheck && player.characterType == CharacterType.WARRIOR){
             warriorCheck = true;
             checkDmg(entity);
-        }else if(!archerCheck && player.characterType == CharacterType.ARCHER){
+        }else if(!archerCheck && player.characterType == CharacterType.SLINGER){
             archerCheck = true;
             checkDmg(entity);
-        }else if(!priestCheck && player.characterType == CharacterType.PRIEST){
+        }else if(!priestCheck && player.characterType == CharacterType.NECROMANCER){
             priestCheck = true;
             checkDmg(entity);
         }
@@ -117,8 +115,8 @@ class DamageSystem (
             LOG.debug { "ded: ${event.characterType }"}
             when(event.characterType) {
                 CharacterType.WARRIOR -> warriorDead = true
-                CharacterType.ARCHER -> archerDead = true
-                CharacterType.PRIEST -> priestDead = true
+                CharacterType.SLINGER -> archerDead = true
+                CharacterType.NECROMANCER -> priestDead = true
             }
         }
     }

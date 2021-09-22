@@ -15,7 +15,6 @@ import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
 import ktx.ashley.get
-import ktx.log.debug
 import ktx.log.logger
 import kotlin.math.roundToInt
 
@@ -112,11 +111,11 @@ class PlayerInputSystem(
                 player.isAttacking = warriorIsAttacking
                 player.isSpecialAttacking = warriorIsSpecialAttacking
             }
-            CharacterType.ARCHER -> {
+            CharacterType.SLINGER -> {
                 player.isAttacking = archerIsAttacking
                 player.isSpecialAttacking = archerIsSpecialAttacking
             }
-            CharacterType.PRIEST -> {
+            CharacterType.NECROMANCER -> {
                 player.isAttacking = priestIsAttacking
                 player.isSpecialAttacking = priestIsSpecialAttacking
             }
