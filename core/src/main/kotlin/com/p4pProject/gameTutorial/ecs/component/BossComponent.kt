@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.utils.Pool
 import ktx.ashley.mapperFor
 
-const val BOSS_MAX_HP = 1500
+const val BOSS_MAX_HP = 2500
 
 class BossComponent : Component, Pool.Poolable {
 

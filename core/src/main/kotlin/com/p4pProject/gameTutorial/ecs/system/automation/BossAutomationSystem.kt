@@ -23,8 +23,8 @@ import java.time.LocalDateTime
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-private const val HIGH_HEALTH_THRESHOLD = 1000
-private const val MEDIUM_HEALTH_THRESHOLD = 500
+private const val HIGH_HEALTH_THRESHOLD = 1500
+private const val MEDIUM_HEALTH_THRESHOLD = 750
 
 private val LOG = logger<BossAutomationSystem>()
 class BossAutomationSystem(
