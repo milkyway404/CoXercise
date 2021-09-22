@@ -328,7 +328,7 @@ class GameScreen(
             }
         }
 
-        renderPlayersAndBoss()
+        //renderPlayersAndBoss()
     }
 
     private fun renderPlayersAndBoss() {
@@ -520,7 +520,7 @@ class GameScreen(
         }
         updatePlayerHpMp()
         // allows you to see the borders of components on screen
-        stage.isDebugAll = true
+        stage.isDebugAll = false
     }
 
     override fun onEvent(event: GameEvent) {
