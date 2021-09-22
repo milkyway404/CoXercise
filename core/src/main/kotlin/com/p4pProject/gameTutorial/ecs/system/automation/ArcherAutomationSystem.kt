@@ -66,9 +66,9 @@ class ArcherAutomationSystem(
         val isInSameLocation = isInSameLocation(archerTrans)
 
         when {
-            player.hp < player.maxHp * 0.2 && !isInSameLocation -> {
+            player.hp < player.maxHp * 0.3 && isInSameLocation -> {
                 facing.direction = findBossDirection(bossTrans, archerTrans, faceBoss = false)
-                move(archerTrans, facing.direction)
+                move(archerTrans, facing.direction, player)
             }
             isBossInAttackRange(archerTrans, bossTrans) -> {
                 facing.direction = findBossDirection(bossTrans, archerTrans, faceBoss = true)
@@ -76,7 +76,7 @@ class ArcherAutomationSystem(
             }
             else -> {
                 facing.direction = findBossDirection(bossTrans, archerTrans, faceBoss = true)
-                move(archerTrans, facing.direction)
+                move(archerTrans, facing.direction, player)
             }
         }
     }
@@ -110,7 +110,7 @@ class ArcherAutomationSystem(
         }
     }
 
-    private fun move(archerTrans: TransformComponent, facingDirection: FacingDirection) {
+    private fun move(archerTrans: TransformComponent, facingDirection: FacingDirection, playerComponent: PlayerComponent) {
         val archerPos = archerTrans.position
 
         when (facingDirection) {
@@ -127,6 +127,8 @@ class ArcherAutomationSystem(
                 archerPos.x = MathUtils.clamp(archerPos.x - ARCHER_MOVEMENT_SPEED, 0f, V_WIDTH - archerTrans.size.x)
             }
         }
+
+        playerComponent.mp = MathUtils.clamp(playerComponent.mp + 1, 0, playerComponent.maxMp);
     }
 
     private fun findBossDirection(bossTrans: TransformComponent, archerTrans: TransformComponent, faceBoss: Boolean): FacingDirection {

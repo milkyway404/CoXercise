@@ -2,6 +2,7 @@ package com.p4pProject.gameTutorial.ecs.system.automation
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.p4pProject.gameTutorial.V_HEIGHT
 import com.p4pProject.gameTutorial.V_WIDTH
@@ -64,9 +65,9 @@ class PriestAutomationSystem(
 
         val isInSameLocation = isInSameLocation(priestTrans)
         when {
-            player.hp < player.maxHp * 0.2 && !isInSameLocation -> {
+            player.hp < player.maxHp * 0.3 && isInSameLocation -> {
                 facing.direction = findDirectionToFace(bossTrans, priestTrans, faceBoss = false)
-                move(priestTrans, facing.direction)
+                move(priestTrans, facing.direction, player)
             }
             isBossInAttackRange(priestTrans, bossTrans) -> {
                 facing.direction = findDirectionToFace(bossTrans, priestTrans, faceBoss = true)
@@ -74,7 +75,7 @@ class PriestAutomationSystem(
             }
             else -> {
                 facing.direction = findDirectionToFace(bossTrans, priestTrans, faceBoss = true)
-                move(priestTrans, facing.direction)
+                move(priestTrans, facing.direction, player)
             }
         }
     }
@@ -177,7 +178,7 @@ class PriestAutomationSystem(
         }
     }
 
-    private fun move(priestTrans: TransformComponent, facingDirection: FacingDirection) {
+    private fun move(priestTrans: TransformComponent, facingDirection: FacingDirection, playerComponent: PlayerComponent) {
         val priestPos = priestTrans.position
 
         when (facingDirection) {
@@ -194,6 +195,8 @@ class PriestAutomationSystem(
                 priestPos.x = MathUtils.clamp(priestPos.x - PRIEST_MOVEMENT_SPEED, 0f, V_WIDTH - priestTrans.size.x)
             }
         }
+
+        playerComponent.mp = MathUtils.clamp(playerComponent.mp + 1, 0, playerComponent.maxMp);
     }
 
 }

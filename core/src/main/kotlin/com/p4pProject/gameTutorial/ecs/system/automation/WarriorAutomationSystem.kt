@@ -71,7 +71,7 @@ class WarriorAutomationSystem(
         } else {
             // walk
             Gdx.app.log("Walk", "warrior")
-            walkToBoss(warriorTrans, facing.direction)
+            walkToBoss(warriorTrans, facing.direction, player)
         }
     }
 
@@ -90,7 +90,7 @@ class WarriorAutomationSystem(
         }
     }
 
-    private fun walkToBoss(warriorTrans: TransformComponent, facingDirection: FacingDirection) {
+    private fun walkToBoss(warriorTrans: TransformComponent, facingDirection: FacingDirection, playerComponent: PlayerComponent) {
         val warriorPos = warriorTrans.position
 
         when (facingDirection) {
@@ -107,6 +107,8 @@ class WarriorAutomationSystem(
                 warriorPos.x = MathUtils.clamp(warriorPos.x - WARRIOR_MOVEMENT_SPEED, 0f, V_WIDTH - warriorTrans.size.x)
             }
         }
+
+        playerComponent.mp = MathUtils.clamp(playerComponent.mp + 1, 0, playerComponent.maxMp);
     }
 
     private fun isBossInAttackRange(warriorTrans: TransformComponent, bossTrans: TransformComponent): Boolean {
