@@ -447,10 +447,10 @@ class GameScreen(
                         //TODO: add column default and big good image here for the buttons
                         archerSpecialAttackBtn = imageButton(SkinImageButton.ARCHER_SPECIAL.name) {
                             color.a = 1.0f
-                            val playerComp = currentPlayer[PlayerComponent.mapper]!!
-                            playerComp.mp -= playerComp.specialAttackMpCost
                             onClick {
                                 if (!isDisabled && !archerDead) {
+                                    val playerComp = currentPlayer[PlayerComponent.mapper]!!
+                                    playerComp.mp -= playerComp.specialAttackMpCost
                                     emitPlayerSpecialAttack(CharacterType.SLINGER)
                                     gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
                                         val facing = currentPlayer[FacingComponent.mapper]
