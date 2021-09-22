@@ -11,6 +11,13 @@ archerAttack
   orig: 22, 20
   offset: 0, 0
   index: -1
+archerSpecial
+  rotate: false
+  xy: 131, 220
+  size: 22, 20
+  orig: 22, 20
+  offset: 0, 0
+  index: -1
 font11_gradient
   rotate: false
   xy: 1, 121
@@ -27,7 +34,7 @@ font8
   index: -1
 frame
   rotate: false
-  xy: 155, 198
+  xy: 73, 9
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -35,7 +42,7 @@ frame
   index: -1
 frame_transparent
   rotate: false
-  xy: 131, 176
+  xy: 155, 198
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -50,7 +57,7 @@ game_hud
   index: -1
 label_frame
   rotate: false
-  xy: 49, 9
+  xy: 131, 176
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -58,7 +65,7 @@ label_frame
   index: -1
 label_frame_transparent
   rotate: false
-  xy: 71, 9
+  xy: 131, 154
   size: 20, 20
   split: 7, 7, 7, 7
   orig: 20, 20
@@ -84,35 +91,35 @@ mp_bar
   index: -1
 no_sound
   rotate: false
-  xy: 93, 20
+  xy: 95, 20
   size: 11, 9
   orig: 11, 9
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 138, 167
+  xy: 138, 145
   size: 6, 7
   orig: 6, 7
   offset: 0, 0
   index: -1
 play
   rotate: false
-  xy: 131, 141
+  xy: 131, 119
   size: 5, 9
   orig: 5, 9
   offset: 0, 0
   index: -1
 priestAttack
   rotate: false
-  xy: 131, 198
+  xy: 155, 220
   size: 22, 20
   orig: 22, 20
   offset: 0, 0
   index: -1
 priestSpecialAttack
   rotate: false
-  xy: 131, 220
+  xy: 25, 9
   size: 22, 20
   orig: 22, 20
   offset: 0, 0
@@ -133,7 +140,7 @@ scroll_knob
   index: -1
 scroll_v
   rotate: false
-  xy: 131, 152
+  xy: 131, 130
   size: 5, 22
   split: 0, 0, 8, 9
   orig: 5, 22
@@ -164,14 +171,14 @@ warning
   index: -1
 warriorAttack
   rotate: false
-  xy: 25, 9
+  xy: 131, 198
   size: 22, 20
   orig: 22, 20
   offset: 0, 0
   index: -1
 warriorSepcialAttack
   rotate: false
-  xy: 155, 220
+  xy: 49, 9
   size: 22, 20
   orig: 22, 20
   offset: 0, 0
