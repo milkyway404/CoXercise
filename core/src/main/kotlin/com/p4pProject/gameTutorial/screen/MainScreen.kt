@@ -75,21 +75,21 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                                     }
                                     row()
                                     textButton(
-                                        CharacterType.ARCHER.name,
+                                        CharacterType.SLINGER.name,
                                         SkinTextButton.DEFAULT.name
                                     ) {
                                         onClick {
-                                            chosenCharacterType = CharacterType.ARCHER
+                                            chosenCharacterType = CharacterType.SLINGER
                                             startSinglePlayerGame();
                                         }
                                     }
                                     row()
                                     textButton(
-                                        CharacterType.PRIEST.name,
+                                        CharacterType.NECROMANCER.name,
                                         SkinTextButton.DEFAULT.name
                                     ) {
                                         onClick {
-                                            chosenCharacterType = CharacterType.PRIEST
+                                            chosenCharacterType = CharacterType.NECROMANCER
                                             startSinglePlayerGame();
                                         }
                                     }
@@ -121,15 +121,15 @@ class MainScreen( game: MyGameTutorial) : GameBaseScreen(game) {
                                         }
                                     }
                                     row()
-                                    textButton(CharacterType.ARCHER.name, SkinTextButton.DEFAULT.name) {
+                                    textButton(CharacterType.SLINGER.name, SkinTextButton.DEFAULT.name) {
                                         onClick {
-                                            chosenCharacterType = CharacterType.ARCHER
+                                            chosenCharacterType = CharacterType.SLINGER
                                         }
                                     }
                                     row()
-                                    textButton(CharacterType.PRIEST.name, SkinTextButton.DEFAULT.name) {
+                                    textButton(CharacterType.NECROMANCER.name, SkinTextButton.DEFAULT.name) {
                                         onClick {
-                                            chosenCharacterType = CharacterType.PRIEST
+                                            chosenCharacterType = CharacterType.NECROMANCER
                                         }
                                     }
                                     row()

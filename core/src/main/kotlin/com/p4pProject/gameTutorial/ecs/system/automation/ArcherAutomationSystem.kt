@@ -2,7 +2,6 @@ package com.p4pProject.gameTutorial.ecs.system.automation
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.p4pProject.gameTutorial.V_HEIGHT
 import com.p4pProject.gameTutorial.V_WIDTH
@@ -31,12 +30,12 @@ class ArcherAutomationSystem(
         val player = entity[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
 
-        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.ARCHER ||
-            chosenCharacterType == CharacterType.ARCHER) {
+        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.SLINGER ||
+            chosenCharacterType == CharacterType.SLINGER) {
             return
         }
 
-        if(player.characterType == CharacterType.ARCHER && player.isDead){
+        if(player.characterType == CharacterType.SLINGER && player.isDead){
             return
         }
 
