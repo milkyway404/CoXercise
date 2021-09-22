@@ -90,7 +90,6 @@ class GameScreen(
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
             with<MoveComponent>()
-            with<GraphicComponent>()
             with<PlayerComponent> {
                 setAsWarrior()
             }
@@ -119,7 +118,6 @@ class GameScreen(
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
             with<MoveComponent>()
-            with<GraphicComponent>()
             with<PlayerComponent> {
                 setAsPriest()
 
@@ -328,7 +326,7 @@ class GameScreen(
             }
         }
 
-        renderPlayersAndBoss()
+        //renderPlayersAndBoss()
     }
 
     private fun renderPlayersAndBoss() {
@@ -445,7 +443,7 @@ class GameScreen(
                     }
                     CharacterType.ARCHER -> {
                         //TODO: add column default and big good image here for the buttons
-                        archerSpecialAttackBtn = imageButton(SkinImageButton.ARCHER_ATTACK.name) {
+                        archerSpecialAttackBtn = imageButton(SkinImageButton.ARCHER_SPECIAL.name) {
                             color.a = 1.0f
                             val playerComp = currentPlayer[PlayerComponent.mapper]!!
                             playerComp.mp -= playerComp.specialAttackMpCost
@@ -520,7 +518,7 @@ class GameScreen(
         }
         updatePlayerHpMp()
         // allows you to see the borders of components on screen
-        stage.isDebugAll = true
+        stage.isDebugAll = false
     }
 
     override fun onEvent(event: GameEvent) {
