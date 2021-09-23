@@ -2,7 +2,6 @@ package com.p4pProject.gameTutorial.ecs.system.automation
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.MathUtils
 import com.p4pProject.gameTutorial.V_HEIGHT
 import com.p4pProject.gameTutorial.V_WIDTH
@@ -31,12 +30,12 @@ class ArcherAutomationSystem(
         val player = entity[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
 
-        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.ARCHER ||
-            chosenCharacterType == CharacterType.ARCHER) {
+        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.SLINGER ||
+            chosenCharacterType == CharacterType.SLINGER) {
             return
         }
 
-        if(player.characterType == CharacterType.ARCHER && player.isDead){
+        if(player.characterType == CharacterType.SLINGER && player.isDead){
             return
         }
 
@@ -67,9 +66,9 @@ class ArcherAutomationSystem(
         val isInSameLocation = isInSameLocation(archerTrans)
 
         when {
-            player.hp < player.maxHp * 0.2 && !isInSameLocation -> {
+            player.hp < player.maxHp * 0.3 && isInSameLocation -> {
                 facing.direction = findBossDirection(bossTrans, archerTrans, faceBoss = false)
-                move(archerTrans, facing.direction)
+                move(archerTrans, facing.direction, player)
             }
             isBossInAttackRange(archerTrans, bossTrans) -> {
                 facing.direction = findBossDirection(bossTrans, archerTrans, faceBoss = true)
@@ -77,7 +76,7 @@ class ArcherAutomationSystem(
             }
             else -> {
                 facing.direction = findBossDirection(bossTrans, archerTrans, faceBoss = true)
-                move(archerTrans, facing.direction)
+                move(archerTrans, facing.direction, player)
             }
         }
     }
@@ -111,7 +110,7 @@ class ArcherAutomationSystem(
         }
     }
 
-    private fun move(archerTrans: TransformComponent, facingDirection: FacingDirection) {
+    private fun move(archerTrans: TransformComponent, facingDirection: FacingDirection, playerComponent: PlayerComponent) {
         val archerPos = archerTrans.position
 
         when (facingDirection) {
@@ -128,6 +127,8 @@ class ArcherAutomationSystem(
                 archerPos.x = MathUtils.clamp(archerPos.x - ARCHER_MOVEMENT_SPEED, 0f, V_WIDTH - archerTrans.size.x)
             }
         }
+
+        playerComponent.mp = MathUtils.clamp(playerComponent.mp + 1, 0, playerComponent.maxMp);
     }
 
     private fun findBossDirection(bossTrans: TransformComponent, archerTrans: TransformComponent, faceBoss: Boolean): FacingDirection {

@@ -15,7 +15,7 @@ const val ARCHER_MAX_HP = 50
 const val ARCHER_MAX_MP = 50
 const val ARCHER_SPECIAL_ATTACK_MP_COST = 50
 const val ARCHER_NORMAL_ATTACK_DAMAGE = 10
-const val ARCHER_SPECIAL_ATTACK_DAMAGE = 50
+const val ARCHER_SPECIAL_ATTACK_DAMAGE = 150
 
 const val PRIEST_MAX_HP = 50
 const val PRIEST_MAX_MP = 200
@@ -50,7 +50,7 @@ class PlayerComponent : Component, Pool.Poolable {
     }
 
     fun setAsArcher(){
-        characterType = CharacterType.ARCHER
+        characterType = CharacterType.SLINGER
         hp = ARCHER_MAX_HP
         mp = ARCHER_MAX_HP
         maxHp = ARCHER_MAX_HP
@@ -61,7 +61,7 @@ class PlayerComponent : Component, Pool.Poolable {
     }
 
     fun setAsPriest(){
-        characterType = CharacterType.PRIEST
+        characterType = CharacterType.NECROMANCER
         hp = PRIEST_MAX_HP
         mp = PRIEST_MAX_MP
         maxHp = PRIEST_MAX_HP
@@ -77,10 +77,10 @@ class PlayerComponent : Component, Pool.Poolable {
             CharacterType.WARRIOR -> {
                 WARRIOR_MAX_HP
             }
-            CharacterType.ARCHER -> {
+            CharacterType.SLINGER -> {
                 ARCHER_MAX_HP
             }
-            CharacterType.PRIEST -> {
+            CharacterType.NECROMANCER -> {
                 PRIEST_MAX_HP
             }
         }

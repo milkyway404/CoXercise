@@ -32,7 +32,7 @@ import kotlin.math.min
 
 
 enum class CharacterType {
-    WARRIOR, ARCHER, PRIEST
+    WARRIOR, SLINGER, NECROMANCER
 }
 
 private val LOG = logger<MyGameTutorial>()
@@ -71,8 +71,8 @@ class GameScreen(
     private fun movePlayer(characterType: String, x: Float, y: Float) {
         val playerToMove = when (characterType) {
             CharacterType.WARRIOR.name -> warrior
-            CharacterType.ARCHER.name -> archer
-            CharacterType.PRIEST.name -> priest
+            CharacterType.SLINGER.name -> archer
+            CharacterType.NECROMANCER.name -> priest
             else -> return
         }
 
@@ -129,8 +129,8 @@ class GameScreen(
 
         currentPlayer = when (chosenCharacterType) {
             CharacterType.WARRIOR -> warrior
-            CharacterType.ARCHER -> archer
-            CharacterType.PRIEST -> priest
+            CharacterType.SLINGER -> archer
+            CharacterType.NECROMANCER -> priest
         }
     }
 
@@ -157,13 +157,13 @@ class GameScreen(
                         warriorSpecialAttackBtn.isDisabled = false
                     }
                 }
-                CharacterType.ARCHER -> {
+                CharacterType.SLINGER -> {
                     if (this::archerSpecialAttackBtn.isInitialized) {
                         archerSpecialAttackBtn.color.a = 1f
                         archerSpecialAttackBtn.isDisabled = false
                     }
                 }
-                CharacterType.PRIEST -> {
+                CharacterType.NECROMANCER -> {
                     if (this::priestSpecialAttackBtn.isInitialized) {
                         priestSpecialAttackBtn.color.a = 1f
                         priestSpecialAttackBtn.isDisabled = false
@@ -178,13 +178,13 @@ class GameScreen(
                         warriorSpecialAttackBtn.isDisabled = true
                     }
                 }
-                CharacterType.ARCHER -> {
+                CharacterType.SLINGER -> {
                     if (this::archerSpecialAttackBtn.isInitialized) {
                         archerSpecialAttackBtn.color.a = 0.5f
                         archerSpecialAttackBtn.isDisabled = true
                     }
                 }
-                CharacterType.PRIEST -> {
+                CharacterType.NECROMANCER -> {
                     if (this::priestSpecialAttackBtn.isInitialized) {
                         priestSpecialAttackBtn.color.a = 0.5f
                         priestSpecialAttackBtn.isDisabled = true
@@ -259,14 +259,14 @@ class GameScreen(
                             this.player = warrior
                         })
                     }
-                    CharacterType.ARCHER.name -> {
+                    CharacterType.SLINGER.name -> {
                         val facing = archer[FacingComponent.mapper]
                         require(facing != null)
                         gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
                             this.player = archer
                         })
                     }
-                    CharacterType.PRIEST.name -> {
+                    CharacterType.NECROMANCER.name -> {
                         gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
                             this.player = priest
                         })
@@ -283,14 +283,14 @@ class GameScreen(
                             this.player = warrior
                         })
                     }
-                    CharacterType.ARCHER.name -> {
+                    CharacterType.SLINGER.name -> {
                         val facing = archer[FacingComponent.mapper]
                         require(facing != null)
                         gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
                             this.player = archer
                         })
                     }
-                    CharacterType.PRIEST.name -> {
+                    CharacterType.NECROMANCER.name -> {
                         gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
                             this.player = priest
                         })
@@ -441,15 +441,15 @@ class GameScreen(
                             }
                         }
                     }
-                    CharacterType.ARCHER -> {
+                    CharacterType.SLINGER -> {
                         //TODO: add column default and big good image here for the buttons
                         archerSpecialAttackBtn = imageButton(SkinImageButton.ARCHER_SPECIAL.name) {
                             color.a = 1.0f
-                            val playerComp = currentPlayer[PlayerComponent.mapper]!!
-                            playerComp.mp -= playerComp.specialAttackMpCost
                             onClick {
                                 if (!isDisabled && !archerDead) {
-                                    emitPlayerSpecialAttack(CharacterType.ARCHER)
+                                    val playerComp = currentPlayer[PlayerComponent.mapper]!!
+                                    playerComp.mp -= playerComp.specialAttackMpCost
+                                    emitPlayerSpecialAttack(CharacterType.SLINGER)
                                     gameEventManager.dispatchEvent(GameEvent.ArcherSpecialAttackEvent.apply {
                                         val facing = currentPlayer[FacingComponent.mapper]
                                         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
@@ -464,7 +464,7 @@ class GameScreen(
                             color.a = 1.0f
                             onClick {
                                 if(!archerDead){
-                                    emitPlayerAttack(CharacterType.ARCHER)
+                                    emitPlayerAttack(CharacterType.SLINGER)
                                     gameEventManager.dispatchEvent(GameEvent.ArcherAttackEvent.apply {
                                         val facing = currentPlayer[FacingComponent.mapper]
                                         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
@@ -475,14 +475,14 @@ class GameScreen(
                             }
                         }
                     }
-                    CharacterType.PRIEST -> {
+                    CharacterType.NECROMANCER -> {
                         priestSpecialAttackBtn = imageButton(SkinImageButton.PRIEST_SPECIAL.name) {
                             color.a = 1.0f
                             onClick {
                                 if (!isDisabled && !priestDead) {
                                     val playerComp = currentPlayer[PlayerComponent.mapper]!!
                                     playerComp.mp -= playerComp.specialAttackMpCost
-                                    emitPlayerSpecialAttack(CharacterType.PRIEST)
+                                    emitPlayerSpecialAttack(CharacterType.NECROMANCER)
 
                                     if(!priestDead){
                                         gameEventManager.dispatchEvent(GameEvent.PriestSpecialAttackEvent.apply {
@@ -500,7 +500,7 @@ class GameScreen(
                             color.a = 1.0f
                             onClick {
                                 if(!priestDead){
-                                    emitPlayerAttack(CharacterType.PRIEST)
+                                    emitPlayerAttack(CharacterType.NECROMANCER)
                                     gameEventManager.dispatchEvent(GameEvent.PriestAttackEvent.apply {
                                         val facing = currentPlayer[FacingComponent.mapper]
                                         require(facing != null) { "Entity |entity| must have a FacingComponent. entity=$currentPlayer" }
@@ -528,11 +528,11 @@ class GameScreen(
                     if (currentPlayer == warrior) playerDead = true
                     warriorDead = true
                 }
-                CharacterType.ARCHER -> {
+                CharacterType.SLINGER -> {
                     if (currentPlayer == archer) playerDead = true
                     archerDead = true
                 }
-                CharacterType.PRIEST -> {
+                CharacterType.NECROMANCER -> {
                     if (currentPlayer == priest) playerDead = true
                     priestDead = true
                 }

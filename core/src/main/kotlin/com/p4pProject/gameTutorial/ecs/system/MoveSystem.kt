@@ -14,7 +14,6 @@ import com.p4pProject.gameTutorial.screen.chosenCharacterType
 import com.p4pProject.gameTutorial.screen.CharacterType
 import ktx.ashley.allOf
 import ktx.ashley.get
-import ktx.log.debug
 import ktx.log.logger
 import kotlin.math.*
 
@@ -68,12 +67,12 @@ class MoveSystem(
                     return
                 }
             }
-            CharacterType.ARCHER -> {
+            CharacterType.SLINGER -> {
                 if (entity[ArcherAnimationComponent.mapper] == null) {
                     return
                 }
             }
-            CharacterType.PRIEST -> {
+            CharacterType.NECROMANCER -> {
                 if (entity[PriestAnimationComponent.mapper] == null) {
                     return
                 }
@@ -114,7 +113,7 @@ class MoveSystem(
                 entity[FacingComponent.mapper]?.let { facing ->
                     movePlayer(transform, facing.direction)
                 }
-                player.mp++
+                player.mp = MathUtils.clamp(player.mp + 1, 0, player.maxMp)
                 gameEventManager.dispatchEvent(GameEvent.PlayerStep.apply {
                     this.player = player
                 })

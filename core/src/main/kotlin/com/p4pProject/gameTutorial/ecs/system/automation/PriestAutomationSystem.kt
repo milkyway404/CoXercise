@@ -16,7 +16,6 @@ import com.p4pProject.gameTutorial.screen.gameMode
 import ktx.ashley.allOf
 import ktx.ashley.get
 import kotlin.math.abs
-import kotlin.random.Random
 
 const val PRIEST_MOVEMENT_SPEED = 0.25f
 const val PRIEST_ATTACK_RANGE = 1f
@@ -32,12 +31,12 @@ class PriestAutomationSystem(
         val player = entity[PlayerComponent.mapper]
         require(player != null) { "Entity |entity| must have a PlayerComponent. entity=$entity" }
 
-        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.PRIEST ||
-            chosenCharacterType == CharacterType.PRIEST) {
+        if (gameMode == GameMode.MULTIPLAYER || player.characterType != CharacterType.NECROMANCER ||
+            chosenCharacterType == CharacterType.NECROMANCER) {
             return
         }
 
-        if(player.characterType == CharacterType.PRIEST && player.isDead){
+        if(player.characterType == CharacterType.NECROMANCER && player.isDead){
             return
         }
         walkToRunAwayAndAttackBoss(entity)
@@ -66,9 +65,9 @@ class PriestAutomationSystem(
 
         val isInSameLocation = isInSameLocation(priestTrans)
         when {
-            player.hp < player.maxHp * 0.2 && !isInSameLocation -> {
+            player.hp < player.maxHp * 0.3 && isInSameLocation -> {
                 facing.direction = findDirectionToFace(bossTrans, priestTrans, faceBoss = false)
-                move(priestTrans, facing.direction)
+                move(priestTrans, facing.direction, player)
             }
             isBossInAttackRange(priestTrans, bossTrans) -> {
                 facing.direction = findDirectionToFace(bossTrans, priestTrans, faceBoss = true)
@@ -76,7 +75,7 @@ class PriestAutomationSystem(
             }
             else -> {
                 facing.direction = findDirectionToFace(bossTrans, priestTrans, faceBoss = true)
-                move(priestTrans, facing.direction)
+                move(priestTrans, facing.direction, player)
             }
         }
     }
@@ -179,7 +178,7 @@ class PriestAutomationSystem(
         }
     }
 
-    private fun move(priestTrans: TransformComponent, facingDirection: FacingDirection) {
+    private fun move(priestTrans: TransformComponent, facingDirection: FacingDirection, playerComponent: PlayerComponent) {
         val priestPos = priestTrans.position
 
         when (facingDirection) {
@@ -196,6 +195,8 @@ class PriestAutomationSystem(
                 priestPos.x = MathUtils.clamp(priestPos.x - PRIEST_MOVEMENT_SPEED, 0f, V_WIDTH - priestTrans.size.x)
             }
         }
+
+        playerComponent.mp = MathUtils.clamp(playerComponent.mp + 1, 0, playerComponent.maxMp);
     }
 
 }
