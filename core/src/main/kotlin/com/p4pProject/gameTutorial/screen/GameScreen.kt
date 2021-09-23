@@ -103,7 +103,6 @@ class GameScreen(
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
             with<MoveComponent>()
-            with<GraphicComponent>()
             with<PlayerComponent>{
                 setAsArcher()
 
@@ -118,6 +117,7 @@ class GameScreen(
                 setSize(20f * UNIT_SCALE, 20f * UNIT_SCALE)
             }
             with<MoveComponent>()
+            with<GraphicComponent>()
             with<PlayerComponent> {
                 setAsPriest()
 
