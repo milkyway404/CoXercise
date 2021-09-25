@@ -80,7 +80,7 @@ class BossAutomationSystem(
             }
             else -> {
                 movementSpeed = 0.06f
-                boss.attackDamage = 20
+                boss.attackDamage = 10
                 findLowestHpCharacter(entity)
             }
         }
