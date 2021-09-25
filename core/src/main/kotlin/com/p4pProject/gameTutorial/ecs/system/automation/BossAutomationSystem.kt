@@ -75,12 +75,12 @@ class BossAutomationSystem(
             }
             in MEDIUM_HEALTH_THRESHOLD..HIGH_HEALTH_THRESHOLD -> {
                 movementSpeed = 0.05f
-                boss.attackDamage = 10
+                boss.attackDamage = 5
                 findClosestCharacter(entity)
             }
             else -> {
                 movementSpeed = 0.06f
-                boss.attackDamage = 10
+                boss.attackDamage = 5
                 findLowestHpCharacter(entity)
             }
         }
